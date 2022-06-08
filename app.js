@@ -1,9 +1,19 @@
+const express = require('express')
+const session = require('express-session')
+const helmet = require('helmet')
+const bodyParser = require('body-parser')
+const Redis = require('ioredis')
+const RedisStore = require('connect-redis')(session)
+require('dotenv').config()
+process.env.APP_PATH = `${__dirname}/`
+
 const xdevkitLib = require('./xdevkitLib.js')
 const lib = require('./lib.js')
 const statusList = require('./statusList.js')
+const scc = require('./serverCommonConstant.js')
 
 const CLIENT_ID = 'foo'
-const XLOGIN_REDIRECT_URI = encodeURIComponent('https://sample.reiwa.co/f/xlogin/callback')
+const XLOGIN_REDIRECT_URI = encodeURIComponent('http://localhost:3001/f/xlogin/callback')
 
 /* xdevkit common constant */
 const xdevkitConstant = {}
@@ -14,20 +24,11 @@ xdevkitConstant.XLOGIN_ISSUER = 'https://xlogin.jp'
 xdevkitConstant.XLOGIN_RESPONSE_TYPE = 'code'
 xdevkitConstant.XLOGIN_CODE_CHALLENGE_METHOD = 'S256'
 
-xdevkitConstant.XLOGIN_AUTHORIZATION_ENDPOINT = 'https://xlogin.jp/api/v0.2/auth/connect'
-xdevkitConstant.XLOGIN_CODE_ENDPOINT = 'https://xlogin.jp/api/v0.2/auth/code'
-xdevkitConstant.XLOGIN_USER_INFO_ENDPOINT = 'https://xlogin.jp/api/v0.2/user/info'
+xdevkitConstant.XLOGIN_AUTHORIZATION_ENDPOINT = 'http://127.0.0.1:3000/api/v0.2/auth/connect'
+xdevkitConstant.XLOGIN_CODE_ENDPOINT = 'http://127.0.0.1:3000/api/v0.2/auth/code'
+xdevkitConstant.XLOGIN_USER_INFO_ENDPOINT = 'http://127.0.0.1:3000/api/v0.2/user/info'
 
 /* server common constant */
-const scc = {}
-scc.url = {}
-scc.url.ERROR_PAGE = '/error'
-
-scc.session = {}
-scc.session.SESSION_ID_VERIFIER_L = 64
-scc.session.SESSION_ID = 'sid'
-scc.session.SESSION_ID_VERIFIER = 'sidv'
-
 
 /* POST /f/xlogin/connect */
 const handleXloginConnect = (redirectAfterAuth) => {
@@ -48,25 +49,15 @@ const handleXloginConnect = (redirectAfterAuth) => {
   const oidcQueryStr = xdevkitLib.objToQuery(oidcQueryParam) 
   const redirectTo = `${xdevkitConstant.XLOGIN_AUTHORIZATION_ENDPOINT}?${oidcQueryStr}`
 
-  const { sessionId, sessionIdVerifier } = lib.generateSessionId(scc.session.SESSION_ID_VERIFIER_L)
   const newUserSession = { oidc: Object.assign(oidcSessionPart, oidcQueryParam) }
 
-
   const status = statusList.OK
-  return { status, cookie: [[scc.session.SESSION_ID, sessionId, {}], [scc.session.SESSION_ID_VERIFIER, sessionIdVerifier, {}]], sessionId, session: newUserSession, response: null, redirect: redirectTo }
+  return { status, session: newUserSession, response: null, redirect: redirectTo }
 }
 
 /* GET /f/xlogin/callback */
-const handleXloginCode = (state, code, iss, sessionId, userSession) => {
-  /*
-  // inputでバリデーションを行う
-  if (!state || !code || !iss) {
-    const status = statusList.NOT_ENOUGH_PARAM
-    return { status, session: null, response: null, redirect: scc.url.ERROR_PAGE }
-  }
-  */
-
-  if (!sessionId || !userSession || !userSession.oidc) {
+const handleXloginCode = (state, code, iss, userSession) => {
+  if (!userSession || !userSession.oidc) {
     const status = statusList.INVALID_SESSION
     return { status, session: {}, response: null, redirect: scc.url.ERROR_PAGE }
   }
@@ -87,7 +78,6 @@ const handleXloginCode = (state, code, iss, sessionId, userSession) => {
     const status = statusList.INVALID_SESSION
     return { status, session: null, response: null, redirect: scc.url.ERROR_PAGE }
   }
-  console.log('?')
 
   if (accessTokenResponse.error || !accessTokenResponse.content || !accessTokenResponse.content['access_token']) {
     const status = statusList.API_ERROR
@@ -108,14 +98,83 @@ const handleXloginCode = (state, code, iss, sessionId, userSession) => {
 
   const userInfo = userInfoResponse.content['user_info']
   const status = statusList.LOGIN_SUCCESS
-  const { sessionId: newSessionId, sessionIdVerifier: newSessionIdVerifier } = lib.generateSessionId(scc.session.SESSION_ID_VERIFIER_L)
   const redirectTo = xdevkitLib.addQueryStr(userSession.oidc['redirect_after_auth'], xdevkitLib.objToQuery({ code: status }))
 
-  return { status, cookie: [[scc.session.SESSION_ID, newSessionId, {}], [scc.session.SESSION_ID_VERIFIER, newSessionIdVerifier, {}]], sessionId: newSessionId, session: { userInfo }, response: null, redirect: redirectTo }
+  return { status, session: { userInfo }, response: null, redirect: redirectTo }
 }
 
+const output = (req, res, handleResult) => {
+  console.log('output error:', handleResult.error)
+  req.session.auth = handleResult.session
+
+  if (handleResult.response) {
+    return res.json(handleResult.response)
+  } else if (handleResult.redirect) {
+    return res.redirect(handleResult.redirect)
+  } else {
+    return res.redirect(scc.url.ERROR_PAGE)
+  }
+}
 
 const main = () => {
+  const expressApp = express()
+  expressApp.use(helmet())
+  const redis = new Redis({
+    port: scc.session.REDIS_PORT,
+    host: scc.session.REDIS_HOST,
+    db: scc.session.REDIS_DB,
+  })
+  expressApp.use(session({
+    secret : process.env.SESSION_SECRET, 
+    resave : true,
+    saveUninitialized : true,                
+    rolling : true,
+    name : scc.session.SESSION_ID,
+    cookie: {
+      path: '/',
+      maxAge: 1000 * 60 * 60 * 24 * 30,
+      secure: scc.session.SESSION_COOKIE_SECURE,
+      httpOnly: true,
+      sameSite: 'lax',
+    },
+    store: new RedisStore({ client: redis }),
+  }))
+
+  expressApp.use(bodyParser.urlencoded({ extended: true }))
+  expressApp.use(bodyParser.json())
+
+  expressApp.use((req, res, next) => {
+    /*
+    if (req.headers['origin']) {
+      return res.status(403).end('0')
+    }
+    */
+    return next()
+  })
+
+  expressApp.get('/f/xlogin/connect', (req, res) => {
+    const { redirectAfterAuth } = req.query
+    const resultHandleXloginConnect = handleXloginConnect(redirectAfterAuth)
+    output(req, res, resultHandleXloginConnect)
+  })
+
+  expressApp.get('/f/xlogin/callback', (req, res) => {
+    /*
+    res.end('<script>window.location.href = `/f/xlogin/callbackAfterRedirect${window.location.search}`</script>')
+  })
+
+  expressApp.get('/f/xlogin/callbackAfterRedirect', (req, res) => {
+  */
+    const { state, code, iss } = req.query
+    const resultHandleXloginCode = handleXloginCode(state, code, iss, req.session.auth)
+    output(req, res, resultHandleXloginCode)
+  })
+
+  expressApp.use(express.static(scc.server.PUBLIC_DIR, { index: 'index.html', extensions: ['html'] }))
+  expressApp.listen(scc.server.PORT, () => {
+    console.log(`Example app listening at http://localhost:${scc.server.PORT}`)
+  })
+
   console.log('==================================================')
 
   const resultHandleXloginConnect = handleXloginConnect('/')
@@ -126,10 +185,11 @@ const main = () => {
   const iss = xdevkitConstant.XLOGIN_ISSUER
   const client_id = 'foo'
   const code_verifier = 'code_verifier'
-  const redirect_after_auth = 'https://sample.reiwa.co/'
-  const resultHandlerXloginCode = handleXloginCode(state, 'code', iss, 'sessionId', { oidc: { state, iss, client_id, code_verifier, redirect_after_auth } })
+  const redirect_after_auth = 'http://localhost:3001/'
+  const resultHandlerXloginCode = handleXloginCode(state, 'code', iss, { oidc: { state, iss, client_id, code_verifier, redirect_after_auth } })
   console.log(resultHandlerXloginCode)
   console.log('==================================================')
+  console.log('open: http://localhost:3001/f/xlogin/connect')
 }
 
 main()
