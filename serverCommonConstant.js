@@ -1,6 +1,7 @@
 const scc = {}
 scc.server = {}
-scc.server.PORT = 3001
+scc.server.PORT = 7004
+scc.server.HOST = 'sample.xlogin.jp'
 scc.server.PUBLIC_BUILD_DIR = `${process.env.APP_PATH}view/build`
 scc.server.PUBLIC_STATIC_DIR = `${process.env.APP_PATH}view/static`
 

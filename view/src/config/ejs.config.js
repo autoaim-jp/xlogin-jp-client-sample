@@ -9,8 +9,8 @@ export const ejsConfig = {
 
     inlineCssList: [],
     externalCssList: ['/css/tailwind.css'],
-    inlineScriptList: ['/js/index/app.js'],
-    externalScriptList: [],
+    inlineScriptList: [],
+    externalScriptList: ['/js/index/app.js'],
   },
   mypage: {
     title: 'mypage | sample.xlogin.jp',

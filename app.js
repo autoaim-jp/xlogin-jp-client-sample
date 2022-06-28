@@ -13,7 +13,7 @@ const statusList = require('./statusList.js')
 const scc = require('./serverCommonConstant.js')
 
 const CLIENT_ID = 'foo'
-const XLOGIN_REDIRECT_URI = encodeURIComponent('http://localhost:3001/f/xlogin/callback')
+const XLOGIN_REDIRECT_URI = encodeURIComponent(`https://${scc.server.HOST}/f/xlogin/callback`)
 
 /* xdevkit common constant */
 const xdevkitConstant = {}
@@ -24,9 +24,9 @@ xdevkitConstant.XLOGIN_ISSUER = 'https://xlogin.jp'
 xdevkitConstant.XLOGIN_RESPONSE_TYPE = 'code'
 xdevkitConstant.XLOGIN_CODE_CHALLENGE_METHOD = 'S256'
 
-xdevkitConstant.XLOGIN_AUTHORIZATION_ENDPOINT = 'http://127.0.0.1:3000/api/v0.2/auth/connect'
-xdevkitConstant.XLOGIN_CODE_ENDPOINT = 'http://127.0.0.1:3000/api/v0.2/auth/code'
-xdevkitConstant.XLOGIN_USER_INFO_ENDPOINT = 'http://127.0.0.1:3000/api/v0.2/user/info'
+xdevkitConstant.XLOGIN_AUTHORIZATION_ENDPOINT = 'https://xlogin.jp/api/v0.2/auth/connect'
+xdevkitConstant.XLOGIN_CODE_ENDPOINT = 'http://xlogin.jp/api/v0.2/auth/code'
+xdevkitConstant.XLOGIN_USER_INFO_ENDPOINT = 'http://xlogin.jp/api/v0.2/user/info'
 
 /* server common constant */
 
@@ -174,7 +174,7 @@ const main = () => {
   expressApp.use(express.static(scc.server.PUBLIC_STATIC_DIR, { index: 'index.html', extensions: ['html'] }))
  
   expressApp.listen(scc.server.PORT, () => {
-    console.log(`Example app listening at http://localhost:${scc.server.PORT}`)
+    console.log(`Example app listening at host: ${scc.server.HOST}, port: ${scc.server.PORT}`)
   })
 
   console.log('==================================================')
