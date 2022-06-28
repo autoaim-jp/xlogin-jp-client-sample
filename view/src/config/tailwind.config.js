@@ -1,5 +1,5 @@
 module.exports = {
-  purge: ['./public/build/*.html'],
+  purge: ['./view/build/*.html'],
   darkMode: false,
   theme: {
     extend: {

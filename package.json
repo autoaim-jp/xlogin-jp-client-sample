@@ -6,5 +6,12 @@
     "express-session": "^1.17.3",
     "helmet": "^5.1.0",
     "ioredis": "^5.0.5"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "compile": "bash gdeno run xdevkit-cli compile --js ./view/src/js/ --css ./view/src/css/ --ejs ./view/src/ejs/page/ --out ./view/build/ --ejsconfig ./view/src/config/ejs.config.js --tailwindconfig ./view/src/config/tailwind.config.js --tailwindcss ./view/src/css/tailwind.css",
+    "compile-minify": "bash gdeno run xdevkit-cli compile --js ./view/src/js/ --css ./view/src/css/ --ejs ./view/src/ejs/page/ --out ./view/build/ --ejsconfig ./view/src/config/ejs.config.js --tailwindconfig ./view/src/config/tailwind.config.js --tailwindcss ./view/src/css/tailwind.css --minify",
+    "watch": "bash gdeno run xdevkit-cli watch --js ./view/src/js/ --css ./view/src/css/ --ejs ./view/src/ejs/page/ --out ./view/build/ --ejsconfig ./view/src/config/ejs.config.js --tailwindconfig ./view/src/config/tailwind.config.js --tailwindcss ./view/src/css/tailwind.css"
   }
+
 }

@@ -4,3 +4,7 @@
 
 @tailwind utilities;
 
+html {
+  font-family: Roboto, Arial, 'Noto Sans', sans-serif;
+}
+

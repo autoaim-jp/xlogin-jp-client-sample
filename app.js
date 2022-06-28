@@ -170,7 +170,9 @@ const main = () => {
     output(req, res, resultHandleXloginCode)
   })
 
-  expressApp.use(express.static(scc.server.PUBLIC_DIR, { index: 'index.html', extensions: ['html'] }))
+  expressApp.use(express.static(scc.server.PUBLIC_BUILD_DIR, { index: 'index.html', extensions: ['html'] }))
+  expressApp.use(express.static(scc.server.PUBLIC_STATIC_DIR, { index: 'index.html', extensions: ['html'] }))
+ 
   expressApp.listen(scc.server.PORT, () => {
     console.log(`Example app listening at http://localhost:${scc.server.PORT}`)
   })
