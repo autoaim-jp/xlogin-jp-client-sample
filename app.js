@@ -1,3 +1,4 @@
+const https = require('https')
 const express = require('express')
 const session = require('express-session')
 const helmet = require('helmet')
@@ -12,21 +13,21 @@ const lib = require('./lib.js')
 const statusList = require('./statusList.js')
 const scc = require('./serverCommonConstant.js')
 
-const CLIENT_ID = 'foo'
-const XLOGIN_REDIRECT_URI = encodeURIComponent(`https://${scc.server.HOST}/f/xlogin/callback`)
+const CLIENT_ID = process.env.CLIENT_ID
+const XLOGIN_REDIRECT_URI = encodeURIComponent(`${process.env.SERVER_ORIGIN}/f/xlogin/callback`)
 
 /* xdevkit common constant */
 const xdevkitConstant = {}
 xdevkitConstant.STATE_L = 64
 xdevkitConstant.CODE_VERIFIER_L = 64
 xdevkitConstant.XLOGIN_SCOPE = 'read_user'
-xdevkitConstant.XLOGIN_ISSUER = 'https://xlogin.jp'
+xdevkitConstant.XLOGIN_ISSUER = process.env.AUTH_SERVER_ORIGIN
 xdevkitConstant.XLOGIN_RESPONSE_TYPE = 'code'
 xdevkitConstant.XLOGIN_CODE_CHALLENGE_METHOD = 'S256'
 
-xdevkitConstant.XLOGIN_AUTHORIZATION_ENDPOINT = 'https://xlogin.jp/api/v0.2/auth/connect'
-xdevkitConstant.XLOGIN_CODE_ENDPOINT = 'http://xlogin.jp/api/v0.2/auth/code'
-xdevkitConstant.XLOGIN_USER_INFO_ENDPOINT = 'http://xlogin.jp/api/v0.2/user/info'
+xdevkitConstant.XLOGIN_AUTHORIZATION_ENDPOINT = `${process.env.AUTH_SERVER_ORIGIN}/api/v0.2/auth/connect`
+xdevkitConstant.XLOGIN_CODE_ENDPOINT = `${process.env.AUTH_SERVER_ORIGIN}/api/v0.2/auth/code`
+xdevkitConstant.XLOGIN_USER_INFO_ENDPOINT = `${process.env.AUTH_SERVER_ORIGIN}/api/v0.2/user/info`
 
 /* server common constant */
 
@@ -173,9 +174,20 @@ const main = () => {
   expressApp.use(express.static(scc.server.PUBLIC_BUILD_DIR, { index: 'index.html', extensions: ['html'] }))
   expressApp.use(express.static(scc.server.PUBLIC_STATIC_DIR, { index: 'index.html', extensions: ['html'] }))
  
-  expressApp.listen(scc.server.PORT, () => {
-    console.log(`Example app listening at host: ${scc.server.HOST}, port: ${scc.server.PORT}`)
-  })
+  if (process.env.SERVER_ORIGIN.indexOf('https') >= 0) {
+    const tlsConfig = {
+      key: fs.readFileSync(process.env.TLS_KEY_PATH),
+      cert: fs.readFileSync(process.env.TLS_CERT_PATH),
+    }
+    const server = https.createServer(tlsConfig, expressApp)
+    server.listen(process.env.SERVER_PORT, () => {
+      console.log(`Example app listening at port: ${process.env.SERVER_PORT}, origin: ${process.env.SERVER_ORIGIN}`)
+    })
+  } else {
+    expressApp.listen(process.env.SERVER_PORT, () => {
+      console.log(`Example app listening at port: ${process.env.SERVER_PORT}, origin: ${process.env.SERVER_ORIGIN}`)
+    })
+  }
 
   console.log('==================================================')
 
@@ -185,13 +197,13 @@ const main = () => {
 
   const state = 'state'
   const iss = xdevkitConstant.XLOGIN_ISSUER
-  const client_id = 'foo'
+  const client_id = CLIENT_ID
   const code_verifier = 'code_verifier'
-  const redirect_after_auth = 'http://localhost:3001/'
+  const redirect_after_auth = `${process.env.SERVER_ORIGIN}/`
   const resultHandlerXloginCode = handleXloginCode(state, 'code', iss, { oidc: { state, iss, client_id, code_verifier, redirect_after_auth } })
   console.log(resultHandlerXloginCode)
   console.log('==================================================')
-  console.log('open: http://localhost:3001/f/xlogin/connect')
+  console.log(`open: ${process.env.SERVER_ORIGIN}/f/xlogin/connect`)
 }
 
 main()
