@@ -1,7 +1,7 @@
 const scc = {}
 scc.server = {}
 scc.server.PORT = 3001
-scc.server.PUBLIC_DIR = `${process.env.APP_PATH}public`
+scc.server.PUBLIC_DIR = `${process.env.APP_PATH}view/public`
 
 scc.url = {}
 scc.url.ERROR_PAGE = '/error'
