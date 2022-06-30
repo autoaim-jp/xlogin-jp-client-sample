@@ -20,7 +20,7 @@ export const ejsConfig = {
     inlineCssList: [],
     externalCssList: ['/css/tailwind.css'],
     inlineScriptList: [],
-    externalScriptList: [],
+    externalScriptList: ['/js/mypage/app.js'],
   },
 }
 
