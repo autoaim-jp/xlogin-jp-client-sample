@@ -22,7 +22,7 @@ const closeModal = () => {
     elm.classList.add('hidden')
   })
 }
-const applyElmList = (query, f, parent = document) => {
+export const applyElmList = (query, f, parent = document) => {
   Object.values(parent.querySelectorAll(query)).forEach((elm) => {
     f(elm)
   })
@@ -178,5 +178,11 @@ export const monkeyPatch = () => {
 }
 export const getRandomStr = (len) => {
   return btoa(crypto.getRandomValues(new Uint8Array(len))).slice(0, len)
+}
+
+export const redirect = (response) => {
+  if (response && response.redirect) {
+    window.location.href = response.redirect
+  }
 }
 

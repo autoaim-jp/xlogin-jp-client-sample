@@ -1,5 +1,5 @@
 /* /setting.js */
-export const apiEndpoint = '/api/v1/public'
+export const apiEndpoint = '/f'
 
 const settingList = {
   apiEndpoint,

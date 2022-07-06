@@ -105,6 +105,19 @@ const handleXloginCode = (state, code, iss, userSession) => {
   return { status, session: { userInfo }, response: null, redirect: redirectTo }
 }
 
+/* GET /f/user/profile */
+const handleUserProfile = (authSession) => {
+  if (!authSession || !authSession.userInfo) {
+    const status = statusList.INVALID_SESSION
+    const redirectTo = scc.url.ERROR_PAGE
+    return { status, session: {}, response: { redirect: redirectTo }, }
+  }
+
+  const { userInfo } = authSession
+  const status = statusList.OK
+  return { status, session: authSession, response: { userInfo } }
+}
+
 const output = (req, res, handleResult) => {
   console.log('output error:', handleResult.error)
   req.session.auth = handleResult.session
@@ -161,15 +174,14 @@ const main = () => {
   })
 
   expressApp.get('/f/xlogin/callback', (req, res) => {
-    /*
-    res.end('<script>window.location.href = `/f/xlogin/callbackAfterRedirect${window.location.search}`</script>')
-  })
-
-  expressApp.get('/f/xlogin/callbackAfterRedirect', (req, res) => {
-  */
     const { state, code, iss } = req.query
     const resultHandleXloginCode = handleXloginCode(state, code, iss, req.session.auth)
     output(req, res, resultHandleXloginCode)
+  })
+
+  expressApp.get('/f/user/profile', (req, res) => {
+    const resultHandleUserProfile = handleUserProfile(req.session.auth)
+    output(req, res, resultHandleUserProfile)
   })
 
   expressApp.use(express.static(scc.server.PUBLIC_BUILD_DIR, { index: 'index.html', extensions: ['html'] }))
