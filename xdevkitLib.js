@@ -14,7 +14,7 @@ const convertToCodeChallenge = (codeVerifier, codeChallengeMethod) => {
   }
 }
 
-const getAccessTokenByCode = (code, oidcSessionPart, endpoint) => {
+const getAccessTokenByCode = (apiRequest, code, oidcSessionPart, endpoint) => {
   if (!code || !oidcSessionPart['client_id'] || !oidcSessionPart['state'] || !oidcSessionPart['code_verifier']) {
     return null
   }
@@ -22,16 +22,25 @@ const getAccessTokenByCode = (code, oidcSessionPart, endpoint) => {
   const { client_id, state, code_verifier } = oidcSessionPart
   const oidcQueryStr = objToQuery({ client_id, state, code, code_verifier })
   const reqUrl = `${endpoint}?${oidcQueryStr}`
+  console.log({ reqUrl })
 
-  return { error: null, content: { 'access_token': `requestResult(${reqUrl})` } }
+  return apiRequest(false, reqUrl, {}, {}, true)
 }
 
-const getUserInfo = (accessToken, endpoint) => {
+const getUserInfo = (apiRequest, clientId, filter_key_list, accessToken, endpoint) => {
   if (!accessToken) {
     return null
   }
 
-  return { error: null, content: { 'user_info': { serviceUserId: 123456 } } }
+  const header = { 
+    'Authorization': `Bearer ${accessToken}`,
+    'X_XLOGIN_CLIENT_ID': clientId,
+  }
+  const filter_key_list_str = filter_key_list.join(',')
+  const param = {
+    filter_key_list_str,
+  }
+  return apiRequest(false, endpoint, param, header, true)
 }
 
 const addQueryStr = (url, queryStr) => {

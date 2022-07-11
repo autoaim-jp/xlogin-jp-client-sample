@@ -1,4 +1,5 @@
 const fs = require('fs')
+const axios = require('axios')
 const https = require('https')
 const express = require('express')
 const session = require('express-session')
@@ -17,6 +18,7 @@ const scc = require('./serverCommonConstant.js')
 const CLIENT_ID = process.env.CLIENT_ID
 const XLOGIN_REDIRECT_URI = encodeURIComponent(`${process.env.SERVER_ORIGIN}/f/xlogin/callback`)
 const scope = 'r:email_address,*r:user_name,*r:service_user_id'
+const filter_key_list = ['email_address', 'user_name', 'service_user_id']
 
 /* xdevkit common constant */
 const xdevkitConstant = {}
@@ -58,7 +60,7 @@ const handleXloginConnect = (redirectAfterAuth) => {
 }
 
 /* GET /f/xlogin/callback */
-const handleXloginCode = (state, code, iss, userSession) => {
+const handleXloginCode = async (state, code, iss, userSession) => {
   if (!userSession || !userSession.oidc) {
     const status = statusList.INVALID_SESSION
     return { status, session: {}, response: null, redirect: scc.url.ERROR_PAGE }
@@ -75,31 +77,31 @@ const handleXloginCode = (state, code, iss, userSession) => {
   }
 
   /* request access_token */
-  const accessTokenResponse = xdevkitLib.getAccessTokenByCode(code, userSession.oidc, xdevkitConstant.XLOGIN_CODE_ENDPOINT)
+  const accessTokenResponse = await xdevkitLib.getAccessTokenByCode(lib.apiRequest, code, userSession.oidc, xdevkitConstant.XLOGIN_CODE_ENDPOINT)
   if (!accessTokenResponse) {
     const status = statusList.INVALID_SESSION
     return { status, session: null, response: null, redirect: scc.url.ERROR_PAGE }
   }
 
-  if (accessTokenResponse.error || !accessTokenResponse.content || !accessTokenResponse.content['access_token']) {
+  const accessToken = accessTokenResponse?.data?.result?.access_token
+  if (accessTokenResponse.error || !accessToken) {
     const status = statusList.API_ERROR
     return { status, session: null, response: null, redirect: scc.url.ERROR_PAGE, error: encodeURIComponent(accessTokenResponse.error) }
   }
 
   /* request user_info */
-  const accessToken = accessTokenResponse.content['access_token']
-  const userInfoResponse = xdevkitLib.getUserInfo(accessToken, xdevkitConstant.XLOGIN_USER_INFO_ENDPOINT)
+  const userInfoResponse = await xdevkitLib.getUserInfo(lib.apiRequest, CLIENT_ID, filter_key_list, accessToken, xdevkitConstant.XLOGIN_USER_INFO_ENDPOINT)
   if (!userInfoResponse) {
     const status = statusList.INVALID_SESSION
     return { status, session: null, response: null, redirect: scc.url.ERROR_PAGE }
   }
-  if (userInfoResponse.error || !userInfoResponse.content || !userInfoResponse.content['user_info']) {
+
+  const userInfo = userInfoResponse?.data?.result?.user_info
+  if (userInfoResponse.error || !userInfo) {
     const status = statusList.API_ERROR
     return { status, session: null, response: null, redirect: scc.url.ERROR_PAGE, error: encodeURIComponent(userInfoResponse.error) }
   }
 
-  const userInfo = userInfoResponse.content['user_info']
-  console.log({ userInfo })
   const status = statusList.LOGIN_SUCCESS
   const redirectTo = xdevkitLib.addQueryStr(userSession.oidc['redirect_after_auth'], xdevkitLib.objToQuery({ code: status }))
 
@@ -133,6 +135,7 @@ const output = (req, res, handleResult) => {
 }
 
 const main = () => {
+  lib.init(axios)
   const expressApp = express()
   expressApp.use(helmet())
   const redis = new Redis({
@@ -174,9 +177,9 @@ const main = () => {
     output(req, res, resultHandleXloginConnect)
   })
 
-  expressApp.get('/f/xlogin/callback', (req, res) => {
+  expressApp.get('/f/xlogin/callback', async (req, res) => {
     const { state, code, iss } = req.query
-    const resultHandleXloginCode = handleXloginCode(state, code, iss, req.session.auth)
+    const resultHandleXloginCode = await handleXloginCode(state, code, iss, req.session.auth)
     output(req, res, resultHandleXloginCode)
   })
 
@@ -209,14 +212,6 @@ const main = () => {
   console.log(resultHandleXloginConnect)
   console.log('==================================================')
 
-  const state = 'state'
-  const iss = xdevkitConstant.XLOGIN_ISSUER
-  const client_id = CLIENT_ID
-  const code_verifier = 'code_verifier'
-  const redirect_after_auth = `${process.env.SERVER_ORIGIN}/`
-  const resultHandlerXloginCode = handleXloginCode(state, 'code', iss, { oidc: { state, iss, client_id, code_verifier, redirect_after_auth } })
-  console.log(resultHandlerXloginCode)
-  console.log('==================================================')
   console.log(`open: ${process.env.SERVER_ORIGIN}/f/xlogin/connect`)
 }
 
