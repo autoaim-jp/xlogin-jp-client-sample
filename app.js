@@ -16,12 +16,12 @@ const scc = require('./serverCommonConstant.js')
 
 const CLIENT_ID = process.env.CLIENT_ID
 const XLOGIN_REDIRECT_URI = encodeURIComponent(`${process.env.SERVER_ORIGIN}/f/xlogin/callback`)
+const scope = 'r:email_address,*r:user_name,*r:service_user_id'
 
 /* xdevkit common constant */
 const xdevkitConstant = {}
 xdevkitConstant.STATE_L = 64
 xdevkitConstant.CODE_VERIFIER_L = 64
-xdevkitConstant.XLOGIN_SCOPE = 'read_user'
 xdevkitConstant.XLOGIN_ISSUER = process.env.AUTH_SERVER_ORIGIN
 xdevkitConstant.XLOGIN_RESPONSE_TYPE = 'code'
 xdevkitConstant.XLOGIN_CODE_CHALLENGE_METHOD = 'S256'
@@ -44,7 +44,7 @@ const handleXloginConnect = (redirectAfterAuth) => {
   oidcQueryParam['code_challenge'] = xdevkitLib.convertToCodeChallenge(oidcSessionPart['code_verifier'], oidcQueryParam['code_challenge_method'])
   oidcQueryParam['state'] = xdevkitLib.getRandomStr(xdevkitConstant.STATE_L)
   oidcQueryParam['response_type'] = xdevkitConstant.XLOGIN_RESPONSE_TYPE 
-  oidcQueryParam['scope'] = xdevkitConstant.XLOGIN_SCOPE
+  oidcQueryParam['scope'] = scope
   oidcQueryParam['client_id'] = CLIENT_ID
   oidcQueryParam['redirect_uri'] = XLOGIN_REDIRECT_URI
 
@@ -99,6 +99,7 @@ const handleXloginCode = (state, code, iss, userSession) => {
   }
 
   const userInfo = userInfoResponse.content['user_info']
+  console.log({ userInfo })
   const status = statusList.LOGIN_SUCCESS
   const redirectTo = xdevkitLib.addQueryStr(userSession.oidc['redirect_after_auth'], xdevkitLib.objToQuery({ code: status }))
 
