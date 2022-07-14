@@ -1,5 +1,11 @@
-const getRandomStr = (len) => {
-  return 'deadbeef'.repeat(len / 8).slice(0, len)
+let mod = {}
+
+const init = (crypto) => {
+  mod.crypto = crypto
+}
+
+const getRandomB64UrlSafe = (len) => {
+  return mod.crypto.randomBytes(len).toString('base64url').slice(0, len)
 }
 
 const objToQuery = (obj) => {
@@ -52,7 +58,8 @@ const addQueryStr = (url, queryStr) => {
 }
 
 module.exports = {
-  getRandomStr,
+  init,
+  getRandomB64UrlSafe,
   objToQuery,
   convertToCodeChallenge,
   getAccessTokenByCode,

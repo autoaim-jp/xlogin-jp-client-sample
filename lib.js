@@ -3,11 +3,6 @@ let mod = {}
 const init = (axios) => {
   mod.axios = axios
 }
-const generateSessionId = (len) => {
-  const sessionIdVerifier = 'deadbeef'.repeat(len / 8).slice(0, len)
-  const sessionId = `sha256(${sessionIdVerifier})`
-  return { sessionId, sessionIdVerifier }
-}
 
 const apiRequest = (isPost, url, param = {}, header = {}, json = true) => {
   return new Promise((resolve, reject) => {

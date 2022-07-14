@@ -1,5 +1,6 @@
 const fs = require('fs')
 const axios = require('axios')
+const crypto = require('crypto')
 const https = require('https')
 const express = require('express')
 const session = require('express-session')
@@ -38,13 +39,13 @@ xdevkitConstant.XLOGIN_USER_INFO_ENDPOINT = `${process.env.AUTH_SERVER_ORIGIN}/a
 const handleXloginConnect = (redirectAfterAuth) => {
   const oidcSessionPart = {}
   oidcSessionPart['iss'] = xdevkitConstant.XLOGIN_ISSUER
-  oidcSessionPart['code_verifier'] = xdevkitLib.getRandomStr(xdevkitConstant.CODE_VERIFIER_L)
+  oidcSessionPart['code_verifier'] = xdevkitLib.getRandomB64UrlSafe(xdevkitConstant.CODE_VERIFIER_L)
   oidcSessionPart['redirect_after_auth'] = redirectAfterAuth
 
   const oidcQueryParam = {}
   oidcQueryParam['code_challenge_method'] = xdevkitConstant.XLOGIN_CODE_CHALLENGE_METHOD
   oidcQueryParam['code_challenge'] = xdevkitLib.convertToCodeChallenge(oidcSessionPart['code_verifier'], oidcQueryParam['code_challenge_method'])
-  oidcQueryParam['state'] = xdevkitLib.getRandomStr(xdevkitConstant.STATE_L)
+  oidcQueryParam['state'] = xdevkitLib.getRandomB64UrlSafe(xdevkitConstant.STATE_L)
   oidcQueryParam['response_type'] = xdevkitConstant.XLOGIN_RESPONSE_TYPE 
   oidcQueryParam['scope'] = scope
   oidcQueryParam['client_id'] = CLIENT_ID
@@ -135,6 +136,7 @@ const output = (req, res, handleResult) => {
 }
 
 const main = () => {
+  xdevkitLib.init(crypto)
   lib.init(axios)
   const expressApp = express()
   expressApp.use(helmet())
