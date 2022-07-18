@@ -34,7 +34,6 @@ const apiRequest = (isPost, url, param = {}, header = {}, json = true) => {
 
 module.exports = {
   init,
-  generateSessionId,
   apiRequest,
 }
 
