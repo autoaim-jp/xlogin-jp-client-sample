@@ -35,7 +35,6 @@ const getAccessTokenByCode = (apiRequest, code, oidcSessionPart, endpoint) => {
   const { client_id, state, code_verifier } = oidcSessionPart
   const oidcQueryStr = objToQuery({ client_id, state, code, code_verifier })
   const reqUrl = `${endpoint}?${oidcQueryStr}`
-  console.log({ reqUrl })
 
   return apiRequest(false, reqUrl, {}, {}, true)
 }

@@ -8,15 +8,16 @@ const filter_key_list = ['email_address', 'user_name', 'service_user_id']
 
 /* xdevkit common constant */
 const xdevkitConstant = {}
+xdevkitConstant.API_VERSION = 'v0.7'
 xdevkitConstant.STATE_L = 64
 xdevkitConstant.CODE_VERIFIER_L = 64
 xdevkitConstant.XLOGIN_ISSUER = process.env.AUTH_SERVER_ORIGIN
 xdevkitConstant.XLOGIN_RESPONSE_TYPE = 'code'
 xdevkitConstant.XLOGIN_CODE_CHALLENGE_METHOD = 'S256'
 
-xdevkitConstant.XLOGIN_AUTHORIZATION_ENDPOINT = `${process.env.AUTH_SERVER_ORIGIN}/api/v0.2/auth/connect`
-xdevkitConstant.XLOGIN_CODE_ENDPOINT = `${process.env.AUTH_SERVER_ORIGIN}/api/v0.2/auth/code`
-xdevkitConstant.XLOGIN_USER_INFO_ENDPOINT = `${process.env.AUTH_SERVER_ORIGIN}/api/v0.2/user/info`
+xdevkitConstant.XLOGIN_AUTHORIZATION_ENDPOINT = `${process.env.AUTH_SERVER_ORIGIN}/api/${xdevkitConstant.API_VERSION}/auth/connect`
+xdevkitConstant.XLOGIN_CODE_ENDPOINT = `${process.env.AUTH_SERVER_ORIGIN}/api/${xdevkitConstant.API_VERSION}/auth/code`
+xdevkitConstant.XLOGIN_USER_INFO_ENDPOINT = `${process.env.AUTH_SERVER_ORIGIN}/api/${xdevkitConstant.API_VERSION}/user/info`
 
 const init = (express, scc, statusList) => {
   mod.express = express
