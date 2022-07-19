@@ -46,7 +46,7 @@ const getUserInfo = (apiRequest, clientId, filter_key_list, accessToken, endpoin
 
   const header = { 
     'Authorization': `Bearer ${accessToken}`,
-    'X_XLOGIN_CLIENT_ID': clientId,
+    'X-XLOGIN-CLIENT-ID': clientId,
   }
   const filter_key_list_str = filter_key_list.join(',')
   const param = {
