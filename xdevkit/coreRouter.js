@@ -3,8 +3,8 @@ const lib = require('./lib.js')
 
 const CLIENT_ID = process.env.CLIENT_ID
 const XLOGIN_REDIRECT_URI = encodeURIComponent(`${process.env.SERVER_ORIGIN}/f/xlogin/callback`)
-const scope = 'r:email_address,*r:user_name,*r:service_user_id'
-const filter_key_list = ['email_address', 'user_name', 'service_user_id']
+const scope = 'r:emailAddress,*r:userName,*r:serviceUserId'
+const filterKeyList = ['emailAddress', 'userName', 'serviceUserId']
 
 /* xdevkit common constant */
 const xdevkitConstant = {}
@@ -29,17 +29,17 @@ const init = (express, scc, statusList) => {
 const handleXloginConnect = (redirectAfterAuth) => {
   const oidcSessionPart = {}
   oidcSessionPart['iss'] = xdevkitConstant.XLOGIN_ISSUER
-  oidcSessionPart['code_verifier'] = lib.getRandomB64UrlSafe(xdevkitConstant.CODE_VERIFIER_L)
-  oidcSessionPart['redirect_after_auth'] = redirectAfterAuth
+  oidcSessionPart['codeVerifier'] = lib.getRandomB64UrlSafe(xdevkitConstant.CODE_VERIFIER_L)
+  oidcSessionPart['redirectAfterAuth'] = redirectAfterAuth
 
   const oidcQueryParam = {}
-  oidcQueryParam['code_challenge_method'] = xdevkitConstant.XLOGIN_CODE_CHALLENGE_METHOD
-  oidcQueryParam['code_challenge'] = lib.convertToCodeChallenge(oidcSessionPart['code_verifier'], oidcQueryParam['code_challenge_method'])
+  oidcQueryParam['codeChallengeMethod'] = xdevkitConstant.XLOGIN_CODE_CHALLENGE_METHOD
+  oidcQueryParam['codeChallenge'] = lib.convertToCodeChallenge(oidcSessionPart['codeVerifier'], oidcQueryParam['codeChallengeMethod'])
   oidcQueryParam['state'] = lib.getRandomB64UrlSafe(xdevkitConstant.STATE_L)
-  oidcQueryParam['response_type'] = xdevkitConstant.XLOGIN_RESPONSE_TYPE 
+  oidcQueryParam['responseType'] = xdevkitConstant.XLOGIN_RESPONSE_TYPE 
   oidcQueryParam['scope'] = scope
-  oidcQueryParam['client_id'] = CLIENT_ID
-  oidcQueryParam['redirect_uri'] = XLOGIN_REDIRECT_URI
+  oidcQueryParam['clientId'] = CLIENT_ID
+  oidcQueryParam['redirectUri'] = XLOGIN_REDIRECT_URI
 
   const oidcQueryStr = lib.objToQuery(oidcQueryParam) 
   const redirectTo = `${xdevkitConstant.XLOGIN_AUTHORIZATION_ENDPOINT}?${oidcQueryStr}`
@@ -67,34 +67,35 @@ const handleXloginCode = async (state, code, iss, userSession) => {
     return { status, session: null, response: null, redirect: mod.scc.url.ERROR_PAGE }
   }
 
-  /* request access_token */
+  /* request accessToken */
   const accessTokenResponse = await lib.getAccessTokenByCode(lib.apiRequest, code, userSession.oidc, xdevkitConstant.XLOGIN_CODE_ENDPOINT)
   if (!accessTokenResponse) {
     const status = mod.statusList.INVALID_SESSION
     return { status, session: null, response: null, redirect: mod.scc.url.ERROR_PAGE }
   }
 
-  const accessToken = accessTokenResponse?.data?.result?.access_token
+  const accessToken = accessTokenResponse?.data?.result?.accessToken
   if (accessTokenResponse.error || !accessToken) {
     const status = mod.statusList.API_ERROR
     return { status, session: null, response: null, redirect: mod.scc.url.ERROR_PAGE, error: encodeURIComponent(accessTokenResponse.error) }
   }
 
-  /* request user_info */
-  const userInfoResponse = await lib.getUserInfo(lib.apiRequest, CLIENT_ID, filter_key_list, accessToken, xdevkitConstant.XLOGIN_USER_INFO_ENDPOINT)
+  /* request userInfo */
+  const userInfoResponse = await lib.getUserInfo(lib.apiRequest, CLIENT_ID, filterKeyList, accessToken, xdevkitConstant.XLOGIN_USER_INFO_ENDPOINT)
   if (!userInfoResponse) {
     const status = mod.statusList.INVALID_SESSION
     return { status, session: null, response: null, redirect: mod.scc.url.ERROR_PAGE }
   }
 
-  const userInfo = userInfoResponse?.data?.result?.user_info
+  const userInfo = userInfoResponse?.data?.result?.userInfo
+  console.log({ userInfo })
   if (userInfoResponse.error || !userInfo) {
     const status = mod.statusList.API_ERROR
     return { status, session: null, response: null, redirect: mod.scc.url.ERROR_PAGE, error: encodeURIComponent(userInfoResponse.error) }
   }
 
   const status = mod.statusList.LOGIN_SUCCESS
-  const redirectTo = lib.addQueryStr(userSession.oidc['redirect_after_auth'], lib.objToQuery({ code: status }))
+  const redirectTo = lib.addQueryStr(userSession.oidc['redirectAfterAuth'], lib.objToQuery({ code: status }))
 
   return { status, session: { userInfo }, response: null, redirect: redirectTo }
 }

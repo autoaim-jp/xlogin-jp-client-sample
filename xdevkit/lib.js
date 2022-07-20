@@ -28,18 +28,18 @@ const convertToCodeChallenge = (codeVerifier, codeChallengeMethod) => {
 }
 
 const getAccessTokenByCode = (apiRequest, code, oidcSessionPart, endpoint) => {
-  if (!code || !oidcSessionPart['client_id'] || !oidcSessionPart['state'] || !oidcSessionPart['code_verifier']) {
+  if (!code || !oidcSessionPart['clientId'] || !oidcSessionPart['state'] || !oidcSessionPart['codeVerifier']) {
     return null
   }
 
-  const { client_id, state, code_verifier } = oidcSessionPart
-  const oidcQueryStr = objToQuery({ client_id, state, code, code_verifier })
+  const { clientId, state, codeVerifier } = oidcSessionPart
+  const oidcQueryStr = objToQuery({ clientId, state, code, codeVerifier })
   const reqUrl = `${endpoint}?${oidcQueryStr}`
 
   return apiRequest(false, reqUrl, {}, {}, true)
 }
 
-const getUserInfo = (apiRequest, clientId, filter_key_list, accessToken, endpoint) => {
+const getUserInfo = (apiRequest, clientId, filterKeyList, accessToken, endpoint) => {
   if (!accessToken) {
     return null
   }
@@ -48,9 +48,9 @@ const getUserInfo = (apiRequest, clientId, filter_key_list, accessToken, endpoin
     'authorization': `Bearer ${accessToken}`,
     'x-xlogin-client-id': clientId,
   }
-  const filter_key_list_str = filter_key_list.join(',')
+  const filterKeyListStr = filterKeyList.join(',')
   const param = {
-    filter_key_list_str,
+    filterKeyListStr,
   }
   return apiRequest(false, endpoint, param, header, true)
 }

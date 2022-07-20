@@ -1,24 +1,24 @@
 export const showUserProfile = ({ userInfoResult, applyElmList }) => {
   const { userInfo } = userInfoResult
 
-  if (userInfo?.public?.service_user_id) {
-    applyElmList('[data-var="service_user_id"]', (elm) => {
+  if (userInfo?.public?.serviceUserId) {
+    applyElmList('[data-var="serviceUserId"]', (elm) => {
       elm.clearChildren()
-      elm.appendChild(document.createTextNode(userInfo.public.service_user_id))
+      elm.appendChild(document.createTextNode(userInfo.public.serviceUserId))
     })
   }
 
-  if (userInfo?.public?.user_name) {
-    applyElmList('[data-var="user_name"]', (elm) => {
+  if (userInfo?.public?.userName) {
+    applyElmList('[data-var="userName"]', (elm) => {
       elm.clearChildren()
-      elm.appendChild(document.createTextNode(userInfo.public.user_name))
+      elm.appendChild(document.createTextNode(userInfo.public.userName))
     })
   }
 
-  if (userInfo?.public?.email_address) {
-    applyElmList('[data-var="user_email_address"]', (elm) => {
+  if (userInfo?.public?.emailAddress) {
+    applyElmList('[data-var="userEmailAddress"]', (elm) => {
       elm.clearChildren()
-      elm.appendChild(document.createTextNode(userInfo.public.email_address))
+      elm.appendChild(document.createTextNode(userInfo.public.emailAddress))
     })
   }
 
