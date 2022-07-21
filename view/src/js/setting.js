@@ -1,8 +1,16 @@
 /* /setting.js */
 export const apiEndpoint = '/f'
+export const labelList = {
+  error: {
+    undefined: 'error',
+  },
+}
+
+
 
 const settingList = {
   apiEndpoint,
+  labelList,
 }
 
 export const get = (...keyList) => {

@@ -60,6 +60,24 @@ export const showModal = (modalElm, cancelButtonIsVisible = false, onConfirm = (
   }, 100)
 }
 
+const modalTemplateElm = document.querySelector('#modalTemplate')
+export const getErrorModalElmAndSetter = () => {
+  const modalElm = modalTemplateElm.cloneNode(true)
+  modalElm.id = ''
+
+  modalElm.querySelector('[data-id="modalTitle"]').innerText = 'エラー'
+
+  const labelP = document.createElement('p')
+  labelP.innerText = 'エラーが発生しました。'
+  modalElm.querySelector('[data-id="modalContent"]').appendChild(labelP)
+
+  const setContent = (textStr, errorLabelList) => {
+    labelP.innerText = errorLabelList[textStr] || textStr
+  }
+
+  return { modalElm, setContent }
+}
+
 export const switchLoading = (isVisible) => {
   const loadingElm = document.querySelector('#loading')
   if(!loadingElm) {
@@ -176,13 +194,25 @@ export const monkeyPatch = () => {
     }
   }
 }
+
+/* crypto */
 export const getRandomStr = (len) => {
   return btoa(crypto.getRandomValues(new Uint8Array(len))).slice(0, len)
 }
 
+/* url */
 export const redirect = (response) => {
   if (response && response.redirect) {
     window.location.href = response.redirect
   }
+}
+
+export const getSearchQuery = () => {
+  const searchQuery = {}
+  window.location.search.replace(/^\?/, '').split('&').forEach((row) => { 
+    const kv = row.split('=') 
+    searchQuery[kv[0]] = kv[1]
+  })
+  return searchQuery
 }
 

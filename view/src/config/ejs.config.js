@@ -22,5 +22,15 @@ export const ejsConfig = {
     inlineScriptList: [],
     externalScriptList: ['/js/mypage/app.js'],
   },
+  error: {
+    title: 'error | sample.xlogin.jp',
+    description: 'error',
+    author: 'autoaim_jp',
+
+    inlineCssList: [],
+    externalCssList: ['/css/tailwind.css'],
+    inlineScriptList: [],
+    externalScriptList: ['/js/error/app.js'],
+  },
 }
 
