@@ -25,6 +25,19 @@ const init = (express, scc, statusList) => {
   mod.statusList = statusList
 }
 
+const coreGetErrorResponse = (status, error, isServerRedirect, response = null, session = {}) => {
+  const redirect = `${mod.scc.url.ERROR_PAGE}?error=${encodeURIComponent(error)}`
+  if (isServerRedirect) {
+    return { status, session, response, redirect, error }
+  } else {
+    if (response) {
+      return { status, session, response, error }
+    } else {
+      return { status, session, response: { status, error, redirect }, error }
+    }
+  }
+}
+
 /* POST /f/xlogin/connect */
 const handleXloginConnect = (redirectAfterAuth) => {
   const oidcSessionPart = {}
@@ -54,44 +67,50 @@ const handleXloginConnect = (redirectAfterAuth) => {
 const handleXloginCode = async (state, code, iss, userSession) => {
   if (!userSession || !userSession.oidc) {
     const status = mod.statusList.INVALID_SESSION
-    return { status, session: {}, response: null, redirect: mod.scc.url.ERROR_PAGE }
+    const error = 'handle_xlogin_code_session'
+    return coreGetErrorResponse(status, error, true)
   }
 
   if (state !== userSession.oidc['state']) {
     const status = mod.statusList.INVALID_SESSION
-    return { status, session: null, response: null, redirect: mod.scc.url.ERROR_PAGE }
+    const error = 'handle_xlogin_code_state'
+    return coreGetErrorResponse(status, error, true)
   }
 
   if (iss !== userSession.oidc['iss']) {
     const status = mod.statusList.INVALID_OIDC_ISSUER
-    return { status, session: null, response: null, redirect: mod.scc.url.ERROR_PAGE }
+    const error = 'handle_xlogin_code_iss'
+    return coreGetErrorResponse(status, error, true)
   }
 
   /* request accessToken */
   const accessTokenResponse = await lib.getAccessTokenByCode(lib.apiRequest, code, userSession.oidc, xdevkitConstant.XLOGIN_CODE_ENDPOINT)
   if (!accessTokenResponse) {
     const status = mod.statusList.INVALID_SESSION
-    return { status, session: null, response: null, redirect: mod.scc.url.ERROR_PAGE }
+    const error = 'handle_xlogin_code_access_token'
+    return coreGetErrorResponse(status, error, true)
   }
 
   const accessToken = accessTokenResponse?.data?.result?.accessToken
   if (accessTokenResponse.error || !accessToken) {
     const status = mod.statusList.API_ERROR
-    return { status, session: null, response: null, redirect: mod.scc.url.ERROR_PAGE, error: encodeURIComponent(accessTokenResponse.error) }
+    const error = encodeURIComponent(accessTokenResponse.error)
+    return coreGetErrorResponse(status, error, true)
   }
 
   /* request userInfo */
   const userInfoResponse = await lib.getUserInfo(lib.apiRequest, CLIENT_ID, filterKeyList, accessToken, xdevkitConstant.XLOGIN_USER_INFO_ENDPOINT)
   if (!userInfoResponse) {
     const status = mod.statusList.INVALID_SESSION
-    return { status, session: null, response: null, redirect: mod.scc.url.ERROR_PAGE }
+    const error = 'handle_xlogin_code_user_info'
+    return coreGetErrorResponse(status, error, true)
   }
 
   const userInfo = userInfoResponse?.data?.result?.userInfo
-  console.log({ userInfo })
   if (userInfoResponse.error || !userInfo) {
     const status = mod.statusList.API_ERROR
-    return { status, session: null, response: null, redirect: mod.scc.url.ERROR_PAGE, error: encodeURIComponent(userInfoResponse.error) }
+    const error = encodeURIComponent(userInfoResponse.error)
+    return coreGetErrorResponse(status, error, true)
   }
 
   const status = mod.statusList.LOGIN_SUCCESS
@@ -104,8 +123,8 @@ const handleXloginCode = async (state, code, iss, userSession) => {
 const handleUserProfile = (authSession) => {
   if (!authSession || !authSession.userInfo) {
     const status = mod.statusList.INVALID_SESSION
-    const redirectTo = mod.scc.url.ERROR_PAGE
-    return { status, session: {}, response: { redirect: redirectTo }, }
+    const error = 'handle_user_profile_session'
+    return coreGetErrorResponse(status, error, false)
   }
 
   const { userInfo } = authSession
