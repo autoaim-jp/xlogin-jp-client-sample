@@ -1,8 +1,8 @@
-const mod = {}
-const lib = require('./lib.js')
+import lib from './lib.js'
 
-const CLIENT_ID = process.env.CLIENT_ID
-const XLOGIN_REDIRECT_URI = encodeURIComponent(`${process.env.SERVER_ORIGIN}/f/xlogin/callback`)
+const mod = {}
+
+const XLOGIN_REDIRECT_URI = encodeURIComponent('/f/xlogin/callback')
 const scope = 'r:emailAddress,*r:userName,*r:serviceUserId'
 const filterKeyList = ['emailAddress', 'userName', 'serviceUserId']
 
@@ -11,13 +11,12 @@ const xdevkitConstant = {}
 xdevkitConstant.API_VERSION = 'v0.7'
 xdevkitConstant.STATE_L = 64
 xdevkitConstant.CODE_VERIFIER_L = 64
-xdevkitConstant.XLOGIN_ISSUER = process.env.AUTH_SERVER_ORIGIN
 xdevkitConstant.XLOGIN_RESPONSE_TYPE = 'code'
 xdevkitConstant.XLOGIN_CODE_CHALLENGE_METHOD = 'S256'
 
-xdevkitConstant.XLOGIN_AUTHORIZATION_ENDPOINT = `${process.env.AUTH_SERVER_ORIGIN}/api/${xdevkitConstant.API_VERSION}/auth/connect`
-xdevkitConstant.XLOGIN_CODE_ENDPOINT = `${process.env.AUTH_SERVER_ORIGIN}/api/${xdevkitConstant.API_VERSION}/auth/code`
-xdevkitConstant.XLOGIN_USER_INFO_ENDPOINT = `${process.env.AUTH_SERVER_ORIGIN}/api/${xdevkitConstant.API_VERSION}/user/info`
+xdevkitConstant.XLOGIN_AUTHORIZATION_ENDPOINT = `/api/${xdevkitConstant.API_VERSION}/auth/connect`
+xdevkitConstant.XLOGIN_CODE_ENDPOINT = `/api/${xdevkitConstant.API_VERSION}/auth/code`
+xdevkitConstant.XLOGIN_USER_INFO_ENDPOINT = `/api/${xdevkitConstant.API_VERSION}/user/info`
 
 const init = (express, scc, statusList) => {
   mod.express = express
@@ -41,7 +40,7 @@ const coreGetErrorResponse = (status, error, isServerRedirect, response = null, 
 /* POST /f/xlogin/connect */
 const handleXloginConnect = (redirectAfterAuth) => {
   const oidcSessionPart = {}
-  oidcSessionPart['iss'] = xdevkitConstant.XLOGIN_ISSUER
+  oidcSessionPart['iss'] = mod.scc.env.AUTH_SERVER_ORIGIN
   oidcSessionPart['codeVerifier'] = lib.getRandomB64UrlSafe(xdevkitConstant.CODE_VERIFIER_L)
   oidcSessionPart['redirectAfterAuth'] = redirectAfterAuth
 
@@ -51,11 +50,11 @@ const handleXloginConnect = (redirectAfterAuth) => {
   oidcQueryParam['state'] = lib.getRandomB64UrlSafe(xdevkitConstant.STATE_L)
   oidcQueryParam['responseType'] = xdevkitConstant.XLOGIN_RESPONSE_TYPE 
   oidcQueryParam['scope'] = scope
-  oidcQueryParam['clientId'] = CLIENT_ID
-  oidcQueryParam['redirectUri'] = XLOGIN_REDIRECT_URI
+  oidcQueryParam['clientId'] = mod.scc.env.CLIENT_ID
+  oidcQueryParam['redirectUri'] = mod.scc.env.SERVER_ORIGIN + XLOGIN_REDIRECT_URI
 
   const oidcQueryStr = lib.objToQuery(oidcQueryParam) 
-  const redirectTo = `${xdevkitConstant.XLOGIN_AUTHORIZATION_ENDPOINT}?${oidcQueryStr}`
+  const redirectTo = `${mod.scc.env.AUTH_SERVER_ORIGIN}${xdevkitConstant.XLOGIN_AUTHORIZATION_ENDPOINT}?${oidcQueryStr}`
 
   const newUserSession = { oidc: Object.assign(oidcSessionPart, oidcQueryParam) }
 
@@ -84,7 +83,7 @@ const handleXloginCode = async (state, code, iss, userSession) => {
   }
 
   /* request accessToken */
-  const accessTokenResponse = await lib.getAccessTokenByCode(lib.apiRequest, code, userSession.oidc, xdevkitConstant.XLOGIN_CODE_ENDPOINT)
+  const accessTokenResponse = await lib.getAccessTokenByCode(lib.apiRequest, code, userSession.oidc, mod.scc.env.AUTH_SERVER_ORIGIN + xdevkitConstant.XLOGIN_CODE_ENDPOINT)
   if (!accessTokenResponse) {
     const status = mod.statusList.INVALID_SESSION
     const error = 'handle_xlogin_code_access_token'
@@ -99,7 +98,7 @@ const handleXloginCode = async (state, code, iss, userSession) => {
   }
 
   /* request userInfo */
-  const userInfoResponse = await lib.getUserInfo(lib.apiRequest, CLIENT_ID, filterKeyList, accessToken, xdevkitConstant.XLOGIN_USER_INFO_ENDPOINT)
+  const userInfoResponse = await lib.getUserInfo(lib.apiRequest, mod.scc.env.CLIENT_ID, filterKeyList, accessToken, mod.scc.env.AUTH_SERVER_ORIGIN + xdevkitConstant.XLOGIN_USER_INFO_ENDPOINT)
   if (!userInfoResponse) {
     const status = mod.statusList.INVALID_SESSION
     const error = 'handle_xlogin_code_user_info'
@@ -169,7 +168,7 @@ const getRouter = () => {
 }
 
 
-module.exports = {
+export default {
   init,
   getRouter,
 }

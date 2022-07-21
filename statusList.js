@@ -10,5 +10,5 @@ statusList.INVALID_SESSION = 1002
 statusList.API_ERROR = 1100
 statusList.INVALID_OIDC_ISSUER = 1101
 
-module.exports = statusList
+export default statusList
 

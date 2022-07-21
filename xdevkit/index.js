@@ -1,14 +1,14 @@
-const axios = require('axios')
-const crypto = require('crypto')
-const express = require('express')
-const expressSession = require('express-session')
-const Redis = require('ioredis')
-const RedisStore = require('connect-redis')(expressSession)
+import axios from 'axios'
+import crypto from 'crypto'
+import express from 'express'
+import expressSession from 'express-session'
+import Redis from 'ioredis'
+import RedisStore from 'connect-redis'
 
-const coreRouter = require('./coreRouter.js')
-const sessionRouter = require('./sessionRouter.js')
+import coreRouter from './coreRouter.js'
+import sessionRouter from './sessionRouter.js'
 
-const lib = require('./lib.js')
+import lib from './lib.js'
 
 const init = (scc, statusList) => {
   lib.init(crypto, axios)
@@ -17,7 +17,7 @@ const init = (scc, statusList) => {
 }
 
 
-module.exports = {
+export default {
   init,
   coreRouter,
   sessionRouter,

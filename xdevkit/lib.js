@@ -91,7 +91,7 @@ const apiRequest = (isPost, url, param = {}, header = {}, json = true) => {
 
 
 
-module.exports = {
+export default {
   init,
   getRandomB64UrlSafe,
   objToQuery,

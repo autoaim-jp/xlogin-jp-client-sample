@@ -28,13 +28,13 @@ const getRouter = () => {
       httpOnly: true,
       sameSite: 'lax',
     },
-    store: new mod.RedisStore({ client: redis }),
+    store: new (mod.RedisStore(mod.expressSession))({ client: redis }),
   }))
 
   return expressRouter
 }
 
-module.exports = {
+export default {
   init,
   getRouter,
 }

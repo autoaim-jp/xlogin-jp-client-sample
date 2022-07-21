@@ -1,19 +1,19 @@
-const fs = require('fs')
-const axios = require('axios')
-const https = require('https')
-const express = require('express')
-const bodyParser = require('body-parser')
-const helmet = require('helmet')
-require('dotenv').config()
-process.env.APP_PATH = `${__dirname}/`
+import fs from 'fs'
+import axios from 'axios'
+import https from 'https'
+import express from 'express'
+import bodyParser from 'body-parser'
+import helmet from 'helmet'
+import dotenv from 'dotenv'
 
-
-const lib = require('./lib.js')
-const xdevkit = require('./xdevkit/index.js')
-const statusList = require('./statusList.js')
-const scc = require('./serverCommonConstant.js')
+import lib from './lib.js'
+import xdevkit from './xdevkit/index.js'
+import statusList from './statusList.js'
+import scc, { init as sccInit } from './serverCommonConstant.js'
 
 const main = () => {
+  dotenv.config()
+  sccInit(process.env)
   xdevkit.init(scc, statusList)
   lib.init(axios)
 

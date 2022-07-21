@@ -1,3 +1,4 @@
+/* /lib.js */
 let mod = {}
 
 const init = (axios) => {
@@ -32,7 +33,7 @@ const apiRequest = (isPost, url, param = {}, header = {}, json = true) => {
 
 
 
-module.exports = {
+export default {
   init,
   apiRequest,
 }
