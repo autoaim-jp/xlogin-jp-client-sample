@@ -1,7 +1,7 @@
 /* error/app.js */
 const asocial = {}
-import * as setting from '../setting.js'
-asocial.setting = setting
+import * as browserServerSetting from '../browserServerSetting.js'
+asocial.browserServerSetting = browserServerSetting
 import * as lib from '../lib.js'
 asocial.lib = lib
 
@@ -14,7 +14,7 @@ const a = asocial
 const loadErrorMessage = () => {
   a.output.showErrorModal(argNamed({
     lib: [ a.lib.getSearchQuery, a.lib.getErrorModalElmAndSetter, a.lib.showModal ],
-    setting: a.setting.get('labelList'),
+    browserServerSetting: a.browserServerSetting.get('labelList'),
   }))
 }
 

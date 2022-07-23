@@ -1,7 +1,7 @@
 /* mypage/app.js */
 const asocial = {}
-import * as setting from '../setting.js'
-asocial.setting = setting
+import * as browserServerSetting from '../browserServerSetting.js'
+asocial.browserServerSetting = browserServerSetting
 import * as lib from '../lib.js'
 asocial.lib = lib
 
@@ -15,7 +15,7 @@ const a = asocial
 
 const loadProfile = async () => {
   const userInfoResult = await a.input.fetchUserProfile(argNamed({
-    setting: a.setting.get('apiEndpoint'),
+    browserServerSetting: a.browserServerSetting.get('apiEndpoint'),
     lib: [ a.lib.getRequest ],
   }))
   a.lib.redirect(userInfoResult)

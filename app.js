@@ -8,13 +8,13 @@ import dotenv from 'dotenv'
 
 import lib from './lib.js'
 import xdevkit from './xdevkit/index.js'
-import statusList from './statusList.js'
-import scc, { init as sccInit } from './serverCommonConstant.js'
+import setting, { init as settingInit } from './setting.js'
+import browserServerSetting from './xdevkit/browserServerSetting.js'
 
 const main = () => {
   dotenv.config()
-  sccInit(process.env)
-  xdevkit.init(scc, statusList)
+  settingInit(process.env)
+  xdevkit.init(setting, browserServerSetting)
   lib.init(axios)
 
   const expressApp = express()
@@ -25,8 +25,8 @@ const main = () => {
   expressApp.use(xdevkit.sessionRouter.getRouter())
   expressApp.use(xdevkit.coreRouter.getRouter(express))
 
-  expressApp.use(express.static(scc.server.PUBLIC_BUILD_DIR, { index: 'index.html', extensions: ['html'] }))
-  expressApp.use(express.static(scc.server.PUBLIC_STATIC_DIR, { index: 'index.html', extensions: ['html'] }))
+  expressApp.use(express.static(setting.server.PUBLIC_BUILD_DIR, { index: 'index.html', extensions: ['html'] }))
+  expressApp.use(express.static(setting.server.PUBLIC_STATIC_DIR, { index: 'index.html', extensions: ['html'] }))
 
   if (process.env.SERVER_ORIGIN.indexOf('https') >= 0) {
     const tlsConfig = {

@@ -8,8 +8,8 @@ import * as output from './output.js'
 asocial.output = output
 import * as input from './input.js'
 asocial.input = input
-import * as setting from '../setting.js'
-asocial.setting = setting
+import * as browserServerSetting from '../browserServerSetting.js'
+asocial.browserServerSetting = browserServerSetting
 import * as lib from '../lib.js'
 asocial.lib = lib
 /* a is an alias of asocial */
@@ -30,12 +30,12 @@ const loadMemoContent = async () => {
   /* [input] fetch data from server */
   /*
   const memoContent = await a.input.fetchMemoContent(argNamed({
-    setting: a.setting.get('apiEndpoint'),
+    browserServerSetting: a.browserServerSetting.get('apiEndpoint'),
     lib: [a.lib.getRequest],
   }))
     */
   const memoContent = await a.input.fetchMemoContent(argNamed({
-    setting: a.setting.get('apiEndpoint'),
+    browserServerSetting: a.browserServerSetting.get('apiEndpoint'),
     lib: [ a.lib.getRequest ],
   }))
   a.lib.debug('memoContent', memoContent)
@@ -48,13 +48,13 @@ const loadMemoContent = async () => {
 
   /* [action] get onClick handler */
   const onClickSaveMemoHandler = a.action.getOnClickSaveMemoHandler(argNamed({
-    setting: a.setting.get('apiEndpoint'),
+    browserServerSetting: a.browserServerSetting.get('apiEndpoint'),
     output: [ a.output.postSaveMemoContent, a.output.getInfoModalSaveMemoElm, ],
     lib: [ a.lib.postRequest, a.lib.showModal, a.lib.switchLoading, ],
     other: { memoContentElmAndGetter, },
   }))
   const onClickClearMemoHandler = a.action.getOnClickClearMemoHandler(argNamed({
-    setting: a.setting.get('apiEndpoint'),
+    browserServerSetting: a.browserServerSetting.get('apiEndpoint'),
     app: [ a.app.loadMemoContent, ],
     output: [ a.output.postClearMemoContent, a.output.getConfirmModalClearMemoElm, ],
     lib: [ a.lib.postRequest, a.lib.showModal, a.lib.switchLoading, ],

@@ -10,10 +10,10 @@ import sessionRouter from './sessionRouter.js'
 
 import lib from './lib.js'
 
-const init = (scc, statusList) => {
+const init = (setting, browserServerSetting) => {
   lib.init(crypto, axios)
-  coreRouter.init(express, scc, statusList)
-  sessionRouter.init(express, expressSession, Redis, RedisStore, scc)
+  coreRouter.init(express, setting, browserServerSetting)
+  sessionRouter.init(express, expressSession, Redis, RedisStore, setting)
 }
 
 

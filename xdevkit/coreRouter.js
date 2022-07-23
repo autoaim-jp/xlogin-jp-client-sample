@@ -18,14 +18,14 @@ xdevkitConstant.XLOGIN_AUTHORIZATION_ENDPOINT = `/api/${xdevkitConstant.API_VERS
 xdevkitConstant.XLOGIN_CODE_ENDPOINT = `/api/${xdevkitConstant.API_VERSION}/auth/code`
 xdevkitConstant.XLOGIN_USER_INFO_ENDPOINT = `/api/${xdevkitConstant.API_VERSION}/user/info`
 
-const init = (express, scc, statusList) => {
+const init = (express, setting, browserServerSetting) => {
   mod.express = express
-  mod.scc = scc
-  mod.statusList = statusList
+  mod.setting = setting
+  mod.bsc = browserServerSetting
 }
 
 const coreGetErrorResponse = (status, error, isServerRedirect, response = null, session = {}) => {
-  const redirect = `${mod.scc.url.ERROR_PAGE}?error=${encodeURIComponent(error)}`
+  const redirect = `${mod.setting.url.ERROR_PAGE}?error=${encodeURIComponent(error)}`
   if (isServerRedirect) {
     return { status, session, response, redirect, error }
   } else {
@@ -40,7 +40,7 @@ const coreGetErrorResponse = (status, error, isServerRedirect, response = null, 
 /* POST /f/xlogin/connect */
 const handleXloginConnect = (redirectAfterAuth) => {
   const oidcSessionPart = {}
-  oidcSessionPart['iss'] = mod.scc.env.AUTH_SERVER_ORIGIN
+  oidcSessionPart['iss'] = mod.setting.env.AUTH_SERVER_ORIGIN
   oidcSessionPart['codeVerifier'] = lib.getRandomB64UrlSafe(xdevkitConstant.CODE_VERIFIER_L)
   oidcSessionPart['redirectAfterAuth'] = redirectAfterAuth
 
@@ -50,69 +50,69 @@ const handleXloginConnect = (redirectAfterAuth) => {
   oidcQueryParam['state'] = lib.getRandomB64UrlSafe(xdevkitConstant.STATE_L)
   oidcQueryParam['responseType'] = xdevkitConstant.XLOGIN_RESPONSE_TYPE 
   oidcQueryParam['scope'] = scope
-  oidcQueryParam['clientId'] = mod.scc.env.CLIENT_ID
-  oidcQueryParam['redirectUri'] = mod.scc.env.SERVER_ORIGIN + XLOGIN_REDIRECT_URI
+  oidcQueryParam['clientId'] = mod.setting.env.CLIENT_ID
+  oidcQueryParam['redirectUri'] = mod.setting.env.SERVER_ORIGIN + XLOGIN_REDIRECT_URI
 
   const oidcQueryStr = lib.objToQuery(oidcQueryParam) 
-  const redirectTo = `${mod.scc.env.AUTH_SERVER_ORIGIN}${xdevkitConstant.XLOGIN_AUTHORIZATION_ENDPOINT}?${oidcQueryStr}`
+  const redirectTo = `${mod.setting.env.AUTH_SERVER_ORIGIN}${xdevkitConstant.XLOGIN_AUTHORIZATION_ENDPOINT}?${oidcQueryStr}`
 
   const newUserSession = { oidc: Object.assign(oidcSessionPart, oidcQueryParam) }
 
-  const status = mod.statusList.OK
+  const status = mod.bsc.statusList.OK
   return { status, session: newUserSession, response: null, redirect: redirectTo }
 }
 
 /* GET /f/xlogin/callback */
 const handleXloginCode = async (state, code, iss, userSession) => {
   if (!userSession || !userSession.oidc) {
-    const status = mod.statusList.INVALID_SESSION
+    const status = mod.bsc.statusList.INVALID_SESSION
     const error = 'handle_xlogin_code_session'
     return coreGetErrorResponse(status, error, true)
   }
 
   if (state !== userSession.oidc['state']) {
-    const status = mod.statusList.INVALID_SESSION
+    const status = mod.bsc.statusList.INVALID_SESSION
     const error = 'handle_xlogin_code_state'
     return coreGetErrorResponse(status, error, true)
   }
 
   if (iss !== userSession.oidc['iss']) {
-    const status = mod.statusList.INVALID_OIDC_ISSUER
+    const status = mod.bsc.statusList.INVALID_OIDC_ISSUER
     const error = 'handle_xlogin_code_iss'
     return coreGetErrorResponse(status, error, true)
   }
 
   /* request accessToken */
-  const accessTokenResponse = await lib.getAccessTokenByCode(lib.apiRequest, code, userSession.oidc, mod.scc.env.AUTH_SERVER_ORIGIN + xdevkitConstant.XLOGIN_CODE_ENDPOINT)
+  const accessTokenResponse = await lib.getAccessTokenByCode(lib.apiRequest, code, userSession.oidc, mod.setting.env.AUTH_SERVER_ORIGIN + xdevkitConstant.XLOGIN_CODE_ENDPOINT)
   if (!accessTokenResponse) {
-    const status = mod.statusList.INVALID_SESSION
+    const status = mod.bsc.statusList.INVALID_SESSION
     const error = 'handle_xlogin_code_access_token'
     return coreGetErrorResponse(status, error, true)
   }
 
   const accessToken = accessTokenResponse?.data?.result?.accessToken
   if (accessTokenResponse.error || !accessToken) {
-    const status = mod.statusList.API_ERROR
+    const status = mod.bsc.statusList.API_ERROR
     const error = encodeURIComponent(accessTokenResponse.error)
     return coreGetErrorResponse(status, error, true)
   }
 
   /* request userInfo */
-  const userInfoResponse = await lib.getUserInfo(lib.apiRequest, mod.scc.env.CLIENT_ID, filterKeyList, accessToken, mod.scc.env.AUTH_SERVER_ORIGIN + xdevkitConstant.XLOGIN_USER_INFO_ENDPOINT)
+  const userInfoResponse = await lib.getUserInfo(lib.apiRequest, mod.setting.env.CLIENT_ID, filterKeyList, accessToken, mod.setting.env.AUTH_SERVER_ORIGIN + xdevkitConstant.XLOGIN_USER_INFO_ENDPOINT)
   if (!userInfoResponse) {
-    const status = mod.statusList.INVALID_SESSION
+    const status = mod.bsc.statusList.INVALID_SESSION
     const error = 'handle_xlogin_code_user_info'
     return coreGetErrorResponse(status, error, true)
   }
 
   const userInfo = userInfoResponse?.data?.result?.userInfo
   if (userInfoResponse.error || !userInfo) {
-    const status = mod.statusList.API_ERROR
+    const status = mod.bsc.statusList.API_ERROR
     const error = encodeURIComponent(userInfoResponse.error)
     return coreGetErrorResponse(status, error, true)
   }
 
-  const status = mod.statusList.LOGIN_SUCCESS
+  const status = mod.bsc.statusList.LOGIN_SUCCESS
   const redirectTo = lib.addQueryStr(userSession.oidc['redirectAfterAuth'], lib.objToQuery({ code: status }))
 
   return { status, session: { userInfo }, response: null, redirect: redirectTo }
@@ -121,13 +121,13 @@ const handleXloginCode = async (state, code, iss, userSession) => {
 /* GET /f/user/profile */
 const handleUserProfile = (authSession) => {
   if (!authSession || !authSession.userInfo) {
-    const status = mod.statusList.INVALID_SESSION
+    const status = mod.bsc.statusList.INVALID_SESSION
     const error = 'handle_user_profile_session'
     return coreGetErrorResponse(status, error, false)
   }
 
   const { userInfo } = authSession
-  const status = mod.statusList.OK
+  const status = mod.bsc.statusList.OK
   return { status, session: authSession, response: { userInfo } }
 }
 
@@ -140,7 +140,7 @@ const output = (req, res, handleResult) => {
   } else if (handleResult.redirect) {
     return res.redirect(handleResult.redirect)
   } else {
-    return res.redirect(mod.scc.url.ERROR_PAGE)
+    return res.redirect(mod.setting.url.ERROR_PAGE)
   }
 }
 

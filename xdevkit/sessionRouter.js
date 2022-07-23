@@ -1,30 +1,30 @@
 const mod = {}
 
-const init = (express, expressSession, Redis, RedisStore, scc) => {
+const init = (express, expressSession, Redis, RedisStore, setting) => {
   mod.express = express
   mod.expressSession = expressSession
   mod.Redis = Redis
   mod.RedisStore = RedisStore
-  mod.scc = scc
+  mod.setting = setting
 }
 
 const getRouter = () => {
   const expressRouter = mod.express.Router()
   const redis = new mod.Redis({
-    port: mod.scc.session.REDIS_PORT,
-    host: mod.scc.session.REDIS_HOST,
-    db: mod.scc.session.REDIS_DB,
+    port: mod.setting.session.REDIS_PORT,
+    host: mod.setting.session.REDIS_HOST,
+    db: mod.setting.session.REDIS_DB,
   })
   expressRouter.use(mod.expressSession({
     secret : process.env.SESSION_SECRET, 
     resave : true,
     saveUninitialized : true,                
     rolling : true,
-    name : mod.scc.session.SESSION_ID,
+    name : mod.setting.session.SESSION_ID,
     cookie: {
       path: '/',
       maxAge: 1000 * 60 * 60 * 24 * 30,
-      secure: mod.scc.session.SESSION_COOKIE_SECURE,
+      secure: mod.setting.session.SESSION_COOKIE_SECURE,
       httpOnly: true,
       sameSite: 'lax',
     },
