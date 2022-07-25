@@ -6,28 +6,21 @@ import bodyParser from 'body-parser'
 import helmet from 'helmet'
 import dotenv from 'dotenv'
 
-import lib from './lib.js'
 import xdevkit from './xdevkit/index.js'
-import setting, { init as settingInit } from './setting.js'
-import browserServerSetting from './xdevkit/browserServerSetting.js'
+import { setting, init as settingInit, getXdevkitSetting } from './setting/index.js'
 
-const main = () => {
-  dotenv.config()
-  settingInit(process.env)
-  xdevkit.init(setting, browserServerSetting)
-  lib.init(axios)
+const _getOtherRouter = () => {
+  const expressRouter = express.Router()
+  expressRouter.use(helmet())
+  expressRouter.use(bodyParser.urlencoded({ extended: true }))
+  expressRouter.use(bodyParser.json())
 
-  const expressApp = express()
-  expressApp.use(helmet())
-  expressApp.use(bodyParser.urlencoded({ extended: true }))
-  expressApp.use(bodyParser.json())
+  expressRouter.use(express.static(setting.server.PUBLIC_BUILD_DIR, { index: 'index.html', extensions: ['html'] }))
+  expressRouter.use(express.static(setting.server.PUBLIC_STATIC_DIR, { index: 'index.html', extensions: ['html'] }))
+  return expressRouter
+}
 
-  expressApp.use(xdevkit.sessionRouter.getRouter())
-  expressApp.use(xdevkit.coreRouter.getRouter(express))
-
-  expressApp.use(express.static(setting.server.PUBLIC_BUILD_DIR, { index: 'index.html', extensions: ['html'] }))
-  expressApp.use(express.static(setting.server.PUBLIC_STATIC_DIR, { index: 'index.html', extensions: ['html'] }))
-
+const _startServer = (expressApp) => {
   if (process.env.SERVER_ORIGIN.indexOf('https') >= 0) {
     const tlsConfig = {
       key: fs.readFileSync(process.env.TLS_KEY_PATH),
@@ -35,15 +28,25 @@ const main = () => {
     }
     const server = https.createServer(tlsConfig, expressApp)
     server.listen(process.env.SERVER_PORT, () => {
-      console.log(`Example app listening at port: ${process.env.SERVER_PORT}, origin: ${process.env.SERVER_ORIGIN}`)
+      console.log(`${process.env.CLIENT_ID} listen to port: ${process.env.SERVER_PORT}, origin: ${process.env.SERVER_ORIGIN}`)
     })
   } else {
     expressApp.listen(process.env.SERVER_PORT, () => {
-      console.log(`Example app listening at port: ${process.env.SERVER_PORT}, origin: ${process.env.SERVER_ORIGIN}`)
+      console.log(`${process.env.CLIENT_ID} listen to port: ${process.env.SERVER_PORT}, origin: ${process.env.SERVER_ORIGIN}`)
     })
   }
+}
 
-  console.log(`open: ${process.env.SERVER_ORIGIN}/f/xlogin/connect`)
+const main = () => {
+  dotenv.config()
+  settingInit(process.env)
+  xdevkit.init(getXdevkitSetting())
+
+  const expressApp = express()
+  expressApp.use(_getOtherRouter())
+  expressApp.use(xdevkit.getRouter())
+
+  _startServer(expressApp)
 }
 
 main()

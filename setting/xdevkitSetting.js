@@ -1,9 +1,6 @@
+/* /setting/xdevkitSetting.js */
+
 const setting = {}
-setting.server = {}
-setting.server.PUBLIC_BUILD_DIR = 'view/build'
-setting.server.PUBLIC_STATIC_DIR = 'view/static'
-
-
 setting.url = {}
 setting.url.ERROR_PAGE = '/error'
 

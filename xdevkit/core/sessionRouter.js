@@ -1,14 +1,15 @@
+/* /xdevkit/core/sessionRouter.js */
 const mod = {}
 
-const init = (express, expressSession, Redis, RedisStore, setting) => {
+const init = (setting, express, expressSession, Redis, RedisStore) => {
+  mod.setting = setting
   mod.express = express
   mod.expressSession = expressSession
   mod.Redis = Redis
   mod.RedisStore = RedisStore
-  mod.setting = setting
 }
 
-const getRouter = () => {
+export const getSessionRouter = () => {
   const expressRouter = mod.express.Router()
   const redis = new mod.Redis({
     port: mod.setting.session.REDIS_PORT,
@@ -36,6 +37,5 @@ const getRouter = () => {
 
 export default {
   init,
-  getRouter,
 }
 
