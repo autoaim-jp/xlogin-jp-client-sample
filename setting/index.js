@@ -10,7 +10,5 @@ setting.server = {}
 setting.server.PUBLIC_BUILD_DIR = 'view/build'
 setting.server.PUBLIC_STATIC_DIR = 'view/static'
 
-export const getXdevkitSetting = () => {
-  return xdevkitSetting
-}
+setting.xdevkitSetting = xdevkitSetting
 

@@ -7,7 +7,7 @@ import helmet from 'helmet'
 import dotenv from 'dotenv'
 
 import xdevkit from './xdevkit/index.js'
-import { setting, init as settingInit, getXdevkitSetting } from './setting/index.js'
+import { setting, init as settingInit } from './setting/index.js'
 
 const _getOtherRouter = () => {
   const expressRouter = express.Router()
@@ -40,7 +40,7 @@ const _startServer = (expressApp) => {
 const main = () => {
   dotenv.config()
   settingInit(process.env)
-  xdevkit.init(getXdevkitSetting())
+  xdevkit.init(setting.xdevkitSetting)
 
   const expressApp = express()
   expressApp.use(_getOtherRouter())
