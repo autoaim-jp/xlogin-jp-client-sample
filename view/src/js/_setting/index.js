@@ -1,4 +1,4 @@
-/* /setting/index.js */
+/* /_setting/index.js */
 import * as browserServerSetting from './browserServerSetting.js'
 
 const settingList = {
