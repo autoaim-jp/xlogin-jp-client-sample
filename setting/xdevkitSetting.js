@@ -14,7 +14,7 @@ setting.api.STATE_L = 64
 setting.api.CODE_VERIFIER_L = 64
 setting.api.XLOGIN_RESPONSE_TYPE = 'code'
 setting.api.XLOGIN_CODE_CHALLENGE_METHOD = 'S256'
-setting.api.SCOPE = 'r:emailAddress,*r:userName,*r:serviceUserId'
+setting.api.SCOPE = 'r:auth:emailAddress,*r:auth:userName,*r:$CLIENT_ID:serviceUserId'
 
 setting.url = {}
 setting.url.ERROR_PAGE = '/error'
@@ -30,6 +30,8 @@ export const init = (env) => {
   setting.env.SERVER_ORIGIN = env.SERVER_ORIGIN
   setting.env.AUTH_SERVER_ORIGIN = env.AUTH_SERVER_ORIGIN
   setting.env.CLIENT_ID = env.CLIENT_ID
+
+  setting.api.SCOPE = setting.api.SCOPE.replace(/\$CLIENT_ID/g, env.CLIENT_ID)
 }
 
 export default setting
