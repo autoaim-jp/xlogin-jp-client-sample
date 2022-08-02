@@ -11,7 +11,9 @@ import { setting, init as settingInit } from './setting/index.js'
 
 const _getOtherRouter = () => {
   const expressRouter = express.Router()
-  expressRouter.use(helmet())
+  if (process.env.SERVER_ORIGIN.indexOf('https') >= 0) {
+    expressRouter.use(helmet())
+  }
   expressRouter.use(bodyParser.urlencoded({ extended: true }))
   expressRouter.use(bodyParser.json())
 
