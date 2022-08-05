@@ -13,6 +13,10 @@
 
     </div><!-- section1 -->
 
+    <div class='section1 min-h-80 flex flex-col text-left text-black md:flex items-center justify-center flex-grow p-16'>
+      <%- await include(`${componentPath}timer.ejs`)  %>
+    </div>
+
     <%- await include(`${componentPath}loading.ejs`)  %>
     <%- await include(`${componentPath}modal.ejs`)  %>
     <div id='hiddenForTailwindByJs' class='hidden w-full h-96 p-1'></div>

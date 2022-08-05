@@ -7,6 +7,8 @@ import helmet from 'helmet'
 import dotenv from 'dotenv'
 
 import xdevkit from './xdevkit/index.js'
+import action from './action.js'
+import lib from './lib.js'
 import { setting, init as settingInit } from './setting/index.js'
 
 const _getOtherRouter = () => {
@@ -19,6 +21,12 @@ const _getOtherRouter = () => {
 
   expressRouter.use(express.static(setting.server.PUBLIC_BUILD_DIR, { index: 'index.html', extensions: ['html'] }))
   expressRouter.use(express.static(setting.server.PUBLIC_STATIC_DIR, { index: 'index.html', extensions: ['html'] }))
+  return expressRouter
+}
+
+const _getActionRouter = () => {
+  const expressRouter = express.Router()
+  expressRouter.post('/f/timer/add', action.handleTimerAdd)
   return expressRouter
 }
 
@@ -41,12 +49,15 @@ const _startServer = (expressApp) => {
 
 const main = () => {
   dotenv.config()
+  lib.init(axios)
   settingInit(process.env)
   xdevkit.init(setting.xdevkitSetting)
+  action.init(setting, lib)
 
   const expressApp = express()
   expressApp.use(_getOtherRouter())
   expressApp.use(xdevkit.getRouter())
+  expressApp.use(_getActionRouter())
 
   _startServer(expressApp)
 }

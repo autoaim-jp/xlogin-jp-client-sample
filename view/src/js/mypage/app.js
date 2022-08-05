@@ -7,6 +7,8 @@ asocial.lib = lib
 
 import * as input from './input.js'
 asocial.input = input
+import * as action from './action.js'
+asocial.action = action
 import * as output from './output.js'
 asocial.output = output
 
@@ -25,12 +27,27 @@ const loadProfile = async () => {
   }))
 }
 
+const loadTimerBtn = async () => {
+  const addTimer = a.output.getAddTimer(argNamed({
+    browserServerSetting: a.setting.getBrowserServerSetting().get('apiEndpoint'),
+    lib: [ a.lib.postRequest ],
+  }))
+
+  const onClickAddTimerButton = a.action.getOnClickAddTimerButton(argNamed({
+    output: { addTimer },
+  }))
+  a.output.setOnClickAddTimerButton(argNamed({
+    onClick: { onClickAddTimerButton },
+  }))
+}
+
 const main = async () => {
   a.lib.switchLoading(true)
   a.lib.setOnClickNavManu()
   a.lib.monkeyPatch()
 
   await a.app.loadProfile()
+  a.app.loadTimerBtn()
 
   setTimeout(() => {
     a.lib.switchLoading(false)
@@ -40,6 +57,7 @@ const main = async () => {
 a.app = {
   main,
   loadProfile,
+  loadTimerBtn,
 }
 
 a.app.main()

@@ -9,3 +9,16 @@ export const showUserProfile = ({ userInfoResult, applyElmList }) => {
   })
 }
 
+
+export const getAddTimer = ({ apiEndpoint, postRequest }) => {
+  const url = `${apiEndpoint}/timer/add`
+  return () => {
+    return postRequest(url)
+  }
+}
+
+export const setOnClickAddTimerButton = ({ onClickAddTimerButton }) => {
+  const addTimerBtn = document.querySelector('#addTimerBtn')
+  addTimerBtn.onclick = onClickAddTimerButton
+}
+
