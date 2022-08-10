@@ -19,6 +19,9 @@ export const getAddTimer = ({ apiEndpoint, postRequest }) => {
 
 export const setOnClickAddTimerButton = ({ onClickAddTimerButton }) => {
   const addTimerBtn = document.querySelector('#addTimerBtn')
-  addTimerBtn.onclick = onClickAddTimerButton
+  addTimerBtn.onclick = (e) => {
+    e.preventDefault()
+    onClickAddTimerButton()
+  }
 }
 
