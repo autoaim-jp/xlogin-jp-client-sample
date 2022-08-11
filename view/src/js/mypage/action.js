@@ -1,6 +1,5 @@
 export const getOnClickAddTimerButton = ({ addTimer }) => {
-  return (e) => {
-    e.preventDefault()
+  return () => {
     addTimer()
   }
 }
