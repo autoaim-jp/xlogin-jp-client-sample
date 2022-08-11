@@ -1,6 +1,8 @@
 /* /_setting/index.js */
 import * as browserServerSetting from './browserServerSetting.js'
 
+export const bsc = browserServerSetting
+
 const settingList = {
 }
 

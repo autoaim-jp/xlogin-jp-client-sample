@@ -41,6 +41,12 @@ const loadTimerBtn = async () => {
   }))
 }
 
+const showNotification = () => {
+  setInterval(() => {
+    a.lib.showNotification(a.setting.bsc.apiEndpoint)
+  }, 5 * 1000)
+}
+
 const main = async () => {
   a.lib.switchLoading(true)
   a.lib.setOnClickNavManu()
@@ -48,6 +54,8 @@ const main = async () => {
 
   await a.app.loadProfile()
   a.app.loadTimerBtn()
+
+  a.app.showNotification()
 
   setTimeout(() => {
     a.lib.switchLoading(false)
@@ -58,6 +66,7 @@ a.app = {
   main,
   loadProfile,
   loadTimerBtn,
+  showNotification,
 }
 
 a.app.main()

@@ -26,7 +26,10 @@ const _getOtherRouter = () => {
 
 const _getActionRouter = () => {
   const expressRouter = express.Router()
-  expressRouter.post('/f/timer/add', action.handleTimerAdd)
+  expressRouter.post(`${setting.bsc.apiEndpoint}/timer/add`, action.handleTimerAdd)
+  expressRouter.post(`${setting.bsc.apiEndpoint}/notification/open`, action.handleNotificationOpen)
+  expressRouter.get(`${setting.bsc.apiEndpoint}/notification/list`, action.handleNotificationList)
+ 
   return expressRouter
 }
 

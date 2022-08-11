@@ -13,6 +13,14 @@ const postRequest = (clientId, accessToken, url, param) => {
   return apiRequest(true, url, param, header)
 }
 
+const getRequest = (clientId, accessToken, url, param) => {
+  const header = {
+    'authorization': `Bearer ${accessToken}`,
+    'x-xlogin-client-id': clientId,
+  }
+  return apiRequest(false, url, param, header)
+}
+
 const apiRequest = (isPost, url, param = {}, header = {}, json = true) => {
   return new Promise((resolve, reject) => {
     const query = param && Object.keys(param).map((key) => { return key + '=' + param[key] }).join('&')
@@ -43,6 +51,7 @@ const apiRequest = (isPost, url, param = {}, header = {}, json = true) => {
 export default {
   init,
   postRequest,
+  getRequest,
   apiRequest,
 }
 
