@@ -5,3 +5,5 @@ export const getOnClickXloginButton = () => {
   }
 }
 
+export default {}
+

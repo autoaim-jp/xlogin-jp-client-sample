@@ -1,6 +1,8 @@
 /* /_setting/index.js */
 import * as browserServerSetting from './browserServerSetting.js'
 
+export const bsc = browserServerSetting
+
 const settingList = {
 }
 
@@ -13,9 +15,9 @@ export const get = (...keyList) => {
     prev[curr] = settingList[curr]
     return prev
   }, {})
-  for(const key of keyList) {
-    if(!constantList[key]) {
-      throw new Error('[error] undefined setting constant: ' + key)
+  for (const key of keyList) {
+    if (!constantList[key]) {
+      throw new Error(`[error] undefined setting constant: ${key}`)
     }
   }
   return constantList

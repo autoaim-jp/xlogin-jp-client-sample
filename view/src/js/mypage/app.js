@@ -1,15 +1,16 @@
 /* mypage/app.js */
-const asocial = {}
 import * as setting from '../_setting/index.js'
-asocial.setting = setting
 import * as lib from '../lib.js'
-asocial.lib = lib
 
 import * as input from './input.js'
-asocial.input = input
 import * as action from './action.js'
-asocial.action = action
 import * as output from './output.js'
+
+const asocial = {}
+asocial.setting = setting
+asocial.lib = lib
+asocial.input = input
+asocial.action = action
 asocial.output = output
 
 /* a is an alias of asocial */
@@ -18,11 +19,11 @@ const a = asocial
 const loadProfile = async () => {
   const userInfoResult = await a.input.fetchUserProfile(argNamed({
     browserServerSetting: a.setting.getBrowserServerSetting().get('apiEndpoint'),
-    lib: [ a.lib.getRequest ],
+    lib: [a.lib.getRequest],
   }))
   a.lib.redirect(userInfoResult)
   a.output.showUserProfile(argNamed({
-    lib: [ a.lib.applyElmList ],
+    lib: [a.lib.applyElmList],
     other: { userInfoResult },
   }))
 }
@@ -30,7 +31,7 @@ const loadProfile = async () => {
 const loadTimerBtn = async () => {
   const addTimer = a.output.getAddTimer(argNamed({
     browserServerSetting: a.setting.getBrowserServerSetting().get('apiEndpoint'),
-    lib: [ a.lib.postRequest ],
+    lib: [a.lib.postRequest],
   }))
 
   const onClickAddTimerButton = a.action.getOnClickAddTimerButton(argNamed({
@@ -41,6 +42,12 @@ const loadTimerBtn = async () => {
   }))
 }
 
+const showNotification = () => {
+  setInterval(() => {
+    a.lib.showNotification(a.setting.bsc.apiEndpoint)
+  }, 5 * 1000)
+}
+
 const main = async () => {
   a.lib.switchLoading(true)
   a.lib.setOnClickNavManu()
@@ -48,6 +55,8 @@ const main = async () => {
 
   await a.app.loadProfile()
   a.app.loadTimerBtn()
+
+  a.app.showNotification()
 
   setTimeout(() => {
     a.lib.switchLoading(false)
@@ -58,6 +67,7 @@ a.app = {
   main,
   loadProfile,
   loadTimerBtn,
+  showNotification,
 }
 
 a.app.main()

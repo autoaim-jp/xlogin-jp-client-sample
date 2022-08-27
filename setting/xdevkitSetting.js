@@ -14,7 +14,7 @@ setting.api.STATE_L = 64
 setting.api.CODE_VERIFIER_L = 64
 setting.api.XLOGIN_RESPONSE_TYPE = 'code'
 setting.api.XLOGIN_CODE_CHALLENGE_METHOD = 'S256'
-setting.api.SCOPE = 'r:auth:emailAddress,*r:auth:userName,*r:$CLIENT_ID:serviceUserId,*ar:$CLIENT_ID:notification'
+setting.api.SCOPE = 'r:auth:emailAddress,*r:auth:userName,*r:$CLIENT_ID:serviceUserId,*rw:$CLIENT_ID:notification'
 
 setting.url = {}
 setting.url.ERROR_PAGE = '/error'
@@ -22,7 +22,6 @@ setting.url.XLOGIN_AUTHORIZATION_ENDPOINT = `/api/${setting.api.API_VERSION}/aut
 setting.url.XLOGIN_CODE_ENDPOINT = `/api/${setting.api.API_VERSION}/auth/code`
 setting.url.XLOGIN_USER_INFO_ENDPOINT = `/api/${setting.api.API_VERSION}/user/info`
 setting.url.XLOGIN_REDIRECT_URI = encodeURIComponent('/f/xlogin/callback')
-
 
 
 export const init = (env) => {
