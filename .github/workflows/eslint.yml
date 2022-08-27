@@ -10,6 +10,7 @@ jobs:
         with:
           node-version: '16'
       - run: yarn install
+      - run: version=v0.9 yarn init-xdevkit
       - name: Run eslint-server
         run: yarn lint-server
       - name: Run eslint-test
