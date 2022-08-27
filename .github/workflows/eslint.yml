@@ -13,8 +13,8 @@ jobs:
       - run: version=v0.9 yarn init-xdevkit
       - name: Run eslint-server
         run: yarn lint-server
-      - name: Run eslint-test
-        run: yarn lint-test
+      - name: Run eslint-browser
+        run: yarn lint-browser
 
   slack-notification:
     if: always()
