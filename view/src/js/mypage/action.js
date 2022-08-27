@@ -4,3 +4,5 @@ export const getOnClickAddTimerButton = ({ addTimer }) => {
   }
 }
 
+export default {}
+

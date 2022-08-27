@@ -29,7 +29,7 @@ const _getActionRouter = () => {
   expressRouter.post(`${setting.bsc.apiEndpoint}/timer/add`, action.handleTimerAdd)
   expressRouter.post(`${setting.bsc.apiEndpoint}/notification/open`, action.handleNotificationOpen)
   expressRouter.get(`${setting.bsc.apiEndpoint}/notification/list`, action.handleNotificationList)
- 
+
   return expressRouter
 }
 

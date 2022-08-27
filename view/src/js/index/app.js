@@ -1,10 +1,11 @@
 /* /index/app.js */
-const asocial = {}
 import * as output from './output.js'
-asocial.output = output
 import * as action from './action.js'
-asocial.action = action
 import * as lib from '../lib.js'
+
+const asocial = {}
+asocial.output = output
+asocial.action = action
 asocial.lib = lib
 /* a is an alias of asocial */
 const a = asocial

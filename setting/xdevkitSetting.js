@@ -24,7 +24,6 @@ setting.url.XLOGIN_USER_INFO_ENDPOINT = `/api/${setting.api.API_VERSION}/user/in
 setting.url.XLOGIN_REDIRECT_URI = encodeURIComponent('/f/xlogin/callback')
 
 
-
 export const init = (env) => {
   setting.env = {}
   setting.env.SERVER_ORIGIN = env.SERVER_ORIGIN
