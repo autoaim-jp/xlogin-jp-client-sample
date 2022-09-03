@@ -4,5 +4,11 @@ export const getOnClickAddTimerButton = ({ addTimer }) => {
   }
 }
 
+export const getOnClickSaveMessageButton = ({ saveMessage }) => {
+  return () => {
+    saveMessage()
+  }
+}
+
 export default {}
 

@@ -11,6 +11,9 @@ setting.server = {}
 setting.server.PUBLIC_BUILD_DIR = 'view/build'
 setting.server.PUBLIC_STATIC_DIR = 'view/static'
 
+setting.user = {}
+setting.user.MESSAGE_FILE_PATH = '/message.txt'
+
 setting.xdevkitSetting = xdevkitSetting
 setting.bsc = browserServerSetting
 

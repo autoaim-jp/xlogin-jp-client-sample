@@ -45,7 +45,20 @@ const loadTimerBtn = async () => {
 const showNotification = () => {
   setInterval(() => {
     a.lib.showNotification(a.setting.bsc.apiEndpoint)
-  }, 5 * 1000)
+  }, 30 * 1000)
+}
+
+const loadMessageBtn = () => {
+  const saveMessage = a.output.getSaveMessage(argNamed({
+    browserServerSetting: a.setting.getBrowserServerSetting().get('apiEndpoint'),
+    lib: [a.lib.postRequest],
+  }))
+  const onClickSaveMessageButton = a.action.getOnClickSaveMessageButton(argNamed({
+    output: { saveMessage },
+  }))
+  a.output.setOnClickSaveMessageButton(argNamed({
+    onClick: { onClickSaveMessageButton },
+  }))
 }
 
 const main = async () => {
@@ -55,6 +68,7 @@ const main = async () => {
 
   await a.app.loadProfile()
   a.app.loadTimerBtn()
+  a.app.loadMessageBtn()
 
   a.app.showNotification()
 
@@ -68,6 +82,7 @@ a.app = {
   loadProfile,
   loadTimerBtn,
   showNotification,
+  loadMessageBtn,
 }
 
 a.app.main()

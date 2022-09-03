@@ -49,10 +49,27 @@ const handleNotificationList = async (req, res) => {
   res.json({ status, result })
 }
 
+const handleMessageSave = async (req, res) => {
+  const { message } = req.body
+  const url = `${mod.setting.xdevkitSetting.env.AUTH_SERVER_ORIGIN}/api/${mod.setting.xdevkitSetting.api.API_VERSION}/file/update`
+  const { accessToken } = req.session.auth
+  const param = {
+    owner: mod.setting.xdevkitSetting.env.CLIENT_ID,
+    filePath: mod.setting.user.MESSAGE_FILE_PATH,
+    content: message,
+  }
+  const fileSaveResponse = await mod.lib.postRequest(mod.setting.xdevkitSetting.env.CLIENT_ID, accessToken, url, param)
+  console.log({ fileSaveResponse })
+
+  const status = mod.setting.bsc.statusList.OK
+  res.json({ status })
+}
+
 export default {
   init,
   handleTimerAdd,
   handleNotificationOpen,
   handleNotificationList,
+  handleMessageSave,
 }
 
