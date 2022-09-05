@@ -43,7 +43,6 @@ export const setOnClickSaveMessageButton = ({ onClickSaveMessageButton }) => {
 }
 
 export const showMessage = ({ messageResult }) => {
-  const { content } = messageResult
-  document.querySelector('#messageContent').value = content
+  document.querySelector('#messageContent').value = messageResult.result.fileContent
 }
 

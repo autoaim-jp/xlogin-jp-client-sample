@@ -72,11 +72,13 @@ const handleMessageContent = async (req, res) => {
     owner: mod.setting.xdevkitSetting.env.CLIENT_ID,
     filePath: mod.setting.user.MESSAGE_FILE_PATH,
   }
-  const fileGetResponse = await mod.lib.postRequest(mod.setting.xdevkitSetting.env.CLIENT_ID, accessToken, url, param)
+  const fileGetResponse = await mod.lib.getRequest(mod.setting.xdevkitSetting.env.CLIENT_ID, accessToken, url, param)
   console.log({ fileGetResponse })
 
+  const { result } = fileGetResponse.data
+
   const status = mod.setting.bsc.statusList.OK
-  res.json({ status })
+  res.json({ status, result })
 }
 
 export default {

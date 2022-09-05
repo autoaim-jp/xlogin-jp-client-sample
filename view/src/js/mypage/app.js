@@ -48,8 +48,8 @@ const showNotification = () => {
   }, 30 * 1000)
 }
 
-const loadMessageContent = () => {
-  const messageResult = a.input.fetchMessage(argNamed({
+const loadMessageContent = async () => {
+  const messageResult = await a.input.fetchMessage(argNamed({
     browserServerSetting: a.setting.getBrowserServerSetting().get('apiEndpoint'),
     lib: [a.lib.getRequest],
   }))
@@ -79,6 +79,7 @@ const main = async () => {
 
   await a.app.loadProfile()
   a.app.loadTimerBtn()
+  a.app.loadMessageContent()
   a.app.loadMessageBtn()
 
   a.app.showNotification()
@@ -93,6 +94,7 @@ a.app = {
   loadProfile,
   loadTimerBtn,
   showNotification,
+  loadMessageContent,
   loadMessageBtn,
 }
 
