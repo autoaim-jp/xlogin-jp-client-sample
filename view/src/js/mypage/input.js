@@ -4,5 +4,10 @@ export const fetchUserProfile = ({ apiEndpoint, getRequest }) => {
   return getRequest(url)
 }
 
+export const fetchMessage = ({ apiEndpoint, getRequest }) => {
+  const url = `${apiEndpoint}/message/content`
+  return getRequest(url)
+}
+
 export default {}
 

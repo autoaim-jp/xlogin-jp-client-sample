@@ -48,6 +48,17 @@ const showNotification = () => {
   }, 30 * 1000)
 }
 
+const loadMessageContent = () => {
+  const messageResult = a.input.fetchMessage(argNamed({
+    browserServerSetting: a.setting.getBrowserServerSetting().get('apiEndpoint'),
+    lib: [a.lib.getRequest],
+  }))
+
+  a.output.showMessage(argNamed({
+    param: { messageResult },
+  }))
+}
+
 const loadMessageBtn = () => {
   const saveMessage = a.output.getSaveMessage(argNamed({
     browserServerSetting: a.setting.getBrowserServerSetting().get('apiEndpoint'),
