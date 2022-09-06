@@ -31,8 +31,7 @@ export const getSaveMessage = ({ apiEndpoint, postRequest }) => {
 export const getDeleteMessage = ({ apiEndpoint, postRequest }) => {
   const url = `${apiEndpoint}/message/delete`
   return () => {
-    const messageContentElm = document.querySelector('#messageContent')
-    const param = { message: messageContentElm.value }
+    const param = {}
     return postRequest(url, param)
   }
 }

@@ -81,6 +81,21 @@ const handleMessageContent = async (req, res) => {
   res.json({ status, result })
 }
 
+const handleMessageDelete = async (req, res) => {
+  const url = `${mod.setting.xdevkitSetting.env.AUTH_SERVER_ORIGIN}/api/${mod.setting.xdevkitSetting.api.API_VERSION}/file/delete`
+  const { accessToken } = req.session.auth
+  const param = {
+    owner: mod.setting.xdevkitSetting.env.CLIENT_ID,
+    filePath: mod.setting.user.MESSAGE_FILE_PATH,
+  }
+  const fileDeleteResponse = await mod.lib.postRequest(mod.setting.xdevkitSetting.env.CLIENT_ID, accessToken, url, param)
+  console.log({ fileDeleteResponse })
+
+  const status = mod.setting.bsc.statusList.OK
+  res.json({ status })
+}
+
+
 export default {
   init,
   handleTimerAdd,
@@ -88,5 +103,6 @@ export default {
   handleNotificationList,
   handleMessageSave,
   handleMessageContent,
+  handleMessageDelete,
 }
 
