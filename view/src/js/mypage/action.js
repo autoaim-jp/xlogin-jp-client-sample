@@ -10,5 +10,12 @@ export const getOnClickSaveMessageButton = ({ saveMessage }) => {
   }
 }
 
+export const getOnClickDeleteMessageButton = ({ deleteMessage }) => {
+  return () => {
+    deleteMessage()
+  }
+}
+
+
 export default {}
 

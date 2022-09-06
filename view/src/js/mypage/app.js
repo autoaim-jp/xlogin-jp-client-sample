@@ -70,6 +70,17 @@ const loadMessageBtn = () => {
   a.output.setOnClickSaveMessageButton(argNamed({
     onClick: { onClickSaveMessageButton },
   }))
+
+  const deleteMessage = a.output.getDeleteMessage(argNamed({
+    browserServerSetting: a.setting.getBrowserServerSetting().get('apiEndpoint'),
+    lib: [a.lib.postRequest],
+  }))
+  const onClickDeleteMessageButton = a.action.getOnClickDeleteMessageButton(argNamed({
+    output: { deleteMessage },
+  }))
+  a.output.setOnClickDeleteMessageButton(argNamed({
+    onClick: { onClickDeleteMessageButton },
+  }))
 }
 
 const main = async () => {
