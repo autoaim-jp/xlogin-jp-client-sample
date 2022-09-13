@@ -29,6 +29,9 @@ const _getActionRouter = () => {
   expressRouter.post(`${setting.bsc.apiEndpoint}/timer/add`, action.handleTimerAdd)
   expressRouter.post(`${setting.bsc.apiEndpoint}/notification/open`, action.handleNotificationOpen)
   expressRouter.get(`${setting.bsc.apiEndpoint}/notification/list`, action.handleNotificationList)
+  expressRouter.post(`${setting.bsc.apiEndpoint}/message/save`, action.handleMessageSave)
+  expressRouter.get(`${setting.bsc.apiEndpoint}/message/content`, action.handleMessageContent)
+  expressRouter.post(`${setting.bsc.apiEndpoint}/message/delete`, action.handleMessageDelete)
 
   return expressRouter
 }

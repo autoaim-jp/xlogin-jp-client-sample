@@ -45,7 +45,42 @@ const loadTimerBtn = async () => {
 const showNotification = () => {
   setInterval(() => {
     a.lib.showNotification(a.setting.bsc.apiEndpoint)
-  }, 5 * 1000)
+  }, 30 * 1000)
+}
+
+const loadMessageContent = async () => {
+  const messageResult = await a.input.fetchMessage(argNamed({
+    browserServerSetting: a.setting.getBrowserServerSetting().get('apiEndpoint'),
+    lib: [a.lib.getRequest],
+  }))
+
+  a.output.showMessage(argNamed({
+    param: { messageResult },
+  }))
+}
+
+const loadMessageBtn = () => {
+  const saveMessage = a.output.getSaveMessage(argNamed({
+    browserServerSetting: a.setting.getBrowserServerSetting().get('apiEndpoint'),
+    lib: [a.lib.postRequest],
+  }))
+  const onClickSaveMessageButton = a.action.getOnClickSaveMessageButton(argNamed({
+    output: { saveMessage },
+  }))
+  a.output.setOnClickSaveMessageButton(argNamed({
+    onClick: { onClickSaveMessageButton },
+  }))
+
+  const deleteMessage = a.output.getDeleteMessage(argNamed({
+    browserServerSetting: a.setting.getBrowserServerSetting().get('apiEndpoint'),
+    lib: [a.lib.postRequest],
+  }))
+  const onClickDeleteMessageButton = a.action.getOnClickDeleteMessageButton(argNamed({
+    output: { deleteMessage },
+  }))
+  a.output.setOnClickDeleteMessageButton(argNamed({
+    onClick: { onClickDeleteMessageButton },
+  }))
 }
 
 const main = async () => {
@@ -55,6 +90,8 @@ const main = async () => {
 
   await a.app.loadProfile()
   a.app.loadTimerBtn()
+  a.app.loadMessageContent()
+  a.app.loadMessageBtn()
 
   a.app.showNotification()
 
@@ -68,6 +105,8 @@ a.app = {
   loadProfile,
   loadTimerBtn,
   showNotification,
+  loadMessageContent,
+  loadMessageBtn,
 }
 
 a.app.main()

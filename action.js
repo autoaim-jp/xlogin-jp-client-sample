@@ -49,10 +49,60 @@ const handleNotificationList = async (req, res) => {
   res.json({ status, result })
 }
 
+const handleMessageSave = async (req, res) => {
+  const { message } = req.body
+  const url = `${mod.setting.xdevkitSetting.env.AUTH_SERVER_ORIGIN}/api/${mod.setting.xdevkitSetting.api.API_VERSION}/file/update`
+  const { accessToken } = req.session.auth
+  const param = {
+    owner: mod.setting.xdevkitSetting.env.CLIENT_ID,
+    filePath: mod.setting.user.MESSAGE_FILE_PATH,
+    content: message,
+  }
+  const fileSaveResponse = await mod.lib.postRequest(mod.setting.xdevkitSetting.env.CLIENT_ID, accessToken, url, param)
+  console.log({ fileSaveResponse })
+
+  const status = mod.setting.bsc.statusList.OK
+  res.json({ status })
+}
+
+const handleMessageContent = async (req, res) => {
+  const url = `${mod.setting.xdevkitSetting.env.AUTH_SERVER_ORIGIN}/api/${mod.setting.xdevkitSetting.api.API_VERSION}/file/content`
+  const { accessToken } = req.session.auth
+  const param = {
+    owner: mod.setting.xdevkitSetting.env.CLIENT_ID,
+    filePath: mod.setting.user.MESSAGE_FILE_PATH,
+  }
+  const fileGetResponse = await mod.lib.getRequest(mod.setting.xdevkitSetting.env.CLIENT_ID, accessToken, url, param)
+  console.log({ fileGetResponse })
+
+  const { result } = fileGetResponse.data
+
+  const status = mod.setting.bsc.statusList.OK
+  res.json({ status, result })
+}
+
+const handleMessageDelete = async (req, res) => {
+  const url = `${mod.setting.xdevkitSetting.env.AUTH_SERVER_ORIGIN}/api/${mod.setting.xdevkitSetting.api.API_VERSION}/file/delete`
+  const { accessToken } = req.session.auth
+  const param = {
+    owner: mod.setting.xdevkitSetting.env.CLIENT_ID,
+    filePath: mod.setting.user.MESSAGE_FILE_PATH,
+  }
+  const fileDeleteResponse = await mod.lib.postRequest(mod.setting.xdevkitSetting.env.CLIENT_ID, accessToken, url, param)
+  console.log({ fileDeleteResponse })
+
+  const status = mod.setting.bsc.statusList.OK
+  res.json({ status })
+}
+
+
 export default {
   init,
   handleTimerAdd,
   handleNotificationOpen,
   handleNotificationList,
+  handleMessageSave,
+  handleMessageContent,
+  handleMessageDelete,
 }
 
