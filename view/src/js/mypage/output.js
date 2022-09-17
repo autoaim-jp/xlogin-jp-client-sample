@@ -68,3 +68,12 @@ export const showMessage = ({ messageResult }) => {
   document.querySelector('#messageContent').value = messageResult.result.fileContent
 }
 
+export const showEditor = ({ splitPermissionListResult }) => {
+  const { splitPermissionList, clientId }  = splitPermissionListResult.result
+  if (splitPermissionList.optional[`rw:${clientId}:file`]) {
+    document.querySelector('#editorContainer').classList.remove('hidden')
+  } else {
+    document.querySelector('#filePermissionRequestContainer').classList.remove('hidden')
+  }
+}
+

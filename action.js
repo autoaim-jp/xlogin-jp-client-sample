@@ -95,6 +95,16 @@ const handleMessageDelete = async (req, res) => {
   res.json({ status })
 }
 
+const handleSplitPermissionList = async (req, res) => {
+  const { splitPermissionList } = req.session.auth
+  const clientId = process.env.CLIENT_ID
+  const result = { splitPermissionList, clientId }
+
+  const status = mod.setting.bsc.statusList.OK
+  res.json({ status, result })
+}
+
+
 
 export default {
   init,
@@ -104,5 +114,6 @@ export default {
   handleMessageSave,
   handleMessageContent,
   handleMessageDelete,
+  handleSplitPermissionList,
 }
 

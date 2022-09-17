@@ -9,5 +9,11 @@ export const fetchMessage = ({ apiEndpoint, getRequest }) => {
   return getRequest(url)
 }
 
+export const fetchSplitPermissionList = ({ apiEndpoint, getRequest }) => {
+  const url = `${apiEndpoint}/session/splitPermissionList`
+  return getRequest(url)
+}
+
+
 export default {}
 

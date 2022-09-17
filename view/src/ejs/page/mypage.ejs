@@ -5,7 +5,7 @@
     <%- await include(`${componentPath}nav.ejs`)  %>
     <%- await include(`${componentPath}notification.ejs`)  %>
     <div class='section1 min-h-80 flex flex-col text-left text-black md:flex items-center justify-center flex-grow p-16'>
-     <div class='font-bold text-3xl max-w-lg bg-gray-400 p-6 rounded shadow-xl max-w-4xl w-full'>
+      <div class='font-bold text-3xl max-w-lg bg-gray-400 p-6 rounded shadow-xl max-w-4xl w-full'>
         <div id='memoContentWrap' class='w-full'>
         </div>
         <h2 class='text-center mb-2'>MY PAGE</h2>
@@ -15,8 +15,14 @@
     </div><!-- section1 -->
 
     <div class='section1 min-h-80 flex flex-col text-left text-black md:flex items-center justify-center flex-grow p-16'>
-      <%- await include(`${componentPath}timer.ejs`)  %>
-      <%- await include(`${componentPath}editor.ejs`)  %>
+      <div class='font-bold text-3xl max-w-lg bg-gray-400 p-6 rounded shadow-xl max-w-4xl w-full flex justify-center'>
+        <%- await include(`${componentPath}timer.ejs`)  %>
+      </div>
+    </div>
+    <div class='section1 min-h-80 flex flex-col text-left text-black md:flex items-center justify-center flex-grow p-16'>
+      <div class='font-bold text-3xl max-w-lg bg-gray-400 p-6 rounded shadow-xl max-w-4xl w-full flex flex-col justify-center'>
+        <%- await include(`${componentPath}editor.ejs`)  %>
+      </div>
     </div>
 
     <%- await include(`${componentPath}loading.ejs`)  %>

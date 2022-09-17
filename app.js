@@ -33,6 +33,7 @@ const _getActionRouter = () => {
   expressRouter.get(`${setting.bsc.apiEndpoint}/message/content`, action.handleMessageContent)
   expressRouter.post(`${setting.bsc.apiEndpoint}/message/delete`, action.handleMessageDelete)
 
+  expressRouter.get(`${setting.bsc.apiEndpoint}/session/splitPermissionList`, action.handleSplitPermissionList)
   return expressRouter
 }
 

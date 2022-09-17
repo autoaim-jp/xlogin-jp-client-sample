@@ -83,6 +83,18 @@ const loadMessageBtn = () => {
   }))
 }
 
+const loadPermission = async () => {
+  const splitPermissionListResult = await a.input.fetchSplitPermissionList(argNamed({
+    browserServerSetting: a.setting.getBrowserServerSetting().get('apiEndpoint'),
+    lib: [a.lib.getRequest],
+  }))
+
+  a.output.showEditor(argNamed({
+    param: { splitPermissionListResult },
+  }))
+
+}
+
 const main = async () => {
   a.lib.switchLoading(true)
   a.lib.setOnClickNavManu()
@@ -94,6 +106,7 @@ const main = async () => {
   a.app.loadMessageBtn()
 
   a.app.showNotification()
+  a.app.loadPermission()
 
   setTimeout(() => {
     a.lib.switchLoading(false)
@@ -107,6 +120,7 @@ a.app = {
   showNotification,
   loadMessageContent,
   loadMessageBtn,
+  loadPermission,
 }
 
 a.app.main()
