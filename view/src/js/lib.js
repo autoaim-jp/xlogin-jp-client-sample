@@ -48,6 +48,11 @@ export const postRequest = (url, param = {}) => {
   })
 }
 
+export const fetchSplitPermissionList = (apiEndpoint) => {
+  const url = `${apiEndpoint}/session/splitPermissionList`
+  return getRequest(url)
+}
+
 
 /* element */
 export const applyElmList = (query, f, parent = document) => {
@@ -115,6 +120,7 @@ export const getErrorModalElmAndSetter = () => {
   return { modalElm, setContent }
 }
 
+/* common all page */
 export const switchLoading = (isVisible) => {
   const loadingElm = document.querySelector('#loading')
   if (!loadingElm) {
@@ -138,6 +144,32 @@ export const setOnClickNavManu = () => {
       navContentElm.classList.add('hidden')
     }
   }
+}
+
+export const reloadXloginLoginBtn = (clientId) => {
+  const getOnClickXloginButtonHandler = () => {
+    const handler = (elm) => {
+      const { permission } = elm.dataset
+      let queryPart = ''
+      if (permission !== undefined) {
+        queryPart += `&requestScope=${permission.replace(/\$CLIENT_ID/g, clientId)}`
+      }
+      return () => {
+        window.location.href = `/f/xlogin/connect?redirectAfterAuth=/mypage${queryPart}`
+      }
+    }
+
+    return handler
+  }
+
+  const setOnClickXloginButton = ({ onClickXloginButtonHandler }) => {
+    document.querySelectorAll('[data-id="xloginLoginBtn"]').forEach((elm) => {
+      elm.onclick = onClickXloginButtonHandler(elm)
+    })
+  }
+
+  const onClickXloginButtonHandler = getOnClickXloginButtonHandler()
+  setOnClickXloginButton({ onClickXloginButtonHandler })
 }
 
 

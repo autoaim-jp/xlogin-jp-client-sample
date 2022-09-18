@@ -84,15 +84,12 @@ const loadMessageBtn = () => {
 }
 
 const loadPermission = async () => {
-  const splitPermissionListResult = await a.input.fetchSplitPermissionList(argNamed({
-    browserServerSetting: a.setting.getBrowserServerSetting().get('apiEndpoint'),
-    lib: [a.lib.getRequest],
-  }))
-
+  const splitPermissionListResult = await a.lib.fetchSplitPermissionList(a.setting.getBrowserServerSetting().apiEndpoint)
   a.output.showEditor(argNamed({
     param: { splitPermissionListResult },
   }))
 
+  a.lib.reloadXloginLoginBtn(splitPermissionListResult.result.clientId)
 }
 
 const main = async () => {

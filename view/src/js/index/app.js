@@ -1,4 +1,6 @@
 /* /index/app.js */
+import * as setting from '../_setting/index.js'
+
 import * as output from './output.js'
 import * as action from './action.js'
 import * as lib from '../lib.js'
@@ -7,6 +9,7 @@ const asocial = {}
 asocial.output = output
 asocial.action = action
 asocial.lib = lib
+asocial.setting = setting
 /* a is an alias of asocial */
 const a = asocial
 
@@ -20,11 +23,9 @@ const main = async () => {
   }, 300)
 }
 
-const loadXloginButton = () => {
-  const onClickXloginButton = a.action.getOnClickXloginButton()
-  a.output.setOnClickXloginButton(argNamed({
-    onClick: { onClickXloginButton },
-  }))
+const loadXloginButton = async () => {
+  const splitPermissionListResult = await a.lib.fetchSplitPermissionList(a.setting.getBrowserServerSetting().apiEndpoint)
+  a.lib.reloadXloginLoginBtn(splitPermissionListResult.result.clientId)
 }
 
 a.app = {
