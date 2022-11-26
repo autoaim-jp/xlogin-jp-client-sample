@@ -96,6 +96,11 @@ const handleMessageDelete = async (req, res) => {
 }
 
 const handleSplitPermissionList = async (req, res) => {
+  if (!req.session || !req.session.auth) {
+    const status = mod.setting.bsc.statusList.INVALID_SESSION
+    const result = {}
+    return res.json({ status, result })
+  }
   const { splitPermissionList } = req.session.auth
   const clientId = process.env.CLIENT_ID
   const result = { splitPermissionList, clientId }
