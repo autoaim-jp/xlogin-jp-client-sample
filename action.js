@@ -99,7 +99,8 @@ const handleSplitPermissionList = async (req, res) => {
   if (!req.session || !req.session.auth) {
     const status = mod.setting.bsc.statusList.INVALID_SESSION
     const result = {}
-    return res.json({ status, result })
+    res.json({ status, result })
+    return
   }
   const { splitPermissionList } = req.session.auth
   const clientId = process.env.CLIENT_ID
@@ -108,7 +109,6 @@ const handleSplitPermissionList = async (req, res) => {
   const status = mod.setting.bsc.statusList.OK
   res.json({ status, result })
 }
-
 
 
 export default {
