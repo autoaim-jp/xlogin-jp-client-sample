@@ -95,6 +95,24 @@ const handleMessageDelete = async (req, res) => {
   res.json({ status })
 }
 
+const handleFileList = async (req, res) => {
+  const url = `${mod.setting.xdevkitSetting.env.AUTH_SERVER_ORIGIN}/api/${mod.setting.xdevkitSetting.api.API_VERSION}/file/list`
+  const { accessToken } = req.session.auth
+  const { filePath } = req.query
+  const param = {
+    owner: mod.setting.xdevkitSetting.env.CLIENT_ID,
+    filePath,
+  }
+  const fileListResponse = await mod.lib.getRequest(mod.setting.xdevkitSetting.env.CLIENT_ID, accessToken, url, param)
+  console.log({ fileListResponse })
+
+  const { result } = fileListResponse.data
+
+  const status = mod.setting.bsc.statusList.OK
+  res.json({ status, result })
+}
+
+
 const handleSplitPermissionList = async (req, res) => {
   if (!req.session || !req.session.auth) {
     const status = mod.setting.bsc.statusList.INVALID_SESSION
@@ -119,6 +137,7 @@ export default {
   handleMessageSave,
   handleMessageContent,
   handleMessageDelete,
+  handleFileList,
   handleSplitPermissionList,
 }
 
