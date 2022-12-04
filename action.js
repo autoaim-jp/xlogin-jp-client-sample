@@ -137,7 +137,8 @@ const handleUpdateBackupEmailAddress = async (req, res) => {
     backupEmailAddress,
   }
   const updateBackupEmailAddressResponse = await mod.lib.postRequest(mod.setting.xdevkitSetting.env.CLIENT_ID, accessToken, url, param)
-  const { result } = updateBackupEmailAddressResponse
+  const { result } = updateBackupEmailAddressResponse.data
+  console.log({ updateBackupEmailAddressResponse })
 
   const status = mod.setting.bsc.statusList.OK
   res.json({ status, result })
