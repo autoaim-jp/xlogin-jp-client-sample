@@ -129,6 +129,21 @@ const handleSplitPermissionList = async (req, res) => {
 }
 
 
+const handleUpdateBackupEmailAddress = async (req, res) => {
+  const { backupEmailAddress } = req.body
+  const url = `${mod.setting.xdevkitSetting.env.AUTH_SERVER_ORIGIN}/api/${mod.setting.xdevkitSetting.api.API_VERSION}/user/update`
+  const { accessToken } = req.session.auth
+  const param = {
+    backupEmailAddress,
+  }
+  const updateBackupEmailAddressResponse = await mod.lib.postRequest(mod.setting.xdevkitSetting.env.CLIENT_ID, accessToken, url, param)
+  console.log({ updateBackupEmailAddressResponse })
+
+  const status = mod.setting.bsc.statusList.OK
+  res.json({ status })
+}
+
+
 export default {
   init,
   handleTimerAdd,
@@ -139,5 +154,6 @@ export default {
   handleMessageDelete,
   handleFileList,
   handleSplitPermissionList,
+  handleUpdateBackupEmailAddress,
 }
 
