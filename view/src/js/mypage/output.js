@@ -62,7 +62,6 @@ export const setOnClickDeleteMessageButton = ({ onClickDeleteMessageButton }) =>
   }
 }
 
-
 /* show elm */
 export const showMessage = ({ messageResult }) => {
   document.querySelector('#messageContent').value = messageResult.result.fileContent
@@ -75,5 +74,45 @@ export const showEditor = ({ splitPermissionListResult }) => {
   } else {
     document.querySelector('#filePermissionRequestContainer').classList.remove('hidden')
   }
+}
+
+export const showTabButton = ({ tabList, activeTabContainerId }) => {
+  console.log({ tabList, activeTabContainerId })
+  const getOnClickTabButton = ({ activeTabContainerId }) => {
+    return (e) => {
+      if(e) {
+        e.preventDefault()
+      }
+      showTabButton({ tabList, activeTabContainerId })
+      showTabContainer({ tabList, activeTabContainerId })
+    }
+  }
+  const tabMenuContainer = document.querySelector('#tabMenuContainer')
+  tabMenuContainer.clearChildren()
+  Object.entries(tabList).forEach(([tabContainerId, value]) => {
+    let tabItemElm = null
+    if (tabContainerId === activeTabContainerId) {
+      tabItemElm = document.querySelector('#tabActiveItemTemplate').cloneNode(true)
+    } else {
+      tabItemElm = document.querySelector('#tabItemTemplate').cloneNode(true)
+    }
+    tabItemElm.id = `btn_${tabContainerId}`
+    tabItemElm.classList.remove('hidden')
+    tabItemElm.children[0].innerText = value
+    tabItemElm.children[0].onclick = getOnClickTabButton({ activeTabContainerId: tabContainerId })
+    tabMenuContainer.appendChild(tabItemElm)
+    if (tabContainerId === activeTabContainerId) {
+      showTabContainer({ tabList, activeTabContainerId: tabContainerId })
+    }
+  })
+}
+
+export const showTabContainer = ({ activeTabContainerId, tabList }) => {
+  Object.keys(tabList).forEach((tabContainerId) => {
+    const tabContainerElm = document.querySelector(`#${tabContainerId}`)
+    tabContainerElm.classList.add('hidden')
+  })
+  const tabContainerElm = document.querySelector(`#${activeTabContainerId}`)
+  tabContainerElm.classList.remove('hidden')
 }
 

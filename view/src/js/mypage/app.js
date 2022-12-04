@@ -92,6 +92,15 @@ const loadPermission = async () => {
   a.lib.reloadXloginLoginBtn(splitPermissionListResult.result.clientId)
 }
 
+const loadTabBtn = async () => {
+  const tabList = { editorTabContainer: 'エディタ', timerTabContainer: 'タイマー', backupEmailAddressFormTabContainer: 'バックアップメールアドレス' }
+  const activeTabContainerId = Object.keys(tabList)[0]
+
+  a.output.showTabButton(argNamed({
+    param: { tabList, activeTabContainerId }
+  }))
+}
+
 const main = async () => {
   a.lib.switchLoading(true)
   a.lib.setOnClickNavManu()
@@ -101,6 +110,7 @@ const main = async () => {
   a.app.loadTimerBtn()
   a.app.loadMessageContent()
   a.app.loadMessageBtn()
+  a.app.loadTabBtn()
 
   a.app.showNotification()
   a.app.loadPermission()
@@ -118,6 +128,7 @@ a.app = {
   loadMessageContent,
   loadMessageBtn,
   loadPermission,
+  loadTabBtn,
 }
 
 a.app.main()

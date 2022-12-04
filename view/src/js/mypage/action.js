@@ -16,6 +16,5 @@ export const getOnClickDeleteMessageButton = ({ deleteMessage }) => {
   }
 }
 
-
 export default {}
 
