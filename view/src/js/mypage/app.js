@@ -26,6 +26,7 @@ const loadProfile = async () => {
     lib: [a.lib.applyElmList],
     other: { userInfoResult },
   }))
+  return userInfoResult
 }
 
 const loadTimerBtn = async () => {
@@ -101,12 +102,34 @@ const loadTabBtn = async () => {
   }))
 }
 
+const loadBackupEmailAddressForm = async ({ userInfoResult }) => {
+  const backupEmailAddress = a.input.getBackupEmailAddress(argNamed({
+    param: { userInfoResult }
+  }))
+  a.output.showBackupEmailAddress(argNamed({
+    param: { backupEmailAddress }
+  }))
+
+
+  const saveBackupEmailAddress = a.output.getSaveBackupEmailAddress(argNamed({
+    browserServerSetting: a.setting.getBrowserServerSetting().get('apiEndpoint'),
+    lib: [a.lib.postRequest],
+  }))
+  const onSubmitBackupEmailAddress = a.action.getOnSubmitBackupEmailAddress(argNamed({
+    param: { saveBackupEmailAddress }
+  }))
+  a.output.setOnSubmitBackupEmailAddress(argNamed({
+    param: { onSubmitBackupEmailAddress }
+  }))
+}
+
 const main = async () => {
   a.lib.switchLoading(true)
   a.lib.setOnClickNavManu()
   a.lib.monkeyPatch()
 
-  await a.app.loadProfile()
+  const userInfoResult = await a.app.loadProfile()
+  await a.app.loadBackupEmailAddressForm({ userInfoResult })
   a.app.loadTimerBtn()
   a.app.loadMessageContent()
   a.app.loadMessageBtn()
@@ -129,6 +152,7 @@ a.app = {
   loadMessageBtn,
   loadPermission,
   loadTabBtn,
+  loadBackupEmailAddressForm,
 }
 
 a.app.main()

@@ -16,5 +16,11 @@ export const getOnClickDeleteMessageButton = ({ deleteMessage }) => {
   }
 }
 
+export const getOnSubmitBackupEmailAddress = ({ saveBackupEmailAddress }) => {
+  return () => {
+    saveBackupEmailAddress()
+  }
+}
+
 export default {}
 

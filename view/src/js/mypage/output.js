@@ -36,6 +36,15 @@ export const getDeleteMessage = ({ apiEndpoint, postRequest }) => {
   }
 }
 
+export const getSaveBackupEmailAddress = ({ apiEndpoint, postRequest }) => {
+  const url = `${apiEndpoint}/backupEmailAddress/save`
+  return () => {
+    const backupEmailAddressInputElm = document.querySelector('#backupEmailAddressInput')
+    const param = { backupEmailAddress: backupEmailAddressInputElm.value }
+    return postRequest(url, param)
+  }
+}
+
 
 /* onClick */
 export const setOnClickAddTimerButton = ({ onClickAddTimerButton }) => {
@@ -62,6 +71,21 @@ export const setOnClickDeleteMessageButton = ({ onClickDeleteMessageButton }) =>
   }
 }
 
+/* onSubmit */
+export const setOnSubmitBackupEmailAddress = ({ onSubmitBackupEmailAddress }) => {
+  const backupEmailAddressFormElm = document.querySelector('#backupEmailAddressForm')
+  backupEmailAddressFormElm.onsubmit = (e) => {
+    e.preventDefault()
+    onSubmitBackupEmailAddress()
+  }
+}
+
+/* show data */
+export const showBackupEmailAddress = ({ backupEmailAddress }) => {
+  const backupEmailAddressInputElm = document.querySelector('#backupEmailAddressInput')
+  backupEmailAddressInputElm.value = backupEmailAddress
+}
+
 /* show elm */
 export const showMessage = ({ messageResult }) => {
   document.querySelector('#messageContent').value = messageResult.result.fileContent
@@ -77,7 +101,6 @@ export const showEditor = ({ splitPermissionListResult }) => {
 }
 
 export const showTabButton = ({ tabList, activeTabContainerId }) => {
-  console.log({ tabList, activeTabContainerId })
   const getOnClickTabButton = ({ activeTabContainerId }) => {
     return (e) => {
       if(e) {
