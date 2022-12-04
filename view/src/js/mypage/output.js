@@ -100,6 +100,15 @@ export const showEditor = ({ splitPermissionListResult }) => {
   }
 }
 
+export const showBackupEmailAddressForm = ({ splitPermissionListResult }) => {
+  const { splitPermissionList, clientId } = splitPermissionListResult.result
+  if (splitPermissionList.optional[`rw:auth:backupEmailAddress`]) {
+    document.querySelector('#backupEmailAddressForm').classList.remove('hidden')
+  } else {
+    document.querySelector('#backupEmailAddressPermissionRequestContainer').classList.remove('hidden')
+  }
+}
+
 export const showTabButton = ({ tabList, activeTabContainerId }) => {
   const getOnClickTabButton = ({ activeTabContainerId }) => {
     return (e) => {

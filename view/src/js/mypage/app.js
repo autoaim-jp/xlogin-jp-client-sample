@@ -90,6 +90,10 @@ const loadPermission = async () => {
     param: { splitPermissionListResult },
   }))
 
+  a.output.showBackupEmailAddressForm(argNamed({
+    param: { splitPermissionListResult },
+  }))
+
   a.lib.reloadXloginLoginBtn(splitPermissionListResult.result.clientId)
 }
 
