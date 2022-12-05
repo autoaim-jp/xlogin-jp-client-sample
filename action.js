@@ -95,6 +95,55 @@ const handleMessageDelete = async (req, res) => {
   res.json({ status })
 }
 
+const handleFileList = async (req, res) => {
+  const url = `${mod.setting.xdevkitSetting.env.AUTH_SERVER_ORIGIN}/api/${mod.setting.xdevkitSetting.api.API_VERSION}/file/list`
+  const { accessToken } = req.session.auth
+  const { filePath } = req.query
+  const param = {
+    owner: mod.setting.xdevkitSetting.env.CLIENT_ID,
+    filePath,
+  }
+  const fileListResponse = await mod.lib.getRequest(mod.setting.xdevkitSetting.env.CLIENT_ID, accessToken, url, param)
+  console.log({ fileListResponse })
+
+  const { result } = fileListResponse.data
+
+  const status = mod.setting.bsc.statusList.OK
+  res.json({ status, result })
+}
+
+
+const handleSplitPermissionList = async (req, res) => {
+  if (!req.session || !req.session.auth) {
+    const status = mod.setting.bsc.statusList.INVALID_SESSION
+    const result = {}
+    res.json({ status, result })
+    return
+  }
+  const { splitPermissionList } = req.session.auth
+  const clientId = process.env.CLIENT_ID
+  const result = { splitPermissionList, clientId }
+
+  const status = mod.setting.bsc.statusList.OK
+  res.json({ status, result })
+}
+
+
+const handleUpdateBackupEmailAddress = async (req, res) => {
+  const { backupEmailAddress } = req.body
+  const url = `${mod.setting.xdevkitSetting.env.AUTH_SERVER_ORIGIN}/api/${mod.setting.xdevkitSetting.api.API_VERSION}/user/update`
+  const { accessToken } = req.session.auth
+  const param = {
+    backupEmailAddress,
+  }
+  const updateBackupEmailAddressResponse = await mod.lib.postRequest(mod.setting.xdevkitSetting.env.CLIENT_ID, accessToken, url, param)
+  const { result } = updateBackupEmailAddressResponse.data
+  console.log({ updateBackupEmailAddressResponse })
+
+  const status = mod.setting.bsc.statusList.OK
+  res.json({ status, result })
+}
+
 
 export default {
   init,
@@ -104,5 +153,8 @@ export default {
   handleMessageSave,
   handleMessageContent,
   handleMessageDelete,
+  handleFileList,
+  handleSplitPermissionList,
+  handleUpdateBackupEmailAddress,
 }
 

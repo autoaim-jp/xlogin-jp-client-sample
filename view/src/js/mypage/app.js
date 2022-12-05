@@ -26,6 +26,7 @@ const loadProfile = async () => {
     lib: [a.lib.applyElmList],
     other: { userInfoResult },
   }))
+  return userInfoResult
 }
 
 const loadTimerBtn = async () => {
@@ -83,17 +84,63 @@ const loadMessageBtn = () => {
   }))
 }
 
+const loadPermission = async () => {
+  const splitPermissionListResult = await a.lib.fetchSplitPermissionList(a.setting.getBrowserServerSetting().apiEndpoint)
+  a.output.showEditor(argNamed({
+    param: { splitPermissionListResult },
+  }))
+
+  a.output.showBackupEmailAddressForm(argNamed({
+    param: { splitPermissionListResult },
+  }))
+
+  a.lib.reloadXloginLoginBtn(splitPermissionListResult.result.clientId)
+}
+
+const loadTabBtn = async () => {
+  const tabList = { editorTabContainer: 'エディタ', timerTabContainer: 'タイマー', backupEmailAddressFormTabContainer: 'バックアップメールアドレス' }
+  const activeTabContainerId = Object.keys(tabList)[0]
+
+  a.output.showTabButton(argNamed({
+    param: { tabList, activeTabContainerId },
+  }))
+}
+
+const loadBackupEmailAddressForm = async ({ userInfoResult }) => {
+  const backupEmailAddress = a.input.getBackupEmailAddress(argNamed({
+    param: { userInfoResult },
+  }))
+  a.output.showBackupEmailAddress(argNamed({
+    param: { backupEmailAddress },
+  }))
+
+
+  const saveBackupEmailAddress = a.output.getSaveBackupEmailAddress(argNamed({
+    browserServerSetting: a.setting.getBrowserServerSetting().get('apiEndpoint'),
+    lib: [a.lib.postRequest],
+  }))
+  const onSubmitBackupEmailAddress = a.action.getOnSubmitBackupEmailAddress(argNamed({
+    param: { saveBackupEmailAddress },
+  }))
+  a.output.setOnSubmitBackupEmailAddress(argNamed({
+    param: { onSubmitBackupEmailAddress },
+  }))
+}
+
 const main = async () => {
   a.lib.switchLoading(true)
   a.lib.setOnClickNavManu()
   a.lib.monkeyPatch()
 
-  await a.app.loadProfile()
+  const userInfoResult = await a.app.loadProfile()
+  await a.app.loadBackupEmailAddressForm({ userInfoResult })
   a.app.loadTimerBtn()
   a.app.loadMessageContent()
   a.app.loadMessageBtn()
+  a.app.loadTabBtn()
 
   a.app.showNotification()
+  a.app.loadPermission()
 
   setTimeout(() => {
     a.lib.switchLoading(false)
@@ -107,6 +154,9 @@ a.app = {
   showNotification,
   loadMessageContent,
   loadMessageBtn,
+  loadPermission,
+  loadTabBtn,
+  loadBackupEmailAddressForm,
 }
 
 a.app.main()

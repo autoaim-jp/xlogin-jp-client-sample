@@ -9,12 +9,12 @@ setting.session.REDIS_HOST = '127.0.0.1'
 setting.session.REDIS_DB = 2
 
 setting.api = {}
-setting.api.API_VERSION = 'v0.7'
+setting.api.API_VERSION = 'v0.1.0'
 setting.api.STATE_L = 64
 setting.api.CODE_VERIFIER_L = 64
 setting.api.XLOGIN_RESPONSE_TYPE = 'code'
 setting.api.XLOGIN_CODE_CHALLENGE_METHOD = 'S256'
-setting.api.SCOPE = 'r:auth:emailAddress,*r:auth:userName,*r:$CLIENT_ID:serviceUserId,*rw:$CLIENT_ID:notification,rw:$CLIENT_ID:file'
+setting.api.SCOPE = 'r:auth:emailAddress,rw:auth:backupEmailAddress,*r:auth:userName,*r:$CLIENT_ID:serviceUserId,*rw:$CLIENT_ID:notification,rw:$CLIENT_ID:file'
 
 setting.url = {}
 setting.url.ERROR_PAGE = '/error'
