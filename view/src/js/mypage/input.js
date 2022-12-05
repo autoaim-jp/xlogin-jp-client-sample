@@ -10,7 +10,7 @@ export const fetchMessage = ({ apiEndpoint, getRequest }) => {
 }
 
 
-export const getBackupEmailAddress = ({ userInfoResult }) => { 
+export const getBackupEmailAddress = ({ userInfoResult }) => {
   const backupEmailAddress = userInfoResult?.userInfo?.public?.['auth:backupEmailAddress']
   return backupEmailAddress || ''
 }

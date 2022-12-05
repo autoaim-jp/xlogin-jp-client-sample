@@ -102,16 +102,16 @@ const loadTabBtn = async () => {
   const activeTabContainerId = Object.keys(tabList)[0]
 
   a.output.showTabButton(argNamed({
-    param: { tabList, activeTabContainerId }
+    param: { tabList, activeTabContainerId },
   }))
 }
 
 const loadBackupEmailAddressForm = async ({ userInfoResult }) => {
   const backupEmailAddress = a.input.getBackupEmailAddress(argNamed({
-    param: { userInfoResult }
+    param: { userInfoResult },
   }))
   a.output.showBackupEmailAddress(argNamed({
-    param: { backupEmailAddress }
+    param: { backupEmailAddress },
   }))
 
 
@@ -120,10 +120,10 @@ const loadBackupEmailAddressForm = async ({ userInfoResult }) => {
     lib: [a.lib.postRequest],
   }))
   const onSubmitBackupEmailAddress = a.action.getOnSubmitBackupEmailAddress(argNamed({
-    param: { saveBackupEmailAddress }
+    param: { saveBackupEmailAddress },
   }))
   a.output.setOnSubmitBackupEmailAddress(argNamed({
-    param: { onSubmitBackupEmailAddress }
+    param: { onSubmitBackupEmailAddress },
   }))
 }
 

@@ -101,22 +101,31 @@ export const showEditor = ({ splitPermissionListResult }) => {
 }
 
 export const showBackupEmailAddressForm = ({ splitPermissionListResult }) => {
-  const { splitPermissionList, clientId } = splitPermissionListResult.result
-  if (splitPermissionList.optional[`rw:auth:backupEmailAddress`]) {
+  const { splitPermissionList } = splitPermissionListResult.result
+  if (splitPermissionList.optional['rw:auth:backupEmailAddress']) {
     document.querySelector('#backupEmailAddressForm').classList.remove('hidden')
   } else {
     document.querySelector('#backupEmailAddressPermissionRequestContainer').classList.remove('hidden')
   }
 }
 
+export const showTabContainer = ({ activeTabContainerId, tabList }) => {
+  Object.keys(tabList).forEach((tabContainerId) => {
+    const tabContainerElm = document.querySelector(`#${tabContainerId}`)
+    tabContainerElm.classList.add('hidden')
+  })
+  const tabContainerElm = document.querySelector(`#${activeTabContainerId}`)
+  tabContainerElm.classList.remove('hidden')
+}
+
 export const showTabButton = ({ tabList, activeTabContainerId }) => {
-  const getOnClickTabButton = ({ activeTabContainerId }) => {
+  const getOnClickTabButton = ({ newActiveTabContainerId }) => {
     return (e) => {
-      if(e) {
+      if (e) {
         e.preventDefault()
       }
-      showTabButton({ tabList, activeTabContainerId })
-      showTabContainer({ tabList, activeTabContainerId })
+      showTabButton({ tabList, activeTabContainerId: newActiveTabContainerId })
+      showTabContainer({ tabList, activeTabContainerId: newActiveTabContainerId })
     }
   }
   const tabMenuContainer = document.querySelector('#tabMenuContainer')
@@ -131,20 +140,11 @@ export const showTabButton = ({ tabList, activeTabContainerId }) => {
     tabItemElm.id = `btn_${tabContainerId}`
     tabItemElm.classList.remove('hidden')
     tabItemElm.children[0].innerText = value
-    tabItemElm.children[0].onclick = getOnClickTabButton({ activeTabContainerId: tabContainerId })
+    tabItemElm.children[0].onclick = getOnClickTabButton({ newActiveTabContainerId: tabContainerId })
     tabMenuContainer.appendChild(tabItemElm)
     if (tabContainerId === activeTabContainerId) {
       showTabContainer({ tabList, activeTabContainerId: tabContainerId })
     }
   })
-}
-
-export const showTabContainer = ({ activeTabContainerId, tabList }) => {
-  Object.keys(tabList).forEach((tabContainerId) => {
-    const tabContainerElm = document.querySelector(`#${tabContainerId}`)
-    tabContainerElm.classList.add('hidden')
-  })
-  const tabContainerElm = document.querySelector(`#${activeTabContainerId}`)
-  tabContainerElm.classList.remove('hidden')
 }
 
