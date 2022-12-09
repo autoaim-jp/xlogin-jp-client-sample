@@ -40,6 +40,10 @@ const handleNotificationOpen = async (req, res) => {
 
 const handleNotificationList = async (req, res) => {
   const url = `${mod.setting.xdevkitSetting.env.AUTH_SERVER_ORIGIN}/api/${mod.setting.xdevkitSetting.api.API_VERSION}/notification/list`
+  if (!req.session || !req.session.auth) {
+    const status = mod.setting.bsc.statusList.INVALID_SESSION
+    return res.json({ status })
+  }
   const { accessToken } = req.session.auth
   const param = { notificationRange: mod.setting.xdevkitSetting.env.CLIENT_ID }
   const notificationListResponse = await mod.lib.getRequest(mod.setting.xdevkitSetting.env.CLIENT_ID, accessToken, url, param)
