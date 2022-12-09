@@ -11,8 +11,6 @@ services:
     build:
       context: .
       dockerfile: ./docker/webcontainer/Dockerfile
-    extra_hosts:
-      - localhost-xlogin:host-gateway
     tty: true
     ports:
       - 3001:3001
