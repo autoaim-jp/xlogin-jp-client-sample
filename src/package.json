@@ -10,10 +10,11 @@
     "ioredis": "^5.0.5"
   },
   "scripts": {
+    "start": "node app.js",
     "lint-server": "eslint *.js setting/",
     "lint-browser": "eslint view/src/js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "init-xdevkit": "git submodule update -i && cd xdevkit/ && git checkout master && git pull && git checkout $version && git pull origin $version && cd ../setting/ && ln -f ../xdevkit/browserServerSetting.js browserServerSetting.js && cd ../view/src/js/_setting/ && ln -f ../../../../xdevkit/browserServerSetting.js browserServerSetting.js",
+    "init-xdevkit": "rm -rf xdevkit/ && git clone -b $version https://github.com/autoaim-jp/xdevkit.git && cp ./xdevkit/browserServerSetting.js ./setting/browserServerSetting.js && cp ./xdevkit/browserServerSetting.js ./view/src/js/_setting/browserServerSetting.js",
     "compile": "bash gdeno run xdevkit-cli compile --js ./view/src/js/ --css ./view/src/css/ --ejs ./view/src/ejs/page/ --out ./view/build/ --ejsconfig ./view/src/config/ejs.config.js --tailwindconfig ./view/src/config/tailwind.config.cjs --tailwindcss ./view/src/css/tailwind.css",
     "compile-minify": "bash gdeno run xdevkit-cli compile --js ./view/src/js/ --css ./view/src/css/ --ejs ./view/src/ejs/page/ --out ./view/build/ --ejsconfig ./view/src/config/ejs.config.js --tailwindconfig ./view/src/config/tailwind.config.cjs --tailwindcss ./view/src/css/tailwind.css --minify",
     "watch": "bash gdeno run xdevkit-cli watch --js ./view/src/js/ --css ./view/src/css/ --ejs ./view/src/ejs/page/ --out ./view/build/ --ejsconfig ./view/src/config/ejs.config.js --tailwindconfig ./view/src/config/tailwind.config.cjs --tailwindcss ./view/src/css/tailwind.css"

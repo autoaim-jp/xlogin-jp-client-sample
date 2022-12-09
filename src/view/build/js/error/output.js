@@ -4,7 +4,7 @@ export const showErrorModal = ({
 }) => {
   const errorKey = getSearchQuery().error
   const { modalElm, setContent } = getErrorModalElmAndSetter()
-  setContent(errorKey, labelList.error)
+  setContent(decodeURIComponent(errorKey), labelList.error)
   showModal(modalElm)
 }
 

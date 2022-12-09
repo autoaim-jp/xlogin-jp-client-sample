@@ -5,7 +5,7 @@ setting.session = {}
 setting.session.SESSION_ID = 'sid'
 setting.session.SESSION_COOKIE_SECURE = false
 setting.session.REDIS_PORT = 6379
-setting.session.REDIS_HOST = '127.0.0.1'
+setting.session.REDIS_HOST = 'rediscontainer'
 setting.session.REDIS_DB = 2
 
 setting.api = {}
