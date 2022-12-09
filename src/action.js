@@ -7,7 +7,7 @@ const init = (setting, lib) => {
 }
 
 const handleTimerAdd = (req, res) => {
-  const url = `${mod.setting.xdevkitSetting.env.AUTH_SERVER_ORIGIN}/api/${mod.setting.xdevkitSetting.api.API_VERSION}/notification/append`
+  const url = `${mod.setting.xdevkitSetting.env.API_SERVER_ORIGIN}/api/${mod.setting.xdevkitSetting.api.API_VERSION}/notification/append`
   const { accessToken } = req.session.auth
   setTimeout(async () => {
     const param = {
@@ -25,7 +25,7 @@ const handleTimerAdd = (req, res) => {
 
 const handleNotificationOpen = async (req, res) => {
   const { notificationIdList } = req.body
-  const url = `${mod.setting.xdevkitSetting.env.AUTH_SERVER_ORIGIN}/api/${mod.setting.xdevkitSetting.api.API_VERSION}/notification/open`
+  const url = `${mod.setting.xdevkitSetting.env.API_SERVER_ORIGIN}/api/${mod.setting.xdevkitSetting.api.API_VERSION}/notification/open`
   const { accessToken } = req.session.auth
   const param = {
     notificationRange: mod.setting.xdevkitSetting.env.CLIENT_ID,
@@ -39,7 +39,7 @@ const handleNotificationOpen = async (req, res) => {
 }
 
 const handleNotificationList = async (req, res) => {
-  const url = `${mod.setting.xdevkitSetting.env.AUTH_SERVER_ORIGIN}/api/${mod.setting.xdevkitSetting.api.API_VERSION}/notification/list`
+  const url = `${mod.setting.xdevkitSetting.env.API_SERVER_ORIGIN}/api/${mod.setting.xdevkitSetting.api.API_VERSION}/notification/list`
   if (!req.session || !req.session.auth) {
     const status = mod.setting.bsc.statusList.INVALID_SESSION
     return res.json({ status })
@@ -55,7 +55,7 @@ const handleNotificationList = async (req, res) => {
 
 const handleMessageSave = async (req, res) => {
   const { message } = req.body
-  const url = `${mod.setting.xdevkitSetting.env.AUTH_SERVER_ORIGIN}/api/${mod.setting.xdevkitSetting.api.API_VERSION}/file/update`
+  const url = `${mod.setting.xdevkitSetting.env.API_SERVER_ORIGIN}/api/${mod.setting.xdevkitSetting.api.API_VERSION}/file/update`
   const { accessToken } = req.session.auth
   const param = {
     owner: mod.setting.xdevkitSetting.env.CLIENT_ID,
@@ -70,7 +70,7 @@ const handleMessageSave = async (req, res) => {
 }
 
 const handleMessageContent = async (req, res) => {
-  const url = `${mod.setting.xdevkitSetting.env.AUTH_SERVER_ORIGIN}/api/${mod.setting.xdevkitSetting.api.API_VERSION}/file/content`
+  const url = `${mod.setting.xdevkitSetting.env.API_SERVER_ORIGIN}/api/${mod.setting.xdevkitSetting.api.API_VERSION}/file/content`
   const { accessToken } = req.session.auth
   const param = {
     owner: mod.setting.xdevkitSetting.env.CLIENT_ID,
@@ -86,7 +86,7 @@ const handleMessageContent = async (req, res) => {
 }
 
 const handleMessageDelete = async (req, res) => {
-  const url = `${mod.setting.xdevkitSetting.env.AUTH_SERVER_ORIGIN}/api/${mod.setting.xdevkitSetting.api.API_VERSION}/file/delete`
+  const url = `${mod.setting.xdevkitSetting.env.API_SERVER_ORIGIN}/api/${mod.setting.xdevkitSetting.api.API_VERSION}/file/delete`
   const { accessToken } = req.session.auth
   const param = {
     owner: mod.setting.xdevkitSetting.env.CLIENT_ID,
@@ -100,7 +100,7 @@ const handleMessageDelete = async (req, res) => {
 }
 
 const handleFileList = async (req, res) => {
-  const url = `${mod.setting.xdevkitSetting.env.AUTH_SERVER_ORIGIN}/api/${mod.setting.xdevkitSetting.api.API_VERSION}/file/list`
+  const url = `${mod.setting.xdevkitSetting.env.API_SERVER_ORIGIN}/api/${mod.setting.xdevkitSetting.api.API_VERSION}/file/list`
   const { accessToken } = req.session.auth
   const { filePath } = req.query
   const param = {
@@ -135,7 +135,7 @@ const handleSplitPermissionList = async (req, res) => {
 
 const handleUpdateBackupEmailAddress = async (req, res) => {
   const { backupEmailAddress } = req.body
-  const url = `${mod.setting.xdevkitSetting.env.AUTH_SERVER_ORIGIN}/api/${mod.setting.xdevkitSetting.api.API_VERSION}/user/update`
+  const url = `${mod.setting.xdevkitSetting.env.API_SERVER_ORIGIN}/api/${mod.setting.xdevkitSetting.api.API_VERSION}/user/update`
   const { accessToken } = req.session.auth
   const param = {
     backupEmailAddress,

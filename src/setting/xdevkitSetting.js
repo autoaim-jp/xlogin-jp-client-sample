@@ -28,6 +28,7 @@ export const init = (env) => {
   setting.env = {}
   setting.env.SERVER_ORIGIN = env.SERVER_ORIGIN
   setting.env.AUTH_SERVER_ORIGIN = env.AUTH_SERVER_ORIGIN
+  setting.env.API_SERVER_ORIGIN = env.API_SERVER_ORIGIN
   setting.env.CLIENT_ID = env.CLIENT_ID
 
   setting.api.SCOPE = setting.api.SCOPE.replace(/\$CLIENT_ID/g, env.CLIENT_ID)
