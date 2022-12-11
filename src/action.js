@@ -48,6 +48,12 @@ const handleNotificationList = async (req, res) => {
   const param = { notificationRange: mod.setting.xdevkitSetting.env.CLIENT_ID }
   const notificationListResponse = await mod.lib.getRequest(mod.setting.xdevkitSetting.env.CLIENT_ID, accessToken, url, param)
 
+  if (!notificationListResponse || !notificationListResponse.data) {
+    const status = mod.setting.bsc.statusList.INVALID_SESSION
+    const result = {}
+    res.json({ status, result })
+    return
+  }
   const { result } = notificationListResponse.data
   const status = mod.setting.bsc.statusList.OK
   res.json({ status, result })
