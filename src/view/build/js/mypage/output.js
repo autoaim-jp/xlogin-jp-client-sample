@@ -109,42 +109,12 @@ export const showBackupEmailAddressForm = ({ splitPermissionListResult }) => {
   }
 }
 
-export const showTabContainer = ({ activeTabContainerId, tabList }) => {
-  Object.keys(tabList).forEach((tabContainerId) => {
-    const tabContainerElm = document.querySelector(`#${tabContainerId}`)
-    tabContainerElm.classList.add('hidden')
-  })
-  const tabContainerElm = document.querySelector(`#${activeTabContainerId}`)
-  tabContainerElm.classList.remove('hidden')
+export const addTabMenuContainer = ({ createTabMenuContainer, showTabButton, tabList, activeTabContainerId }) => {
+  const tabMenuContainerElm = createTabMenuContainer()
+  const tabMenuContainerWrapElm = document.querySelector('#tabMenuContainerWrap')
+  tabMenuContainerWrapElm.appendChild(tabMenuContainerElm)
+
+  showTabButton({ tabMenuContainerElm, tabList, activeTabContainerId })
 }
 
-export const showTabButton = ({ tabList, activeTabContainerId }) => {
-  const getOnClickTabButton = ({ newActiveTabContainerId }) => {
-    return (e) => {
-      if (e) {
-        e.preventDefault()
-      }
-      showTabButton({ tabList, activeTabContainerId: newActiveTabContainerId })
-      showTabContainer({ tabList, activeTabContainerId: newActiveTabContainerId })
-    }
-  }
-  const tabMenuContainer = document.querySelector('#tabMenuContainer')
-  tabMenuContainer.clearChildren()
-  Object.entries(tabList).forEach(([tabContainerId, value]) => {
-    let tabItemElm = null
-    if (tabContainerId === activeTabContainerId) {
-      tabItemElm = document.querySelector('#tabActiveItemTemplate').cloneNode(true)
-    } else {
-      tabItemElm = document.querySelector('#tabItemTemplate').cloneNode(true)
-    }
-    tabItemElm.id = `btn_${tabContainerId}`
-    tabItemElm.classList.remove('hidden')
-    tabItemElm.children[0].innerText = value
-    tabItemElm.children[0].onclick = getOnClickTabButton({ newActiveTabContainerId: tabContainerId })
-    tabMenuContainer.appendChild(tabItemElm)
-    if (tabContainerId === activeTabContainerId) {
-      showTabContainer({ tabList, activeTabContainerId: tabContainerId })
-    }
-  })
-}
 

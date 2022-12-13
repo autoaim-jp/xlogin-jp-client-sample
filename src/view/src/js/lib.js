@@ -120,6 +120,51 @@ export const getErrorModalElmAndSetter = () => {
   return { modalElm, setContent }
 }
 
+/* tab */
+export const createTabMenuContainer = () => {
+  const tabMenuContainerElm = document.querySelector('#tabMenuContainerTemplate').cloneNode(true)
+  tabMenuContainerElm.id = ''
+  tabMenuContainerElm.classList.remove('hidden')
+  return tabMenuContainerElm
+}
+const _showTabContainer = ({ activeTabContainerId, tabList }) => {
+  Object.keys(tabList).forEach((tabContainerId) => {
+    const tabContainerElm = document.querySelector(`#${tabContainerId}`)
+    tabContainerElm.classList.add('hidden')
+  })
+  const tabContainerElm = document.querySelector(`#${activeTabContainerId}`)
+  tabContainerElm.classList.remove('hidden')
+}
+
+export const showTabButton = ({ tabMenuContainerElm, tabList, activeTabContainerId }) => {
+  const getOnClickTabButton = ({ newActiveTabContainerId }) => {
+    return (e) => {
+      if (e) {
+        e.preventDefault()
+      }
+      showTabButton({ tabMenuContainerElm, tabList, activeTabContainerId: newActiveTabContainerId })
+      _showTabContainer({ tabList, activeTabContainerId: newActiveTabContainerId })
+    }
+  }
+  tabMenuContainerElm.clearChildren()
+  Object.entries(tabList).forEach(([tabContainerId, value]) => {
+    let tabItemElm = null
+    if (tabContainerId === activeTabContainerId) {
+      tabItemElm = document.querySelector('#tabActiveItemTemplate').cloneNode(true)
+    } else {
+      tabItemElm = document.querySelector('#tabItemTemplate').cloneNode(true)
+    }
+    tabItemElm.id = ''
+    tabItemElm.classList.remove('hidden')
+    tabItemElm.children[0].innerText = value
+    tabItemElm.children[0].onclick = getOnClickTabButton({ newActiveTabContainerId: tabContainerId })
+    tabMenuContainerElm.appendChild(tabItemElm)
+    if (tabContainerId === activeTabContainerId) {
+      _showTabContainer({ tabList, activeTabContainerId: tabContainerId })
+    }
+  })
+}
+
 /* common all page */
 export const switchLoading = (isVisible) => {
   const loadingElm = document.querySelector('#loading')

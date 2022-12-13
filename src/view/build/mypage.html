@@ -135,14 +135,7 @@
 
     <div class='section1 min-h-80 flex flex-row text-left text-black md:flex items-center justify-center flex-grow p-16'>
       <div class='font-bold text-3xl max-w-lg bg-gray-100 p-6 rounded shadow-xl max-w-4xl w-full flex flex-col justify-center'>
-        <div class='text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700 mb-4'>
-          <ul id='tabMenuContainer' class='flex flex-wrap -mb-px flex-row justify-center'>
-</ul>
-
-<li id='tabItemTemplate' class='hidden mr-2'><a href='#' class='inline-block p-4 rounded-t-lg border-b-2 border-transparent hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300'></a></li>
-<li id='tabActiveItemTemplate' class='hidden mr-2'><a href='#' class='inline-block p-4 text-blue-600 rounded-t-lg border-b-2 border-blue-600 active dark:text-blue-500 dark:border-blue-500'></a></li>
-
-
+        <div id='tabMenuContainerWrap' class='text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700 mb-4'>
         </div>
         <div class='text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700'>
           <div id='editorTabContainer' class='hidden'>
@@ -207,6 +200,13 @@
     </div>
   </div>
 </div>
+
+
+    <ul id='tabMenuContainerTemplate' class='hidden flex flex-wrap -mb-px flex-row justify-center'>
+</ul>
+
+<li id='tabItemTemplate' class='hidden mr-2'><a href='#' class='inline-block p-4 rounded-t-lg border-b-2 border-transparent hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300'></a></li>
+<li id='tabActiveItemTemplate' class='hidden mr-2'><a href='#' class='inline-block p-4 text-blue-600 rounded-t-lg border-b-2 border-blue-600 active dark:text-blue-500 dark:border-blue-500'></a></li>
 
 
     <div id='hiddenForTailwindByJs' class='hidden w-full h-96 p-1'></div>

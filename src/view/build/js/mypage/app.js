@@ -101,7 +101,8 @@ const loadTabBtn = async () => {
   const tabList = { editorTabContainer: 'エディタ', timerTabContainer: 'タイマー', backupEmailAddressFormTabContainer: 'バックアップメールアドレス' }
   const activeTabContainerId = Object.keys(tabList)[0]
 
-  a.output.showTabButton(argNamed({
+  a.output.addTabMenuContainer(argNamed({
+    lib: [a.lib.createTabMenuContainer, a.lib.showTabButton],
     param: { tabList, activeTabContainerId },
   }))
 }
