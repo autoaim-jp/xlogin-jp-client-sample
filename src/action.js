@@ -85,8 +85,14 @@ const handleMessageContent = async (req, res) => {
   const fileGetResponse = await mod.lib.getRequest(mod.setting.xdevkitSetting.env.CLIENT_ID, accessToken, url, param)
   console.log({ fileGetResponse })
 
-  const { result } = fileGetResponse.data
+  if (!fileGetResponse || !fileGetResponse.data) {
+    const status = mod.setting.bsc.statusList.INVALID_SESSION
+    const result = {}
+    res.json({ status, result })
+    return
+  }
 
+  const { result } = fileGetResponse.data
   const status = mod.setting.bsc.statusList.OK
   res.json({ status, result })
 }
