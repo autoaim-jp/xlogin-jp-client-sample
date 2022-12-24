@@ -6,7 +6,7 @@ const init = (axios, crypto) => {
   mod.axios = axios
 }
 
-const apiRequest = (isPost, url, param = {}, header = {}, json = true) => {
+const apiRequest = (isPost, origin, path, param = {}, header = {}, json = true) => {
   const calcSha256AsB64 = (str) => {
     const sha256 = mod.crypto.createHash('sha256')
     sha256.update(str)
@@ -22,14 +22,17 @@ const apiRequest = (isPost, url, param = {}, header = {}, json = true) => {
     const query = param && Object.keys(param).map((key) => { return `${key}=${param[key]}` }).join('&')
     const queryString = query ? `?${query}` : ''
     const contentHash = calcSha256AsB64(JSON.stringify(param))
-    const dataToSign = contentHash
+    const timestamp = Date.now()
+    const dataToSign = `${timestamp}:${path}:${contentHash}`
     const signature = calcSha256HmacAsB64(process.env.CLIENT_SECRET, dataToSign)
+    const url = origin + path
 
     const opt = {
       method: isPost ? 'POST' : 'GET',
       url: url + (isPost ? '' : queryString),
       headers: { 
         ...header, 
+        'x-xlogin-timestamp': timestamp,
         'x-xlogin-signature': signature,
       },
       timeout: 30 * 1000,
@@ -50,20 +53,20 @@ const apiRequest = (isPost, url, param = {}, header = {}, json = true) => {
   })
 }
 
-const postRequest = (clientId, accessToken, url, param) => {
+const postRequest = (clientId, accessToken, origin, path, param) => {
   const header = {
     authorization: `Bearer ${accessToken}`,
     'x-xlogin-client-id': clientId,
   }
-  return apiRequest(true, url, param, header)
+  return apiRequest(true, origin, path, param, header)
 }
 
-const getRequest = (clientId, accessToken, url, param) => {
+const getRequest = (clientId, accessToken, origin, path, param) => {
   const header = {
     authorization: `Bearer ${accessToken}`,
     'x-xlogin-client-id': clientId,
   }
-  return apiRequest(false, url, param, header)
+  return apiRequest(false, origin, path, param, header)
 }
 
 export default {
