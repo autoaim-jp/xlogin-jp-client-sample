@@ -1,5 +1,6 @@
 import fs from 'fs'
 import axios from 'axios'
+import crypto from 'crypto'
 import https from 'https'
 import express from 'express'
 import bodyParser from 'body-parser'
@@ -58,7 +59,7 @@ const _startServer = (expressApp) => {
 
 const main = () => {
   dotenv.config()
-  lib.init(axios)
+  lib.init(axios, crypto)
   settingInit(process.env)
   xdevkit.init(setting.xdevkitSetting)
   action.init(setting, lib)
