@@ -6,6 +6,10 @@ const init = (axios, crypto) => {
   mod.axios = axios
 }
 
+const objToQuery = (obj) => {
+  return Object.entries(obj).map(([key, value]) => { return `${key}=${value}` }).join('&')
+}
+
 const apiRequest = (isPost, origin, path, param = {}, header = {}, json = true) => {
   const calcSha256AsB64 = (str) => {
     const sha256 = mod.crypto.createHash('sha256')
@@ -19,21 +23,24 @@ const apiRequest = (isPost, origin, path, param = {}, header = {}, json = true) 
   }
 
   return new Promise((resolve) => {
-    const query = param && Object.keys(param).map((key) => { return `${key}=${param[key]}` }).join('&')
+    const query = param && objToQuery(param)
     const queryString = query ? `?${query}` : ''
+    const pathWithQueryString = `${path}${isPost ? '' : queryString}`
     const contentHash = calcSha256AsB64(JSON.stringify(param))
     const timestamp = Date.now()
-    const dataToSign = `${timestamp}:${path}:${contentHash}`
+    const dataToSign = `${timestamp}:${pathWithQueryString}:${contentHash}`
     const signature = calcSha256HmacAsB64(process.env.CLIENT_SECRET, dataToSign)
     const url = origin + path
 
     const opt = {
       method: isPost ? 'POST' : 'GET',
-      url: url + (isPost ? '' : queryString),
+      url: url + pathWithQueryString,
+ 
       headers: { 
         ...header, 
         'x-xlogin-timestamp': timestamp,
         'x-xlogin-signature': signature,
+        'tmp-dataToSign': dataToSign,
       },
       timeout: 30 * 1000,
     }
