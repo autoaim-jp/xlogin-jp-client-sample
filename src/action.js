@@ -121,6 +121,12 @@ const handleFileList = async (req, res) => {
   }
   const fileListResponse = await mod.lib.getRequest(mod.setting.xdevkitSetting.env.CLIENT_ID, accessToken, url, param)
   console.log({ fileListResponse })
+  if (!fileListResponse || !fileListResponse.data) {
+    const status = mod.setting.bsc.statusList.INVALID_SESSION
+    const result = {}
+    res.json({ status, result })
+    return
+  }
 
   const { result } = fileListResponse.data
 
@@ -153,8 +159,15 @@ const handleUpdateBackupEmailAddress = async (req, res) => {
     backupEmailAddress,
   }
   const updateBackupEmailAddressResponse = await mod.lib.postRequest(mod.setting.xdevkitSetting.env.CLIENT_ID, accessToken, url, param)
-  const { result } = updateBackupEmailAddressResponse.data
   console.log({ updateBackupEmailAddressResponse })
+  if (!updateBackupEmailAddressResponse || !updateBackupEmailAddressResponse.data) {
+    const status = mod.setting.bsc.statusList.INVALID_SESSION
+    const result = {}
+    res.json({ status, result })
+    return
+  }
+
+  const { result } = updateBackupEmailAddressResponse.data
 
   const status = mod.setting.bsc.statusList.OK
   res.json({ status, result })
