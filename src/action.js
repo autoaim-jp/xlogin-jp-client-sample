@@ -150,7 +150,7 @@ const handleSplitPermissionList = async (req, res) => {
     return
   }
   const { splitPermissionList } = req.session.auth
-  const clientId = process.env.CLIENT_ID
+  const clientId = setting.env.CLIENT_ID
   const result = { splitPermissionList, clientId }
 
   const status = mod.setting.bsc.statusList.OK

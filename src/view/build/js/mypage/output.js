@@ -114,7 +114,44 @@ export const addTabMenuContainer = ({ createTabMenuContainer, showTabButton, tab
   const tabMenuContainerWrapElm = document.querySelector('#tabMenuContainerWrap')
   tabMenuContainerWrapElm.appendChild(tabMenuContainerElm)
 
+<<<<<<< HEAD:src/view/build/js/mypage/output.js
   showTabButton({ tabMenuContainerElm, tabList, activeTabContainerId })
+=======
+export const loadAndGetTabMenuContainer = () => {
+  const tabWrapElm = document.querySelector('#tabWrap')
+  const tabMenuContainerElm = document.querySelector('#tabMenuContainerTemplate')
+  tabWrapElm.appendChild(tabMenuContainerElm)
+  return tabMenuContainerElm
+}
+
+export const showTabButton = ({ tabMenuContainerElm, tabList, activeTabContainerId }) => {
+  const getOnClickTabButton = ({ newActiveTabContainerId }) => {
+    return (e) => {
+      if (e) {
+        e.preventDefault()
+      }
+      showTabButton({ tabMenuContainerElm, tabList, activeTabContainerId: newActiveTabContainerId })
+      showTabContainer({ tabList, activeTabContainerId: newActiveTabContainerId })
+    }
+  }
+  tabMenuContainerElm.clearChildren()
+  Object.entries(tabList).forEach(([tabContainerId, value]) => {
+    let tabItemElm = null
+    if (tabContainerId === activeTabContainerId) {
+      tabItemElm = document.querySelector('#tabActiveItemTemplate').cloneNode(true)
+    } else {
+      tabItemElm = document.querySelector('#tabItemTemplate').cloneNode(true)
+    }
+    tabItemElm.id = `btn_${tabContainerId}`
+    tabItemElm.classList.remove('hidden')
+    tabItemElm.children[0].innerText = value
+    tabItemElm.children[0].onclick = getOnClickTabButton({ newActiveTabContainerId: tabContainerId })
+    tabMenuContainerElm.appendChild(tabItemElm)
+    if (tabContainerId === activeTabContainerId) {
+      showTabContainer({ tabList, activeTabContainerId: tabContainerId })
+    }
+  })
+>>>>>>> v0.13:view/src/js/mypage/output.js
 }
 
 

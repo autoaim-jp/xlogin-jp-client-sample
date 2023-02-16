@@ -101,9 +101,15 @@ const loadTabBtn = async () => {
   const tabList = { editorTabContainer: 'エディタ', timerTabContainer: 'タイマー', backupEmailAddressFormTabContainer: 'バックアップメールアドレス' }
   const activeTabContainerId = Object.keys(tabList)[0]
 
+<<<<<<< HEAD:src/view/build/js/mypage/app.js
   a.output.addTabMenuContainer(argNamed({
     lib: [a.lib.createTabMenuContainer, a.lib.showTabButton],
     param: { tabList, activeTabContainerId },
+=======
+  const tabMenuContainerElm = a.output.loadAndGetTabMenuContainer()
+  a.output.showTabButton(argNamed({
+    param: { tabMenuContainerElm, tabList, activeTabContainerId },
+>>>>>>> v0.13:view/src/js/mypage/app.js
   }))
 }
 
@@ -131,6 +137,7 @@ const loadBackupEmailAddressForm = async ({ userInfoResult }) => {
 const main = async () => {
   a.lib.switchLoading(true)
   a.lib.setOnClickNavManu()
+  a.lib.setOnClickNotification(a.setting.bsc.apiEndpoint)
   a.lib.monkeyPatch()
 
   const userInfoResult = await a.app.loadProfile()
@@ -142,6 +149,15 @@ const main = async () => {
 
   a.app.showNotification()
   a.app.loadPermission()
+
+  
+  const infoWrapElm = document.querySelector('#infoWrap')
+  const infoToastElm = document.querySelector('#infoToastTemplate').cloneNode(true)
+  infoToastElm.classList.remove('hidden')
+  infoWrapElm.appendChild(infoWrapElm)
+  setTimeout(() => {
+    infoWrapElm.removeChild(infoWrapElm)
+  }, 1000)
 
   setTimeout(() => {
     a.lib.switchLoading(false)

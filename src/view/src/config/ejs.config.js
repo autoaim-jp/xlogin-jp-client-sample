@@ -12,6 +12,7 @@ const getBreadcrumbList = (pathList) => {
 export const ejsConfig = {
   _common: {
     componentPath: './view/src/ejs/component/',
+    xdevkitComponentPath: './xdevkit/view/src/ejs/component/',
   },
   index: {
     title: 'sample.xlogin.jp',
