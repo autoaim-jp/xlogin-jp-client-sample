@@ -118,18 +118,24 @@ export const showTabContainer = ({ activeTabContainerId, tabList }) => {
   tabContainerElm.classList.remove('hidden')
 }
 
-export const showTabButton = ({ tabList, activeTabContainerId }) => {
+export const loadAndGetTabMenuContainer = () => {
+  const tabWrapElm = document.querySelector('#tabWrap')
+  const tabMenuContainerElm = document.querySelector('#tabMenuContainerTemplate')
+  tabWrapElm.appendChild(tabMenuContainerElm)
+  return tabMenuContainerElm
+}
+
+export const showTabButton = ({ tabMenuContainerElm, tabList, activeTabContainerId }) => {
   const getOnClickTabButton = ({ newActiveTabContainerId }) => {
     return (e) => {
       if (e) {
         e.preventDefault()
       }
-      showTabButton({ tabList, activeTabContainerId: newActiveTabContainerId })
+      showTabButton({ tabMenuContainerElm, tabList, activeTabContainerId: newActiveTabContainerId })
       showTabContainer({ tabList, activeTabContainerId: newActiveTabContainerId })
     }
   }
-  const tabMenuContainer = document.querySelector('#tabMenuContainer')
-  tabMenuContainer.clearChildren()
+  tabMenuContainerElm.clearChildren()
   Object.entries(tabList).forEach(([tabContainerId, value]) => {
     let tabItemElm = null
     if (tabContainerId === activeTabContainerId) {
@@ -141,7 +147,7 @@ export const showTabButton = ({ tabList, activeTabContainerId }) => {
     tabItemElm.classList.remove('hidden')
     tabItemElm.children[0].innerText = value
     tabItemElm.children[0].onclick = getOnClickTabButton({ newActiveTabContainerId: tabContainerId })
-    tabMenuContainer.appendChild(tabItemElm)
+    tabMenuContainerElm.appendChild(tabItemElm)
     if (tabContainerId === activeTabContainerId) {
       showTabContainer({ tabList, activeTabContainerId: tabContainerId })
     }

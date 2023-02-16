@@ -16,6 +16,7 @@ const a = asocial
 const main = async () => {
   a.lib.switchLoading(true)
   a.lib.setOnClickNavManu()
+  a.lib.setOnClickNotification(a.setting.bsc.apiEndpoint)
   a.lib.monkeyPatch()
   a.app.loadXloginButton()
   setTimeout(() => {

@@ -134,6 +134,7 @@ export const switchLoading = (isVisible) => {
   }
 }
 
+/* nav */
 export const setOnClickNavManu = () => {
   const toggleElm = document.querySelector('#commonNavToggle')
   const navContentElm = document.querySelector('#commonNavContent')
@@ -145,6 +146,7 @@ export const setOnClickNavManu = () => {
     }
   }
 }
+
 
 export const reloadXloginLoginBtn = (clientId) => {
   const getOnClickXloginButtonHandler = () => {
@@ -227,6 +229,20 @@ export const showNotification = async (apiEndpoint) => {
   }
   const param = { notificationIdList }
   await postRequest(`${apiEndpoint}/notification/open`, param)
+}
+
+export const setOnClickNotification = (apiEndpoint) => {
+  applyElmList('[data-id="notificationBtn"]', (notificationBtn) => {
+    notificationBtn.onclick = (e) => {
+      e.preventDefault()
+      e.stopPropagation()
+      if (notificationIsVisible) {
+        return
+      }
+      notificationIsVisible = true
+      showNotification(apiEndpoint)
+    }
+  })
 }
 
 /* misc */

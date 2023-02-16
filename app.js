@@ -13,7 +13,7 @@ import { setting, init as settingInit } from './setting/index.js'
 
 const _getOtherRouter = () => {
   const expressRouter = express.Router()
-  if (process.env.SERVER_ORIGIN.indexOf('https') >= 0) {
+  if (setting.env.SERVER_ORIGIN.indexOf('https') >= 0) {
     expressRouter.use(helmet())
   }
   expressRouter.use(bodyParser.urlencoded({ extended: true }))
@@ -40,18 +40,18 @@ const _getActionRouter = () => {
 }
 
 const _startServer = (expressApp) => {
-  if (process.env.SERVER_ORIGIN.indexOf('https') >= 0) {
+  if (setting.env.SERVER_ORIGIN.indexOf('https') >= 0) {
     const tlsConfig = {
-      key: fs.readFileSync(process.env.TLS_KEY_PATH),
-      cert: fs.readFileSync(process.env.TLS_CERT_PATH),
+      key: fs.readFileSync(setting.env.TLS_KEY_PATH),
+      cert: fs.readFileSync(setting.env.TLS_CERT_PATH),
     }
     const server = https.createServer(tlsConfig, expressApp)
-    server.listen(process.env.SERVER_PORT, () => {
-      console.log(`${process.env.CLIENT_ID} listen to port: ${process.env.SERVER_PORT}, origin: ${process.env.SERVER_ORIGIN}`)
+    server.listen(setting.env.SERVER_PORT, () => {
+      console.log(`${setting.env.CLIENT_ID} listen to port: ${setting.env.SERVER_PORT}, origin: ${setting.env.SERVER_ORIGIN}`)
     })
   } else {
-    expressApp.listen(process.env.SERVER_PORT, () => {
-      console.log(`${process.env.CLIENT_ID} listen to port: ${process.env.SERVER_PORT}, origin: ${process.env.SERVER_ORIGIN}`)
+    expressApp.listen(setting.env.SERVER_PORT, () => {
+      console.log(`${setting.env.CLIENT_ID} listen to port: ${setting.env.SERVER_PORT}, origin: ${setting.env.SERVER_ORIGIN}`)
     })
   }
 }
