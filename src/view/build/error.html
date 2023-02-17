@@ -60,6 +60,7 @@
         <div class='xl:relative absolute w-full left-0 xl:top-auto top-24 flex items-center grid xl:w-auto'>
           <div class='xl:flex xl:items-center xl:w-auto xl:block mt-2 xl:mt-0 p-1 xl:p-0 z-20 bg-gray-100 border-2 xl:bg-transparent xl:border-0 rounded hidden' id='commonNavContent'>
             <ul class='lg:flex justify-end flex-1 xl:flex-row flex-col items-center text-center text-xl'>
+              <li class='xl:m-0 mr-3 mt-2 w-full border-b-2 border-white'><a data-id='notificationBtn' class='inline-block py-2 px-4 font-bold no-underline' href='#'>Notification</a></li>
               <li class='xl:m-0 mr-3 mt-2 w-full border-b-2 border-white'><a class='inline-block py-2 px-4 font-bold no-underline' href='https://github.com/autoaim-jp/xlogin-jp-client-sample' target='_blank'>GitHub</a></li>
             </ul>
           </div>
@@ -67,6 +68,20 @@
 
       </div>
     </nav>
+
+
+    <!-- https://tailwindcomponents.com/component/simple-notification -->
+<div id='notificationContainer' class='z-50 mt-20 p-4 absolute right-0 top-0 flex-col'>
+</div>
+<a id='notificationTemplate' data-id='notification' class='flex flex-col block bg-white max-w-md rounded-lg p-6 shadow mb-4 w-80 hidden' href='#'>
+  <p data-id='subject' class='text-xl text-slate-700 font-medium'>Login at 2022/01/01 00:00:00</p>
+  <div class='flex justify-end'>
+    <div class='text-sm inline-flex space-x-1 items-center'>
+      <span>show detail</span>
+      <svg class='w-3 h-3' fill='none' stroke='currentColor' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'><path stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M17 8l4 4m0 0l-4 4m4-4H3'></path></svg>
+    </div>
+  </div>
+</a>
 
 
     <div class='section1 min-h-80 flex flex-col text-black md:flex items-center justify-center flex-grow p-2'>
@@ -102,6 +117,7 @@
      <div class='font-bold text-4xl max-w-lg bg-gray-100 p-6 rounded shadow-xl max-w-4xl w-full'>
         <div class=''>
           <p>Error</p>
+          <a href='/'>トップページ</a>
         </div>
       </div>
 

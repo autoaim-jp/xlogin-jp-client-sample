@@ -60,6 +60,7 @@
         <div class='xl:relative absolute w-full left-0 xl:top-auto top-24 flex items-center grid xl:w-auto'>
           <div class='xl:flex xl:items-center xl:w-auto xl:block mt-2 xl:mt-0 p-1 xl:p-0 z-20 bg-gray-100 border-2 xl:bg-transparent xl:border-0 rounded hidden' id='commonNavContent'>
             <ul class='lg:flex justify-end flex-1 xl:flex-row flex-col items-center text-center text-xl'>
+              <li class='xl:m-0 mr-3 mt-2 w-full border-b-2 border-white'><a data-id='notificationBtn' class='inline-block py-2 px-4 font-bold no-underline' href='#'>Notification</a></li>
               <li class='xl:m-0 mr-3 mt-2 w-full border-b-2 border-white'><a class='inline-block py-2 px-4 font-bold no-underline' href='https://github.com/autoaim-jp/xlogin-jp-client-sample' target='_blank'>GitHub</a></li>
             </ul>
           </div>
@@ -135,7 +136,7 @@
 
     <div class='section1 min-h-80 flex flex-row text-left text-black md:flex items-center justify-center flex-grow p-16'>
       <div class='font-bold text-3xl max-w-lg bg-gray-100 p-6 rounded shadow-xl max-w-4xl w-full flex flex-col justify-center'>
-        <div id='tabMenuContainerWrap' class='text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700 mb-4'>
+        <div id='tabMenuContainerWrap'class='text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700 mb-4'>
         </div>
         <div class='text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700'>
           <div id='editorTabContainer' class='hidden'>
@@ -178,6 +179,13 @@
       </div>
     </div>
 
+    <ul id='tabMenuContainerTemplate' class='hidden flex flex-wrap -mb-px flex-row justify-center'>
+</ul>
+
+<li id='tabItemTemplate' class='hidden mr-2'><a href='#' class='inline-block p-4 rounded-t-lg border-b-2 border-transparent hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300'></a></li>
+<li id='tabActiveItemTemplate' class='hidden mr-2'><a href='#' class='inline-block p-4 text-blue-600 rounded-t-lg border-b-2 border-blue-600 active dark:text-blue-500 dark:border-blue-500'></a></li>
+
+
     <img id='loading' class='fixed -translate-x-1/2 -translate-y-1/2 inset-1/2 transform hidden' src='/img/loading.svg' />
 
 
@@ -200,13 +208,6 @@
     </div>
   </div>
 </div>
-
-
-    <ul id='tabMenuContainerTemplate' class='hidden flex flex-wrap -mb-px flex-row justify-center'>
-</ul>
-
-<li id='tabItemTemplate' class='hidden mr-2'><a href='#' class='inline-block p-4 rounded-t-lg border-b-2 border-transparent hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300'></a></li>
-<li id='tabActiveItemTemplate' class='hidden mr-2'><a href='#' class='inline-block p-4 text-blue-600 rounded-t-lg border-b-2 border-blue-600 active dark:text-blue-500 dark:border-blue-500'></a></li>
 
 
     <div id='hiddenForTailwindByJs' class='hidden w-full h-96 p-1'></div>
