@@ -34,10 +34,10 @@ const apiRequest = (isPost, origin, path, param = {}, header = {}, json = true) 
 
     const opt = {
       method: isPost ? 'POST' : 'GET',
-      url: url,
- 
-      headers: { 
-        ...header, 
+      url,
+
+      headers: {
+        ...header,
         'x-xlogin-timestamp': timestamp,
         'x-xlogin-signature': signature,
         'tmp-dataToSign': dataToSign,

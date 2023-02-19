@@ -55,11 +55,13 @@ const handleNotificationList = async (req, res) => {
     const status = mod.setting.bsc.statusList.INVALID_SESSION
     const result = {}
     res.json({ status, result })
-    return
+    return null
   }
   const { result } = notificationListResponse.data
   const status = mod.setting.bsc.statusList.OK
   res.json({ status, result })
+
+  return null
 }
 
 const handleMessageSave = async (req, res) => {
