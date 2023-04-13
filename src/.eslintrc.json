@@ -7,7 +7,8 @@
     "argNamed": false
   },
   "plugins": [
-    "import"
+    "import",
+    "jest"
   ],
   "parserOptions": {
     "parser": "@babel/eslint-parser",
