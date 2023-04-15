@@ -19,7 +19,7 @@ services:
       - xl-client-sample-nm:/app/node_modules
     environment:
      - WATCHPACK_POLLING=true
-    command: sh -c "npm start"
+    command: sh -c "npm run start-watch"
     depends_on:
       - rediscontainer
 
