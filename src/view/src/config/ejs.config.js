@@ -1,3 +1,6 @@
+import path from 'path'
+import { fileURLToPath } from 'url'
+
 const breadcrumbAllList = {
   '/': 'ホーム',
   '/mypage': 'マイページ',
@@ -8,11 +11,12 @@ const getBreadcrumbList = (pathList) => {
   return pathList.map((path) => { return { path, label: breadcrumbAllList[path] } })
 }
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 export const ejsConfig = {
   _common: {
-    componentPath: './view/src/ejs/component/',
-    xdevkitComponentPath: './xdevkit/view/src/ejs/component/',
+    componentPath: __dirname + '/../ejs/component/',
+    xdevkitComponentPath: __dirname + '/../../../xdevkit/view/src/ejs/component/',
   },
   index: {
     title: 'sample.xlogin.jp',
