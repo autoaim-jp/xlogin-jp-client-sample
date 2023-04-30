@@ -5,7 +5,7 @@
 XDEVKIT_VERSION=v0.17
 
 if [ $# != 2 ]; then
-  echo "run.sh (app | test) (build | config | up | down)"
+  echo "run.sh (app | test) (build | config | up | down | xdevkit)"
   exit 1
 fi
 
