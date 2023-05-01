@@ -45,7 +45,7 @@ const loadTimerBtn = async () => {
 
 const showNotification = () => {
   setInterval(() => {
-    a.lib.xdevkit.output.showNotification(a.setting.bsc.apiEndpoint, a.lib.xdevkit.output.showModal)
+    a.lib.common.output.showNotification(a.setting.bsc.apiEndpoint, a.lib.xdevkit.output.showModal, a.lib.common.input.getRequest)
   }, 30 * 1000)
 }
 

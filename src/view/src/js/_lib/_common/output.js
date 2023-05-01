@@ -41,7 +41,7 @@ export const setOnClickNavManu = () => {
 
 /* notification */
 let notificationIsVisible = false
-export const showNotification = async (apiEndpoint, showModal) => {
+export const showNotification = async (apiEndpoint, showModal, getRequest) => {
   if (notificationIsVisible) {
     return
   }
