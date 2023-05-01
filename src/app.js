@@ -7,7 +7,7 @@ import bodyParser from 'body-parser'
 import helmet from 'helmet'
 import dotenv from 'dotenv'
 
-import xdevkit from './xdevkit/index.js'
+import xdevkit from './xdevkit/server/index.js'
 import action from './action.js'
 import lib from './lib.js'
 import { setting, init as settingInit } from './setting/index.js'
