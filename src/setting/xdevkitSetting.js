@@ -34,5 +34,28 @@ export const init = (env) => {
   setting.api.SCOPE = setting.api.SCOPE.replace(/\$CLIENT_ID/g, env.CLIENT_ID)
 }
 
-export default setting
+export const get = (...keyList) => {
+  /* eslint-disable no-param-reassign */
+  const constantList = keyList.reduce((prev, key) => {
+    let value = setting
+    for(const keySplit of key.split('.')) {
+      value = value[keySplit]
+    }
+    prev[key.slice(key.lastIndexOf('.') + 1)] = value
+    return prev
+  }, {})
+  for (const key of keyList) {
+    if (constantList[key.slice(key.lastIndexOf('.') + 1)] === undefined) {
+      throw new Error(`[error] undefined setting constant: ${key}`)
+    }
+  }
+  return constantList
+}
+
+
+
+export default {
+  setting,
+  get,
+}
 
