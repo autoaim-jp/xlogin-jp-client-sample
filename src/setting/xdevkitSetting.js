@@ -52,10 +52,17 @@ export const get = (...keyList) => {
   return constantList
 }
 
-
+export const getOne = (key) => {
+  let value = setting
+  for(const keySplit of key.split('.')) {
+    value = value[keySplit]
+  }
+  return value
+}
 
 export default {
   setting,
   get,
+  getOne,
 }
 

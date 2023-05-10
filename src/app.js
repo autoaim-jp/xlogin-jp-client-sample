@@ -62,6 +62,7 @@ const main = () => {
   lib.init(axios, crypto)
   settingInit(process.env)
   xdevkit.init(setting.xdevkitSetting)
+  console.log('?', setting.xdevkitSetting.get('env.CLIENT_ID'))
   action.init(setting, lib)
 
   const expressApp = express()
