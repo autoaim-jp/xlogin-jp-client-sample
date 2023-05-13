@@ -34,7 +34,7 @@ export const init = (env) => {
   setting.api.SCOPE = setting.api.SCOPE.replace(/\$CLIENT_ID/g, env.CLIENT_ID)
 }
 
-export const get = (...keyList) => {
+export const getList = (...keyList) => {
   /* eslint-disable no-param-reassign */
   const constantList = keyList.reduce((prev, key) => {
     let value = setting
@@ -52,7 +52,7 @@ export const get = (...keyList) => {
   return constantList
 }
 
-export const getOne = (key) => {
+export const getValue = (key) => {
   let value = setting
   for(const keySplit of key.split('.')) {
     value = value[keySplit]
@@ -61,8 +61,7 @@ export const getOne = (key) => {
 }
 
 export default {
-  setting,
-  get,
-  getOne,
+  getList,
+  getValue,
 }
 

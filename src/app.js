@@ -61,13 +61,11 @@ const main = () => {
   dotenv.config()
   lib.init(axios, crypto)
   settingInit(process.env)
-  xdevkit.init(setting.xdevkitSetting)
-  console.log('?', setting.xdevkitSetting.get('env.CLIENT_ID'))
   action.init(setting, lib)
 
   const expressApp = express()
   expressApp.use(_getOtherRouter())
-  expressApp.use(xdevkit.getRouter())
+  expressApp.use(xdevkit.getRouter({ xdevkitSetting: setting.xdevkitSetting }))
   expressApp.use(_getActionRouter())
 
   _startServer(expressApp)
