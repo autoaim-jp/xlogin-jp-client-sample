@@ -1,5 +1,5 @@
 /* mypage/app.js */
-import * as setting from '../_setting/index.js'
+import setting from '../_setting/index.js'
 import * as lib from '../_lib/index.js'
 
 import * as input from './input.js'
@@ -18,7 +18,7 @@ const a = asocial
 
 const loadProfile = async () => {
   const userInfoResult = await a.input.fetchUserProfile(argNamed({
-    browserServerSetting: a.setting.getBrowserServerSetting().get('apiEndpoint'),
+    browserServerSetting: a.setting.browserServerSetting.getList('apiEndpoint'),
     lib: [a.lib.common.input.getRequest],
   }))
   a.lib.redirect(userInfoResult)
@@ -31,7 +31,7 @@ const loadProfile = async () => {
 
 const loadTimerBtn = async () => {
   const addTimer = a.output.getAddTimer(argNamed({
-    browserServerSetting: a.setting.getBrowserServerSetting().get('apiEndpoint'),
+    browserServerSetting: a.setting.browserServerSetting.getList('apiEndpoint'),
     lib: [a.lib.common.output.postRequest],
   }))
 
@@ -45,13 +45,13 @@ const loadTimerBtn = async () => {
 
 const showNotification = () => {
   setInterval(() => {
-    a.lib.common.output.showNotification(a.setting.bsc.apiEndpoint, a.lib.xdevkit.output.showModal, a.lib.common.input.getRequest)
+    a.lib.common.output.showNotification(a.setting.browserServerSetting.getValue('apiEndpoint'), a.lib.xdevkit.output.showModal, a.lib.common.input.getRequest)
   }, 30 * 1000)
 }
 
 const loadMessageContent = async () => {
   const messageResult = await a.input.fetchMessage(argNamed({
-    browserServerSetting: a.setting.getBrowserServerSetting().get('apiEndpoint'),
+    browserServerSetting: a.setting.browserServerSetting.getList('apiEndpoint'),
     lib: [a.lib.common.input.getRequest],
   }))
 
@@ -62,7 +62,7 @@ const loadMessageContent = async () => {
 
 const loadMessageBtn = () => {
   const saveMessage = a.output.getSaveMessage(argNamed({
-    browserServerSetting: a.setting.getBrowserServerSetting().get('apiEndpoint'),
+    browserServerSetting: a.setting.browserServerSetting.getList('apiEndpoint'),
     lib: [a.lib.common.output.postRequest],
   }))
   const onClickSaveMessageButton = a.action.getOnClickSaveMessageButton(argNamed({
@@ -73,7 +73,7 @@ const loadMessageBtn = () => {
   }))
 
   const deleteMessage = a.output.getDeleteMessage(argNamed({
-    browserServerSetting: a.setting.getBrowserServerSetting().get('apiEndpoint'),
+    browserServerSetting: a.setting.browserServerSetting.getList('apiEndpoint'),
     lib: [a.lib.common.output.postRequest],
   }))
   const onClickDeleteMessageButton = a.action.getOnClickDeleteMessageButton(argNamed({
@@ -85,7 +85,7 @@ const loadMessageBtn = () => {
 }
 
 const loadPermission = async () => {
-  const splitPermissionListResult = await a.lib.common.input.fetchSplitPermissionList(a.setting.getBrowserServerSetting().apiEndpoint)
+  const splitPermissionListResult = await a.lib.common.input.fetchSplitPermissionList(a.setting.browserServerSetting.getValue('apiEndpoint'))
   a.output.showEditor(argNamed({
     param: { splitPermissionListResult },
   }))
@@ -116,7 +116,7 @@ const loadBackupEmailAddressForm = async ({ userInfoResult }) => {
   }))
 
   const saveBackupEmailAddress = a.output.getSaveBackupEmailAddress(argNamed({
-    browserServerSetting: a.setting.getBrowserServerSetting().get('apiEndpoint'),
+    browserServerSetting: a.setting.browserServerSetting.getList('apiEndpoint'),
     lib: [a.lib.common.output.postRequest],
   }))
   const onSubmitBackupEmailAddress = a.action.getOnSubmitBackupEmailAddress(argNamed({
