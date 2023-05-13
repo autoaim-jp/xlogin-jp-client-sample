@@ -71,7 +71,7 @@ const handleMessageSave = async (req, res) => {
   const { accessToken } = req.session.auth
   const param = {
     owner: mod.setting.xdevkitSetting.getValue('env.CLIENT_ID'),
-    filePath: mod.setting.user.MESSAGE_FILE_PATH,
+    filePath: mod.setting.getValue('user.MESSAGE_FILE_PATH'),
     content: message,
   }
   const fileSaveResponse = await mod.lib.postRequest(mod.setting.xdevkitSetting.getValue('env.CLIENT_ID'), accessToken, origin, path, param)
@@ -87,7 +87,7 @@ const handleMessageContent = async (req, res) => {
   const { accessToken } = req.session.auth
   const param = {
     owner: mod.setting.xdevkitSetting.getValue('env.CLIENT_ID'),
-    filePath: mod.setting.user.MESSAGE_FILE_PATH,
+    filePath: mod.setting.getValue('user.MESSAGE_FILE_PATH'),
   }
   console.log('???', accessToken, origin, path, param)
   const fileGetResponse = await mod.lib.getRequest(mod.setting.xdevkitSetting.getValue('env.CLIENT_ID'), accessToken, origin, path, param)
@@ -111,7 +111,7 @@ const handleMessageDelete = async (req, res) => {
   const { accessToken } = req.session.auth
   const param = {
     owner: mod.setting.xdevkitSetting.getValue('env.CLIENT_ID'),
-    filePath: mod.setting.user.MESSAGE_FILE_PATH,
+    filePath: mod.setting.getValue('user.MESSAGE_FILE_PATH'),
   }
   const fileDeleteResponse = await mod.lib.postRequest(mod.setting.xdevkitSetting.getValue('env.CLIENT_ID'), accessToken, origin, path, param)
   console.log({ fileDeleteResponse })

@@ -10,18 +10,18 @@ import dotenv from 'dotenv'
 import xdevkit from './xdevkit/server/index.js'
 import action from './action.js'
 import lib from './lib.js'
-import { setting, init as settingInit } from './setting/index.js'
+import setting from './setting/index.js'
 
 const _getOtherRouter = () => {
   const expressRouter = express.Router()
-  if (setting.env.SERVER_ORIGIN.indexOf('https') >= 0) {
+  if (setting.getValue('env.SERVER_ORIGIN').indexOf('https') >= 0) {
     expressRouter.use(helmet())
   }
   expressRouter.use(bodyParser.urlencoded({ extended: true }))
   expressRouter.use(bodyParser.json())
 
-  expressRouter.use(express.static(setting.server.PUBLIC_BUILD_DIR, { index: 'index.html', extensions: ['html'] }))
-  expressRouter.use(express.static(setting.server.PUBLIC_STATIC_DIR, { index: 'index.html', extensions: ['html'] }))
+  expressRouter.use(express.static(setting.getValue('server.PUBLIC_BUILD_DIR'), { index: 'index.html', extensions: ['html'] }))
+  expressRouter.use(express.static(setting.getValue('server.PUBLIC_STATIC_DIR'), { index: 'index.html', extensions: ['html'] }))
   return expressRouter
 }
 
@@ -41,18 +41,18 @@ const _getActionRouter = () => {
 }
 
 const _startServer = (expressApp) => {
-  if (setting.env.SERVER_ORIGIN.indexOf('https') >= 0) {
+  if (setting.getValue('env.SERVER_ORIGIN').indexOf('https') >= 0) {
     const tlsConfig = {
-      key: fs.readFileSync(setting.env.TLS_KEY_PATH),
-      cert: fs.readFileSync(setting.env.TLS_CERT_PATH),
+      key: fs.readFileSync(setting.getValue('env.TLS_KEY_PATH')),
+      cert: fs.readFileSync(setting.getValue('env.TLS_CERT_PATH')),
     }
     const server = https.createServer(tlsConfig, expressApp)
-    server.listen(setting.env.SERVER_PORT, () => {
-      console.log(`${setting.env.CLIENT_ID} listen to port: ${setting.env.SERVER_PORT}, origin: ${setting.env.SERVER_ORIGIN}`)
+    server.listen(setting.getValue('env.SERVER_PORT'), () => {
+      console.log(`${setting.getValue('env.CLIENT_ID')} listen to port: ${setting.getValue('env.SERVER_PORT')}, origin: ${setting.getValue('env.SERVER_ORIGIN')}`)
     })
   } else {
-    expressApp.listen(setting.env.SERVER_PORT, () => {
-      console.log(`${setting.env.CLIENT_ID} listen to port: ${setting.env.SERVER_PORT}, origin: ${setting.env.SERVER_ORIGIN}`)
+    expressApp.listen(setting.getValue('env.SERVER_PORT'), () => {
+      console.log(`${setting.getValue('env.CLIENT_ID')} listen to port: ${setting.getValue('env.SERVER_PORT')}, origin: ${setting.getValue('env.SERVER_ORIGIN')}`)
     })
   }
 }
@@ -60,7 +60,7 @@ const _startServer = (expressApp) => {
 const main = () => {
   dotenv.config()
   lib.init(axios, crypto)
-  settingInit(process.env)
+  setting.init(process.env)
   action.init(setting, lib)
 
   const expressApp = express()
