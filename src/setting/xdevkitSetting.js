@@ -24,7 +24,7 @@ setting.url.XLOGIN_USER_INFO_ENDPOINT = `/api/${setting.api.API_VERSION}/user/in
 setting.url.XLOGIN_REDIRECT_URI = encodeURIComponent('/f/xlogin/callback')
 
 
-export const init = (env) => {
+const init = (env) => {
   setting.env = {}
   setting.env.SERVER_ORIGIN = env.SERVER_ORIGIN
   setting.env.AUTH_SERVER_ORIGIN = env.AUTH_SERVER_ORIGIN
@@ -34,7 +34,7 @@ export const init = (env) => {
   setting.api.SCOPE = setting.api.SCOPE.replace(/\$CLIENT_ID/g, env.CLIENT_ID)
 }
 
-export const getList = (...keyList) => {
+const getList = (...keyList) => {
   /* eslint-disable no-param-reassign */
   const constantList = keyList.reduce((prev, key) => {
     let value = setting
@@ -52,7 +52,7 @@ export const getList = (...keyList) => {
   return constantList
 }
 
-export const getValue = (key) => {
+const getValue = (key) => {
   let value = setting
   for(const keySplit of key.split('.')) {
     value = value[keySplit]
@@ -61,6 +61,7 @@ export const getValue = (key) => {
 }
 
 export default {
+  init,
   getList,
   getValue,
 }

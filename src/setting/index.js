@@ -1,11 +1,11 @@
 /* /setting/index.js */
-import xdevkitSetting, { init as xdevkitSettingInit } from './xdevkitSetting.js'
+import xdevkitSetting from './xdevkitSetting.js'
 import browserServerSetting from './browserServerSetting.js'
 
 export const setting = {}
 
 export const init = (env) => {
-  xdevkitSettingInit(env)
+  xdevkitSetting.init(env)
 
   setting.env = {}
   setting.env.CLIENT_ID = env.CLIENT_ID
