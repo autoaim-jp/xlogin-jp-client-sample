@@ -25,5 +25,5 @@ setting.user = {}
 setting.user.MESSAGE_FILE_PATH = '/message.txt'
 
 setting.xdevkitSetting = xdevkitSetting
-setting.bsc = browserServerSetting
+setting.browserServerSetting = browserServerSetting
 

@@ -27,16 +27,16 @@ const _getOtherRouter = () => {
 
 const _getActionRouter = () => {
   const expressRouter = express.Router()
-  expressRouter.post(`${setting.bsc.apiEndpoint}/timer/add`, action.handleTimerAdd)
-  expressRouter.post(`${setting.bsc.apiEndpoint}/notification/open`, action.handleNotificationOpen)
-  expressRouter.get(`${setting.bsc.apiEndpoint}/notification/list`, action.handleNotificationList)
-  expressRouter.post(`${setting.bsc.apiEndpoint}/message/save`, action.handleMessageSave)
-  expressRouter.get(`${setting.bsc.apiEndpoint}/message/content`, action.handleMessageContent)
-  expressRouter.post(`${setting.bsc.apiEndpoint}/message/delete`, action.handleMessageDelete)
-  expressRouter.get(`${setting.bsc.apiEndpoint}/file/list`, action.handleFileList)
-  expressRouter.post(`${setting.bsc.apiEndpoint}/backupEmailAddress/save`, action.handleUpdateBackupEmailAddress)
+  expressRouter.post(`${setting.browserServerSetting.getValue('apiEndpoint')}/timer/add`, action.handleTimerAdd)
+  expressRouter.post(`${setting.browserServerSetting.getValue('apiEndpoint')}/notification/open`, action.handleNotificationOpen)
+  expressRouter.get(`${setting.browserServerSetting.getValue('apiEndpoint')}/notification/list`, action.handleNotificationList)
+  expressRouter.post(`${setting.browserServerSetting.getValue('apiEndpoint')}/message/save`, action.handleMessageSave)
+  expressRouter.get(`${setting.browserServerSetting.getValue('apiEndpoint')}/message/content`, action.handleMessageContent)
+  expressRouter.post(`${setting.browserServerSetting.getValue('apiEndpoint')}/message/delete`, action.handleMessageDelete)
+  expressRouter.get(`${setting.browserServerSetting.getValue('apiEndpoint')}/file/list`, action.handleFileList)
+  expressRouter.post(`${setting.browserServerSetting.getValue('apiEndpoint')}/backupEmailAddress/save`, action.handleUpdateBackupEmailAddress)
 
-  expressRouter.get(`${setting.bsc.apiEndpoint}/session/splitPermissionList`, action.handleSplitPermissionList)
+  expressRouter.get(`${setting.browserServerSetting.getValue('apiEndpoint')}/session/splitPermissionList`, action.handleSplitPermissionList)
   return expressRouter
 }
 

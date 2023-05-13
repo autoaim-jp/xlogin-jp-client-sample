@@ -20,7 +20,7 @@ const handleTimerAdd = (req, res) => {
     console.log({ timerAddResponse })
   }, 10 * 1000)
 
-  const status = mod.setting.bsc.statusList.OK
+  const status = mod.setting.browserServerSetting.getValue('statusList.OK')
   res.json({ status })
 }
 
@@ -36,7 +36,7 @@ const handleNotificationOpen = async (req, res) => {
   const notificationOpenResponse = await mod.lib.postRequest(mod.setting.xdevkitSetting.getValue('env.CLIENT_ID'), accessToken, origin, path, param)
   console.log({ notificationOpenResponse })
 
-  const status = mod.setting.bsc.statusList.OK
+  const status = mod.setting.browserServerSetting.getValue('statusList.OK')
   res.json({ status })
 }
 
@@ -44,7 +44,7 @@ const handleNotificationList = async (req, res) => {
   const origin = mod.setting.xdevkitSetting.getValue('env.API_SERVER_ORIGIN')
   const path = `/api/${mod.setting.xdevkitSetting.getValue('api.API_VERSION')}/notification/list`
   if (!req.session || !req.session.auth) {
-    const status = mod.setting.bsc.statusList.INVALID_SESSION
+    const status = mod.setting.browserServerSetting.getValue('statusList.INVALID_SESSION')
     return res.json({ status })
   }
   const { accessToken } = req.session.auth
@@ -52,13 +52,13 @@ const handleNotificationList = async (req, res) => {
   const notificationListResponse = await mod.lib.getRequest(mod.setting.xdevkitSetting.getValue('env.CLIENT_ID'), accessToken, origin, path, param)
 
   if (!notificationListResponse || !notificationListResponse.data) {
-    const status = mod.setting.bsc.statusList.INVALID_SESSION
+    const status = mod.setting.browserServerSetting.getValue('statusList.INVALID_SESSION')
     const result = {}
     res.json({ status, result })
     return null
   }
   const { result } = notificationListResponse.data
-  const status = mod.setting.bsc.statusList.OK
+  const status = mod.setting.browserServerSetting.getValue('statusList.OK')
   res.json({ status, result })
 
   return null
@@ -77,7 +77,7 @@ const handleMessageSave = async (req, res) => {
   const fileSaveResponse = await mod.lib.postRequest(mod.setting.xdevkitSetting.getValue('env.CLIENT_ID'), accessToken, origin, path, param)
   console.log({ fileSaveResponse })
 
-  const status = mod.setting.bsc.statusList.OK
+  const status = mod.setting.browserServerSetting.getValue('statusList.OK')
   res.json({ status })
 }
 
@@ -94,14 +94,14 @@ const handleMessageContent = async (req, res) => {
   console.log({ fileGetResponse })
 
   if (!fileGetResponse || !fileGetResponse.data) {
-    const status = mod.setting.bsc.statusList.INVALID_SESSION
+    const status = mod.setting.browserServerSetting.getValue('statusList.INVALID_SESSION')
     const result = {}
     res.json({ status, result })
     return
   }
 
   const { result } = fileGetResponse.data
-  const status = mod.setting.bsc.statusList.OK
+  const status = mod.setting.browserServerSetting.getValue('statusList.OK')
   res.json({ status, result })
 }
 
@@ -116,7 +116,7 @@ const handleMessageDelete = async (req, res) => {
   const fileDeleteResponse = await mod.lib.postRequest(mod.setting.xdevkitSetting.getValue('env.CLIENT_ID'), accessToken, origin, path, param)
   console.log({ fileDeleteResponse })
 
-  const status = mod.setting.bsc.statusList.OK
+  const status = mod.setting.browserServerSetting.getValue('statusList.OK')
   res.json({ status })
 }
 
@@ -132,7 +132,7 @@ const handleFileList = async (req, res) => {
   const fileListResponse = await mod.lib.getRequest(mod.setting.xdevkitSetting.getValue('env.CLIENT_ID'), accessToken, origin, path, param)
   console.log({ fileListResponse })
   if (!fileListResponse || !fileListResponse.data) {
-    const status = mod.setting.bsc.statusList.INVALID_SESSION
+    const status = mod.setting.browserServerSetting.getValue('statusList.INVALID_SESSION')
     const result = {}
     res.json({ status, result })
     return
@@ -140,14 +140,14 @@ const handleFileList = async (req, res) => {
 
   const { result } = fileListResponse.data
 
-  const status = mod.setting.bsc.statusList.OK
+  const status = mod.setting.browserServerSetting.getValue('statusList.OK')
   res.json({ status, result })
 }
 
 
 const handleSplitPermissionList = async (req, res) => {
   if (!req.session || !req.session.auth) {
-    const status = mod.setting.bsc.statusList.INVALID_SESSION
+    const status = mod.setting.browserServerSetting.getValue('statusList.INVALID_SESSION')
     const result = {}
     res.json({ status, result })
     return
@@ -156,7 +156,7 @@ const handleSplitPermissionList = async (req, res) => {
   const clientId = mod.setting.xdevkitSetting.getValue('env.CLIENT_ID')
   const result = { splitPermissionList, clientId }
 
-  const status = mod.setting.bsc.statusList.OK
+  const status = mod.setting.browserServerSetting.getValue('statusList.OK')
   res.json({ status, result })
 }
 
@@ -172,7 +172,7 @@ const handleUpdateBackupEmailAddress = async (req, res) => {
   const updateBackupEmailAddressResponse = await mod.lib.postRequest(mod.setting.xdevkitSetting.getValue('env.CLIENT_ID'), accessToken, origin, path, param)
   console.log({ updateBackupEmailAddressResponse })
   if (!updateBackupEmailAddressResponse || !updateBackupEmailAddressResponse.data) {
-    const status = mod.setting.bsc.statusList.INVALID_SESSION
+    const status = mod.setting.browserServerSetting.getValue('statusList.INVALID_SESSION')
     const result = {}
     res.json({ status, result })
     return
@@ -180,7 +180,7 @@ const handleUpdateBackupEmailAddress = async (req, res) => {
 
   const { result } = updateBackupEmailAddressResponse.data
 
-  const status = mod.setting.bsc.statusList.OK
+  const status = mod.setting.browserServerSetting.getValue('statusList.OK')
   res.json({ status, result })
 }
 
