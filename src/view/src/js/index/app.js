@@ -1,5 +1,5 @@
 /* /index/app.js */
-import * as setting from '../_setting/index.js'
+import setting from '../_setting/index.js'
 
 import * as output from './output.js'
 import * as action from './action.js'
@@ -24,7 +24,7 @@ const main = async () => {
 }
 
 const loadXloginButton = async () => {
-  const splitPermissionListResult = await a.lib.common.input.fetchSplitPermissionList(a.setting.getBrowserServerSetting().apiEndpoint)
+  const splitPermissionListResult = await a.lib.common.input.fetchSplitPermissionList(a.setting.browserServerSetting.getValue('apiEndpoint'))
   a.lib.xdevkit.output.reloadXloginLoginBtn(splitPermissionListResult.result.clientId)
 }
 
