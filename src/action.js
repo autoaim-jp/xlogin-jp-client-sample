@@ -1,27 +1,22 @@
 /* /action.js */
-const mod = {}
 
+// TODO remove
+const mod = {}
 const init = (setting, lib) => {
   mod.setting = setting
   mod.lib = lib
 }
 
-const handleTimerAdd = (req, res) => {
-  const origin = mod.setting.xdevkitSetting.getValue('env.API_SERVER_ORIGIN')
-  const path = `/api/${mod.setting.xdevkitSetting.getValue('api.API_VERSION')}/notification/append`
-  const { accessToken } = req.session.auth
-  setTimeout(async () => {
-    const param = {
-      notificationRange: mod.setting.xdevkitSetting.getValue('env.CLIENT_ID'),
-      subject: 'timer',
-      detail: 'TIME\'S UP!',
-    }
-    const timerAddResponse = await mod.lib.postRequest(mod.setting.xdevkitSetting.getValue('env.CLIENT_ID'), accessToken, origin, path, param)
-    console.log({ timerAddResponse })
-  }, 10 * 1000)
 
-  const status = mod.setting.browserServerSetting.getValue('statusList.OK')
-  res.json({ status })
+const getHandlerTimerAdd = ({ handleTimerAdd, OK }) => {
+  return (req, res) => {
+    const { accessToken } = req.session.auth
+
+    handleTimerAdd({ accessToken })
+
+    const status = OK
+    res.json({ status })
+  }
 }
 
 const handleNotificationOpen = async (req, res) => {
@@ -186,8 +181,11 @@ const handleUpdateBackupEmailAddress = async (req, res) => {
 
 
 export default {
+  // TODO remove
   init,
-  handleTimerAdd,
+
+  getHandlerTimerAdd,
+
   handleNotificationOpen,
   handleNotificationList,
   handleMessageSave,

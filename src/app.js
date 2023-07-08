@@ -8,9 +8,18 @@ import helmet from 'helmet'
 import dotenv from 'dotenv'
 
 import xdevkit from './xdevkit/server/index.js'
+import setting from './setting/index.js'
+import output from './output.js'
+import core from './core.js'
+import input from './input.js'
 import action from './action.js'
 import lib from './lib.js'
-import setting from './setting/index.js'
+
+const asocial = {
+  setting, output, core, input, action, lib
+}
+
+const a = asocial
 
 const _getOtherRouter = () => {
   const expressRouter = express.Router()
@@ -27,7 +36,13 @@ const _getOtherRouter = () => {
 
 const _getActionRouter = () => {
   const expressRouter = express.Router()
-  expressRouter.post(`${setting.browserServerSetting.getValue('apiEndpoint')}/timer/add`, action.handleTimerAdd)
+
+  const timerAddHandler = a.action.getHandlerTimerAdd(argNamed({
+    core: [a.core.handleTimerAdd],
+    browserServerSetting: a.setting.browserServerSetting.getList('statusList.OK'),
+  }))
+  expressRouter.post(`${setting.browserServerSetting.getValue('apiEndpoint')}/timer/add`, timerAddHandler)
+
   expressRouter.post(`${setting.browserServerSetting.getValue('apiEndpoint')}/notification/open`, action.handleNotificationOpen)
   expressRouter.get(`${setting.browserServerSetting.getValue('apiEndpoint')}/notification/list`, action.handleNotificationList)
   expressRouter.post(`${setting.browserServerSetting.getValue('apiEndpoint')}/message/save`, action.handleMessageSave)
@@ -61,7 +76,11 @@ const main = () => {
   dotenv.config()
   lib.init(axios, crypto)
   setting.init(process.env)
+  core.init(setting, output, input, lib)
+
+  // TODO remove
   action.init(setting, lib)
+
 
   const expressApp = express()
   expressApp.use(_getOtherRouter())
