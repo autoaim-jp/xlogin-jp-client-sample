@@ -25,7 +25,7 @@ const main = async () => {
 
 const loadXloginButton = async () => {
   const splitPermissionListResult = await a.lib.common.input.fetchSplitPermissionList(a.setting.browserServerSetting.getValue('apiEndpoint'))
-  a.lib.xdevkit.output.reloadXloginLoginBtn(splitPermissionListResult.result.clientId)
+  a.lib.xdevkit.output.reloadXloginLoginBtn(splitPermissionListResult?.result?.clientId)
 }
 
 a.app = {

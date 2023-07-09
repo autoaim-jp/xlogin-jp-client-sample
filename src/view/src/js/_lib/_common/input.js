@@ -14,6 +14,9 @@ export const getRequest = (_url, param = {}) => {
       return null
     }
     return res.json()
+  }).then((json) => {
+    console.log({ _url, json })
+    return json
   }).catch((e) => {
     console.error('[fatal] error @getRequest:', e)
     return null

@@ -38,20 +38,49 @@ const _getActionRouter = () => {
   const expressRouter = express.Router()
 
   const timerAddHandler = a.action.getHandlerTimerAdd(argNamed({
-    core: [a.core.handleTimerAdd],
-    browserServerSetting: a.setting.browserServerSetting.getList('statusList.OK'),
+    core: [a.core.handleTimerAdd, a.core.createResponse],
   }))
   expressRouter.post(`${setting.browserServerSetting.getValue('apiEndpoint')}/timer/add`, timerAddHandler)
 
-  expressRouter.post(`${setting.browserServerSetting.getValue('apiEndpoint')}/notification/open`, action.handleNotificationOpen)
-  expressRouter.get(`${setting.browserServerSetting.getValue('apiEndpoint')}/notification/list`, action.handleNotificationList)
-  expressRouter.post(`${setting.browserServerSetting.getValue('apiEndpoint')}/message/save`, action.handleMessageSave)
-  expressRouter.get(`${setting.browserServerSetting.getValue('apiEndpoint')}/message/content`, action.handleMessageContent)
-  expressRouter.post(`${setting.browserServerSetting.getValue('apiEndpoint')}/message/delete`, action.handleMessageDelete)
-  expressRouter.get(`${setting.browserServerSetting.getValue('apiEndpoint')}/file/list`, action.handleFileList)
-  expressRouter.post(`${setting.browserServerSetting.getValue('apiEndpoint')}/backupEmailAddress/save`, action.handleUpdateBackupEmailAddress)
+  const notificationOpenHandler = a.action.getHandlerNotificationOpen(argNamed({
+    core: [a.core.handleNotificationOpen, a.core.createResponse],
+  }))
+  expressRouter.post(`${setting.browserServerSetting.getValue('apiEndpoint')}/notification/open`, notificationOpenHandler)
 
-  expressRouter.get(`${setting.browserServerSetting.getValue('apiEndpoint')}/session/splitPermissionList`, action.handleSplitPermissionList)
+  const notificationListHandler = a.action.getHandlerNotificationList(argNamed({
+    core: [a.core.handleInvalidSession, a.core.handleNotificationList, a.core.createResponse],
+  }))
+  expressRouter.get(`${setting.browserServerSetting.getValue('apiEndpoint')}/notification/list`, notificationListHandler)
+
+  const messageSaveHandler = a.action.getHandlerMessageSave(argNamed({
+    core: [a.core.handleMessageSave, a.core.createResponse],
+  }))
+  expressRouter.post(`${setting.browserServerSetting.getValue('apiEndpoint')}/message/save`, messageSaveHandler)
+
+  const messageContentHandler = a.action.getHandlerMessageContent(argNamed({
+    core: [a.core.handleMessageContent, a.core.createResponse],
+  }))
+  expressRouter.get(`${setting.browserServerSetting.getValue('apiEndpoint')}/message/content`, messageContentHandler)
+
+  const messageDeleteHandler = a.action.getHandlerMessageDelete(argNamed({
+    core: [a.core.handleMessageDelete, a.core.createResponse],
+  }))
+  expressRouter.post(`${setting.browserServerSetting.getValue('apiEndpoint')}/message/delete`, messageDeleteHandler)
+
+  const fileListHandler = a.action.getHandlerFileList(argNamed({
+    core: [a.core.handleFileList, a.core.createResponse],
+  }))
+  expressRouter.get(`${setting.browserServerSetting.getValue('apiEndpoint')}/file/list`, fileListHandler)
+
+  const updateBackupEmailAddressHandler = a.action.getHandlerUpdateBackupEmailAddress(argNamed({
+    core: [a.core.handleUpdateBackupEmailAddress, a.core.createResponse],
+  }))
+  expressRouter.post(`${setting.browserServerSetting.getValue('apiEndpoint')}/backupEmailAddress/save`, updateBackupEmailAddressHandler)
+
+  const splitPermissionListHandler = a.action.getHandlerSplitPermissionList(argNamed({
+    core: [a.core.handleInvalidSession, a.core.handleSplitPermissionList, a.core.createResponse],
+  }))
+  expressRouter.get(`${setting.browserServerSetting.getValue('apiEndpoint')}/session/splitPermissionList`, splitPermissionListHandler)
   return expressRouter
 }
 
@@ -77,9 +106,6 @@ const main = () => {
   lib.init(axios, crypto)
   setting.init(process.env)
   core.init(setting, output, input, lib)
-
-  // TODO remove
-  action.init(setting, lib)
 
 
   const expressApp = express()

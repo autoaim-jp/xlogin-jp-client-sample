@@ -1,4 +1,5 @@
 /* /output.js */
+
 const timerAddRequest = ({ accessToken, CLIENT_ID, API_VERSION, API_SERVER_ORIGIN, postRequest, }) => {
   const path = `/api/${API_VERSION}/notification/append`
   const param = {
@@ -10,7 +11,68 @@ const timerAddRequest = ({ accessToken, CLIENT_ID, API_VERSION, API_SERVER_ORIGI
   return postRequest(CLIENT_ID, accessToken, API_SERVER_ORIGIN, path, param)
 }
 
+const notificationOpenRequest = ({ accessToken, notificationIdList, CLIENT_ID, API_VERSION, API_SERVER_ORIGIN, postRequest, }) => {
+  const origin = API_SERVER_ORIGIN
+  const path = `/api/${API_VERSION}/notification/open`
+  const param = {
+    notificationRange: CLIENT_ID,
+    notificationIdList,
+  }
+
+  return postRequest(CLIENT_ID, accessToken, API_SERVER_ORIGIN, path, param)
+}
+
+const fileSaveRequest = ({ accessToken, message, MESSAGE_FILE_PATH, CLIENT_ID, API_VERSION, API_SERVER_ORIGIN, postRequest, }) => {
+  const origin = API_SERVER_ORIGIN
+  const path = `/api/${API_VERSION}/file/update`
+  const param = {
+    owner: CLIENT_ID,
+    filePath: MESSAGE_FILE_PATH,
+    content: message,
+  }
+
+  return postRequest(CLIENT_ID, accessToken, origin, path, param)
+}
+
+const fileDeleteRequest = ({ accessToken, MESSAGE_FILE_PATH, CLIENT_ID, API_VERSION, API_SERVER_ORIGIN, postRequest, }) => {
+  const origin = API_SERVER_ORIGIN
+  const path = `/api/${API_VERSION}/file/delete`
+  const param = {
+    owner: CLIENT_ID,
+    filePath: MESSAGE_FILE_PATH,
+  }
+
+  return postRequest(CLIENT_ID, accessToken, origin, path, param)
+}
+
+const updateBackupEmailAddressRequest = ({ accessToken, backupEmailAddress, CLIENT_ID, API_VERSION, API_SERVER_ORIGIN, postRequest, }) => {
+  const origin = API_SERVER_ORIGIN
+  const path = `/api/${API_VERSION}/user/update`
+  const param = {
+    backupEmailAddress,
+  }
+
+  return postRequest(CLIENT_ID, accessToken, origin, path, param)
+}
+
+/* to http client */
+const endResponse = ({ res, json, redirect, ERROR_PAGE }) => {
+  if (redirect) {
+    return res.redirect(redirect)
+  } else if (json) {
+    return res.json(json)
+  } else {
+    return res.redirect(ERROR_PAGE)
+  }
+}
+
 export default {
   timerAddRequest,
+  notificationOpenRequest,
+  fileSaveRequest,
+  fileDeleteRequest,
+  updateBackupEmailAddressRequest,
+
+  endResponse,
 }
 

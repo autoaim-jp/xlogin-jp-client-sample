@@ -94,7 +94,7 @@ const loadPermission = async () => {
     param: { splitPermissionListResult },
   }))
 
-  a.lib.xdevkit.output.reloadXloginLoginBtn(splitPermissionListResult.result.clientId)
+  a.lib.xdevkit.output.reloadXloginLoginBtn(splitPermissionListResult?.result?.clientId)
 }
 
 const loadTabBtn = async () => {
