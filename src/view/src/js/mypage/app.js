@@ -1,6 +1,6 @@
 /* mypage/app.js */
-import * as setting from '../_setting/index.js'
-import * as lib from '../lib.js'
+import setting from '../_setting/index.js'
+import * as lib from '../_lib/index.js'
 
 import * as input from './input.js'
 import * as action from './action.js'
@@ -18,12 +18,12 @@ const a = asocial
 
 const loadProfile = async () => {
   const userInfoResult = await a.input.fetchUserProfile(argNamed({
-    browserServerSetting: a.setting.getBrowserServerSetting().get('apiEndpoint'),
-    lib: [a.lib.getRequest],
+    browserServerSetting: a.setting.browserServerSetting.getList('apiEndpoint'),
+    lib: [a.lib.common.input.getRequest],
   }))
   a.lib.redirect(userInfoResult)
   a.output.showUserProfile(argNamed({
-    lib: [a.lib.applyElmList],
+    lib: [a.lib.xdevkit.output.applyElmList],
     other: { userInfoResult },
   }))
   return userInfoResult
@@ -31,8 +31,8 @@ const loadProfile = async () => {
 
 const loadTimerBtn = async () => {
   const addTimer = a.output.getAddTimer(argNamed({
-    browserServerSetting: a.setting.getBrowserServerSetting().get('apiEndpoint'),
-    lib: [a.lib.postRequest],
+    browserServerSetting: a.setting.browserServerSetting.getList('apiEndpoint'),
+    lib: [a.lib.common.output.postRequest],
   }))
 
   const onClickAddTimerButton = a.action.getOnClickAddTimerButton(argNamed({
@@ -45,14 +45,14 @@ const loadTimerBtn = async () => {
 
 const showNotification = () => {
   setInterval(() => {
-    a.lib.showNotification(a.setting.bsc.apiEndpoint)
+    a.lib.common.output.showNotification(a.setting.browserServerSetting.getValue('apiEndpoint'), a.lib.xdevkit.output.showModal, a.lib.common.input.getRequest)
   }, 30 * 1000)
 }
 
 const loadMessageContent = async () => {
   const messageResult = await a.input.fetchMessage(argNamed({
-    browserServerSetting: a.setting.getBrowserServerSetting().get('apiEndpoint'),
-    lib: [a.lib.getRequest],
+    browserServerSetting: a.setting.browserServerSetting.getList('apiEndpoint'),
+    lib: [a.lib.common.input.getRequest],
   }))
 
   a.output.showMessage(argNamed({
@@ -62,8 +62,8 @@ const loadMessageContent = async () => {
 
 const loadMessageBtn = () => {
   const saveMessage = a.output.getSaveMessage(argNamed({
-    browserServerSetting: a.setting.getBrowserServerSetting().get('apiEndpoint'),
-    lib: [a.lib.postRequest],
+    browserServerSetting: a.setting.browserServerSetting.getList('apiEndpoint'),
+    lib: [a.lib.common.output.postRequest],
   }))
   const onClickSaveMessageButton = a.action.getOnClickSaveMessageButton(argNamed({
     output: { saveMessage },
@@ -73,8 +73,8 @@ const loadMessageBtn = () => {
   }))
 
   const deleteMessage = a.output.getDeleteMessage(argNamed({
-    browserServerSetting: a.setting.getBrowserServerSetting().get('apiEndpoint'),
-    lib: [a.lib.postRequest],
+    browserServerSetting: a.setting.browserServerSetting.getList('apiEndpoint'),
+    lib: [a.lib.common.output.postRequest],
   }))
   const onClickDeleteMessageButton = a.action.getOnClickDeleteMessageButton(argNamed({
     output: { deleteMessage },
@@ -85,7 +85,7 @@ const loadMessageBtn = () => {
 }
 
 const loadPermission = async () => {
-  const splitPermissionListResult = await a.lib.fetchSplitPermissionList(a.setting.getBrowserServerSetting().apiEndpoint)
+  const splitPermissionListResult = await a.lib.common.input.fetchSplitPermissionList(a.setting.browserServerSetting.getValue('apiEndpoint'))
   a.output.showEditor(argNamed({
     param: { splitPermissionListResult },
   }))
@@ -94,7 +94,7 @@ const loadPermission = async () => {
     param: { splitPermissionListResult },
   }))
 
-  a.lib.reloadXloginLoginBtn(splitPermissionListResult.result.clientId)
+  a.lib.xdevkit.output.reloadXloginLoginBtn(splitPermissionListResult?.result?.clientId)
 }
 
 const loadTabBtn = async () => {
@@ -102,7 +102,7 @@ const loadTabBtn = async () => {
   const activeTabContainerId = Object.keys(tabList)[0]
 
   a.output.addTabMenuContainer(argNamed({
-    lib: [a.lib.createTabMenuContainer, a.lib.showTabButton],
+    lib: [a.lib.xdevkit.output.createTabMenuContainer, a.lib.xdevkit.output.showTabButton],
     param: { tabList, activeTabContainerId },
   }))
 }
@@ -115,10 +115,9 @@ const loadBackupEmailAddressForm = async ({ userInfoResult }) => {
     param: { backupEmailAddress },
   }))
 
-
   const saveBackupEmailAddress = a.output.getSaveBackupEmailAddress(argNamed({
-    browserServerSetting: a.setting.getBrowserServerSetting().get('apiEndpoint'),
-    lib: [a.lib.postRequest],
+    browserServerSetting: a.setting.browserServerSetting.getList('apiEndpoint'),
+    lib: [a.lib.common.output.postRequest],
   }))
   const onSubmitBackupEmailAddress = a.action.getOnSubmitBackupEmailAddress(argNamed({
     param: { saveBackupEmailAddress },
@@ -129,8 +128,8 @@ const loadBackupEmailAddressForm = async ({ userInfoResult }) => {
 }
 
 const main = async () => {
-  a.lib.switchLoading(true)
-  a.lib.setOnClickNavManu()
+  a.lib.xdevkit.output.switchLoading(true)
+  a.lib.common.output.setOnClickNavManu()
   a.lib.monkeyPatch()
 
   const userInfoResult = await a.app.loadProfile()
@@ -144,7 +143,7 @@ const main = async () => {
   a.app.loadPermission()
 
   setTimeout(() => {
-    a.lib.switchLoading(false)
+    a.lib.xdevkit.output.switchLoading(false)
   }, 300)
 }
 

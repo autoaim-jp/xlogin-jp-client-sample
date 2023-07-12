@@ -13,7 +13,7 @@ jobs:
         with:
           node-version: '16'
       - run: yarn install
-      - run: version=v0.13 yarn init-xdevkit
+      - run: XDEVKIT_VERSION=v0.17 yarn init-xdevkit
       - name: Run eslint-server
         run: yarn lint-server
       - name: Run eslint-browser

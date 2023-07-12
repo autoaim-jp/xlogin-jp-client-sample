@@ -1,9 +1,9 @@
 /* /index/app.js */
-import * as setting from '../_setting/index.js'
+import setting from '../_setting/index.js'
 
 import * as output from './output.js'
 import * as action from './action.js'
-import * as lib from '../lib.js'
+import * as lib from '../_lib/index.js'
 
 const asocial = {}
 asocial.output = output
@@ -14,18 +14,18 @@ asocial.setting = setting
 const a = asocial
 
 const main = async () => {
-  a.lib.switchLoading(true)
-  a.lib.setOnClickNavManu()
+  a.lib.xdevkit.output.switchLoading(true)
+  a.lib.common.output.setOnClickNavManu()
   a.lib.monkeyPatch()
   a.app.loadXloginButton()
   setTimeout(() => {
-    a.lib.switchLoading(false)
+    a.lib.xdevkit.output.switchLoading(false)
   }, 300)
 }
 
 const loadXloginButton = async () => {
-  const splitPermissionListResult = await a.lib.fetchSplitPermissionList(a.setting.getBrowserServerSetting().apiEndpoint)
-  a.lib.reloadXloginLoginBtn(splitPermissionListResult.result.clientId)
+  const splitPermissionListResult = await a.lib.common.input.fetchSplitPermissionList(a.setting.browserServerSetting.getValue('apiEndpoint'))
+  a.lib.xdevkit.output.reloadXloginLoginBtn(splitPermissionListResult?.result?.clientId)
 }
 
 a.app = {

@@ -1,11 +1,21 @@
 /* /setting/index.js */
-import xdevkitSetting, { init as xdevkitSettingInit } from './xdevkitSetting.js'
+import xdevkitSetting from './xdevkitSetting.js'
 import browserServerSetting from './browserServerSetting.js'
 
-export const setting = {}
+const setting = {}
 
-export const init = (env) => {
-  xdevkitSettingInit(env)
+setting.server = {}
+setting.server.PUBLIC_BUILD_DIR = 'view/build'
+setting.server.PUBLIC_STATIC_DIR = 'view/static'
+
+setting.user = {}
+setting.user.MESSAGE_FILE_PATH = '/message.txt'
+
+setting.xdevkitSetting = xdevkitSetting
+setting.browserServerSetting = browserServerSetting
+
+const init = (env) => {
+  xdevkitSetting.init(env)
 
   setting.env = {}
   setting.env.CLIENT_ID = env.CLIENT_ID
@@ -16,14 +26,39 @@ export const init = (env) => {
   setting.env.SERVER_PORT = env.SERVER_PORT
 }
 
+const getList = (...keyList) => {
+  /* eslint-disable no-param-reassign */
+  const constantList = keyList.reduce((prev, key) => {
+    let value = setting
+    for (const keySplit of key.split('.')) {
+      value = value[keySplit]
+    }
+    prev[key.slice(key.lastIndexOf('.') + 1)] = value
+    return prev
+  }, {})
+  for (const key of keyList) {
+    if (constantList[key.slice(key.lastIndexOf('.') + 1)] === undefined) {
+      throw new Error(`[error] undefined setting constant: ${key}`)
+    }
+  }
+  return constantList
+}
 
-setting.server = {}
-setting.server.PUBLIC_BUILD_DIR = 'view/build'
-setting.server.PUBLIC_STATIC_DIR = 'view/static'
 
-setting.user = {}
-setting.user.MESSAGE_FILE_PATH = '/message.txt'
+const getValue = (key) => {
+  let value = setting
+  for (const keySplit of key.split('.')) {
+    value = value[keySplit]
+  }
+  return value
+}
 
-setting.xdevkitSetting = xdevkitSetting
-setting.bsc = browserServerSetting
+
+export default {
+  init,
+  getList,
+  getValue,
+  xdevkitSetting,
+  browserServerSetting,
+}
 

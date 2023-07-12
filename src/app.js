@@ -7,52 +7,96 @@ import bodyParser from 'body-parser'
 import helmet from 'helmet'
 import dotenv from 'dotenv'
 
-import xdevkit from './xdevkit/index.js'
+import xdevkit from './xdevkit/server/index.js'
+import setting from './setting/index.js'
+import output from './output.js'
+import core from './core.js'
+import input from './input.js'
 import action from './action.js'
 import lib from './lib.js'
-import { setting, init as settingInit } from './setting/index.js'
+
+const asocial = {
+  setting, output, core, input, action, lib,
+}
+
+const a = asocial
 
 const _getOtherRouter = () => {
   const expressRouter = express.Router()
-  if (setting.env.SERVER_ORIGIN.indexOf('https') >= 0) {
+  if (setting.getValue('env.SERVER_ORIGIN').indexOf('https') >= 0) {
     expressRouter.use(helmet())
   }
   expressRouter.use(bodyParser.urlencoded({ extended: true }))
   expressRouter.use(bodyParser.json())
 
-  expressRouter.use(express.static(setting.server.PUBLIC_BUILD_DIR, { index: 'index.html', extensions: ['html'] }))
-  expressRouter.use(express.static(setting.server.PUBLIC_STATIC_DIR, { index: 'index.html', extensions: ['html'] }))
+  expressRouter.use(express.static(setting.getValue('server.PUBLIC_BUILD_DIR'), { index: 'index.html', extensions: ['html'] }))
+  expressRouter.use(express.static(setting.getValue('server.PUBLIC_STATIC_DIR'), { index: 'index.html', extensions: ['html'] }))
   return expressRouter
 }
 
 const _getActionRouter = () => {
   const expressRouter = express.Router()
-  expressRouter.post(`${setting.bsc.apiEndpoint}/timer/add`, action.handleTimerAdd)
-  expressRouter.post(`${setting.bsc.apiEndpoint}/notification/open`, action.handleNotificationOpen)
-  expressRouter.get(`${setting.bsc.apiEndpoint}/notification/list`, action.handleNotificationList)
-  expressRouter.post(`${setting.bsc.apiEndpoint}/message/save`, action.handleMessageSave)
-  expressRouter.get(`${setting.bsc.apiEndpoint}/message/content`, action.handleMessageContent)
-  expressRouter.post(`${setting.bsc.apiEndpoint}/message/delete`, action.handleMessageDelete)
-  expressRouter.get(`${setting.bsc.apiEndpoint}/file/list`, action.handleFileList)
-  expressRouter.post(`${setting.bsc.apiEndpoint}/backupEmailAddress/save`, action.handleUpdateBackupEmailAddress)
 
-  expressRouter.get(`${setting.bsc.apiEndpoint}/session/splitPermissionList`, action.handleSplitPermissionList)
+  const timerAddHandler = a.action.getHandlerTimerAdd(argNamed({
+    core: [a.core.handleTimerAdd, a.core.createResponse],
+  }))
+  expressRouter.post(`${setting.browserServerSetting.getValue('apiEndpoint')}/timer/add`, timerAddHandler)
+
+  const notificationOpenHandler = a.action.getHandlerNotificationOpen(argNamed({
+    core: [a.core.handleNotificationOpen, a.core.createResponse],
+  }))
+  expressRouter.post(`${setting.browserServerSetting.getValue('apiEndpoint')}/notification/open`, notificationOpenHandler)
+
+  const notificationListHandler = a.action.getHandlerNotificationList(argNamed({
+    core: [a.core.handleInvalidSession, a.core.handleNotificationList, a.core.createResponse],
+  }))
+  expressRouter.get(`${setting.browserServerSetting.getValue('apiEndpoint')}/notification/list`, notificationListHandler)
+
+  const messageSaveHandler = a.action.getHandlerMessageSave(argNamed({
+    core: [a.core.handleMessageSave, a.core.createResponse],
+  }))
+  expressRouter.post(`${setting.browserServerSetting.getValue('apiEndpoint')}/message/save`, messageSaveHandler)
+
+  const messageContentHandler = a.action.getHandlerMessageContent(argNamed({
+    core: [a.core.handleMessageContent, a.core.createResponse],
+  }))
+  expressRouter.get(`${setting.browserServerSetting.getValue('apiEndpoint')}/message/content`, messageContentHandler)
+
+  const messageDeleteHandler = a.action.getHandlerMessageDelete(argNamed({
+    core: [a.core.handleMessageDelete, a.core.createResponse],
+  }))
+  expressRouter.post(`${setting.browserServerSetting.getValue('apiEndpoint')}/message/delete`, messageDeleteHandler)
+
+  const fileListHandler = a.action.getHandlerFileList(argNamed({
+    core: [a.core.handleFileList, a.core.createResponse],
+  }))
+  expressRouter.get(`${setting.browserServerSetting.getValue('apiEndpoint')}/file/list`, fileListHandler)
+
+  const updateBackupEmailAddressHandler = a.action.getHandlerUpdateBackupEmailAddress(argNamed({
+    core: [a.core.handleUpdateBackupEmailAddress, a.core.createResponse],
+  }))
+  expressRouter.post(`${setting.browserServerSetting.getValue('apiEndpoint')}/backupEmailAddress/save`, updateBackupEmailAddressHandler)
+
+  const splitPermissionListHandler = a.action.getHandlerSplitPermissionList(argNamed({
+    core: [a.core.handleInvalidSession, a.core.handleSplitPermissionList, a.core.createResponse],
+  }))
+  expressRouter.get(`${setting.browserServerSetting.getValue('apiEndpoint')}/session/splitPermissionList`, splitPermissionListHandler)
   return expressRouter
 }
 
 const _startServer = (expressApp) => {
-  if (setting.env.SERVER_ORIGIN.indexOf('https') >= 0) {
+  if (setting.getValue('env.SERVER_ORIGIN').indexOf('https') >= 0) {
     const tlsConfig = {
-      key: fs.readFileSync(setting.env.TLS_KEY_PATH),
-      cert: fs.readFileSync(setting.env.TLS_CERT_PATH),
+      key: fs.readFileSync(setting.getValue('env.TLS_KEY_PATH')),
+      cert: fs.readFileSync(setting.getValue('env.TLS_CERT_PATH')),
     }
     const server = https.createServer(tlsConfig, expressApp)
-    server.listen(setting.env.SERVER_PORT, () => {
-      console.log(`${setting.env.CLIENT_ID} listen to port: ${setting.env.SERVER_PORT}, origin: ${setting.env.SERVER_ORIGIN}`)
+    server.listen(setting.getValue('env.SERVER_PORT'), () => {
+      console.log(`${setting.getValue('env.CLIENT_ID')} listen to port: ${setting.getValue('env.SERVER_PORT')}, origin: ${setting.getValue('env.SERVER_ORIGIN')}`)
     })
   } else {
-    expressApp.listen(setting.env.SERVER_PORT, () => {
-      console.log(`${setting.env.CLIENT_ID} listen to port: ${setting.env.SERVER_PORT}, origin: ${setting.env.SERVER_ORIGIN}`)
+    expressApp.listen(setting.getValue('env.SERVER_PORT'), () => {
+      console.log(`${setting.getValue('env.CLIENT_ID')} listen to port: ${setting.getValue('env.SERVER_PORT')}, origin: ${setting.getValue('env.SERVER_ORIGIN')}`)
     })
   }
 }
@@ -60,13 +104,13 @@ const _startServer = (expressApp) => {
 const main = () => {
   dotenv.config()
   lib.init(axios, crypto)
-  settingInit(process.env)
-  xdevkit.init(setting.xdevkitSetting)
-  action.init(setting, lib)
+  setting.init(process.env)
+  core.init(setting, output, input, lib)
+
 
   const expressApp = express()
   expressApp.use(_getOtherRouter())
-  expressApp.use(xdevkit.getRouter())
+  expressApp.use(xdevkit.getRouter({ xdevkitSetting: setting.xdevkitSetting }))
   expressApp.use(_getActionRouter())
 
   _startServer(expressApp)
