@@ -38,7 +38,7 @@ const getList = (...keyList) => {
   /* eslint-disable no-param-reassign */
   const constantList = keyList.reduce((prev, key) => {
     let value = setting
-    for(const keySplit of key.split('.')) {
+    for (const keySplit of key.split('.')) {
       value = value[keySplit]
     }
     prev[key.slice(key.lastIndexOf('.') + 1)] = value
@@ -54,7 +54,7 @@ const getList = (...keyList) => {
 
 const getValue = (key) => {
   let value = setting
-  for(const keySplit of key.split('.')) {
+  for (const keySplit of key.split('.')) {
     value = value[keySplit]
   }
   return value

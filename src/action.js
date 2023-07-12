@@ -16,7 +16,7 @@ const getHandlerNotificationOpen = ({ handleNotificationOpen, createResponse }) 
     const { notificationIdList } = req.body
 
     const handleResult = await handleNotificationOpen({ accessToken, notificationIdList })
-    
+
     createResponse({ req, res, handleResult })
   }
 }
@@ -30,7 +30,7 @@ const getHandlerNotificationList = ({ handleInvalidSession, handleNotificationLi
     const { accessToken } = req.session.auth
 
     const handleResult = await handleNotificationList({ accessToken })
-    
+
     createResponse({ req, res, handleResult })
   }
 }

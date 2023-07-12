@@ -95,4 +95,3 @@ export const showNotification = async (apiEndpoint, showModal, getRequest) => {
   await postRequest(`${apiEndpoint}/notification/open`, param)
 }
 
-

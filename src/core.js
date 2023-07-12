@@ -69,7 +69,7 @@ const handleMessageSave = async ({ accessToken, message }) => {
     setting: mod.setting.getList('user.MESSAGE_FILE_PATH'),
     lib: [mod.lib.postRequest],
   }))
- 
+
   console.log({ fileSaveResponse })
 
   const status = mod.setting.browserServerSetting.getValue('statusList.OK')
@@ -191,11 +191,10 @@ const createResponse = ({ req, res, handleResult }) => {
 
   if (req.method === 'GET') {
     if (handleResult.redirect) {
-      return mod.output.endResponse({ res, redirect, ERROR_PAGE })
+      return mod.output.endResponse({ res, redirect: handleResult.redirect, ERROR_PAGE })
     }
 
-    const redirect = ERROR_PAGE
-    return mod.output.endResponse({ res, redirect, ERROR_PAGE })
+    return mod.output.endResponse({ res, redirect: ERROR_PAGE, ERROR_PAGE })
   }
 
   if (redirect) {

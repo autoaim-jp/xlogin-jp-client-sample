@@ -23,6 +23,7 @@ const getList = (...keyList) => {
 }
 
 
+/* eslint-disable no-unused-vars */
 const getValue = (key) => {
   let value = setting
   for (const keySplit of key.split('.')) {
