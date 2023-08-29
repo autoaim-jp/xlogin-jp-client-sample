@@ -18,8 +18,8 @@ setting.api.SCOPE = 'r:auth:emailAddress,rw:auth:backupEmailAddress,*r:auth:user
 
 setting.url = {}
 setting.url.ERROR_PAGE = '/error'
-setting.url.XLOGIN_AUTHORIZATION_ENDPOINT = `/api/${setting.api.API_VERSION}/auth/connect`
-setting.url.XLOGIN_CODE_ENDPOINT = `/api/${setting.api.API_VERSION}/auth/code`
+setting.url.XLOGIN_AUTHORIZATION_ENDPOINT = '/f/auth/connect'
+setting.url.XLOGIN_CODE_ENDPOINT = '/f/auth/code'
 setting.url.XLOGIN_USER_INFO_ENDPOINT = `/api/${setting.api.API_VERSION}/user/info`
 setting.url.XLOGIN_REDIRECT_URI = encodeURIComponent('/f/xlogin/callback')
 
