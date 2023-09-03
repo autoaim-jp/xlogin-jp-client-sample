@@ -102,6 +102,19 @@ const getHandlerUpdateBackupEmailAddress = ({ handleUpdateBackupEmailAddress, cr
   }
 }
 
+const getHandlerUploadFile = ({
+  handleUploadFile, createResponse, multer, FormData, Readable,
+}) => {
+  return async (req, res) => {
+    const { accessToken } = req.session.auth
+
+    const handleResult = await handleUploadFile({
+      req, accessToken, multer, FormData, Readable,
+    })
+
+    createResponse({ req, res, handleResult })
+  }
+}
 
 export default {
   getHandlerTimerAdd,
@@ -118,5 +131,7 @@ export default {
   getHandlerSplitPermissionList,
 
   getHandlerUpdateBackupEmailAddress,
+
+  getHandlerUploadFile,
 }
 

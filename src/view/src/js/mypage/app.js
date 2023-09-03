@@ -84,6 +84,21 @@ const loadMessageBtn = () => {
   }))
 }
 
+const loadUploadForm = () => {
+  const uploadFile = a.output.getUploadFile(argNamed({
+    browserServerSetting: a.setting.browserServerSetting.getList('apiEndpoint'),
+    lib: [a.lib.common.output.postFormRequest],
+  }))
+
+  const onSubmitUploadForm = a.action.getOnSubmitUploadForm(argNamed({
+    output: { uploadFile },
+  }))
+
+  a.output.setOnSubmitUploadForm(argNamed({
+    onSubmit: { onSubmitUploadForm },
+  }))
+}
+
 const loadPermission = async () => {
   const splitPermissionListResult = await a.lib.common.input.fetchSplitPermissionList(a.setting.browserServerSetting.getValue('apiEndpoint'))
   a.output.showEditor(argNamed({
@@ -94,11 +109,15 @@ const loadPermission = async () => {
     param: { splitPermissionListResult },
   }))
 
+  a.output.showUploadForm(argNamed({
+    param: { splitPermissionListResult },
+  }))
+
   a.lib.xdevkit.output.reloadXloginLoginBtn(splitPermissionListResult?.result?.clientId)
 }
 
 const loadTabBtn = async () => {
-  const tabList = { editorTabContainer: 'エディタ', timerTabContainer: 'タイマー', backupEmailAddressFormTabContainer: 'バックアップメールアドレス' }
+  const tabList = { editorTabContainer: 'エディタ', timerTabContainer: 'タイマー', backupEmailAddressFormTabContainer: 'バックアップメールアドレス', uploadTabContainer: 'プロフィール画像' }
   const activeTabContainerId = Object.keys(tabList)[0]
 
   a.output.addTabMenuContainer(argNamed({
@@ -137,6 +156,7 @@ const main = async () => {
   a.app.loadTimerBtn()
   a.app.loadMessageContent()
   a.app.loadMessageBtn()
+  a.app.loadUploadForm()
   a.app.loadTabBtn()
 
   a.app.showNotification()
@@ -154,6 +174,7 @@ a.app = {
   showNotification,
   loadMessageContent,
   loadMessageBtn,
+  loadUploadForm,
   loadPermission,
   loadTabBtn,
   loadBackupEmailAddressForm,

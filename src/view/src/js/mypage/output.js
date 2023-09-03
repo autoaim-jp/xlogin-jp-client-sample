@@ -45,6 +45,17 @@ export const getSaveBackupEmailAddress = ({ apiEndpoint, postRequest }) => {
   }
 }
 
+export const getUploadFile = ({ apiEndpoint, postFormRequest }) => {
+  const url = `${apiEndpoint}/form/save`
+  return () => {
+    const profileImageInputElm = document.querySelector('#profileImageInput')
+    const file = profileImageInputElm.files[0]
+    const formData = new FormData()
+    formData.append('file', file)
+    return postFormRequest(url, formData)
+  }
+}
+
 
 /* onClick */
 export const setOnClickAddTimerButton = ({ onClickAddTimerButton }) => {
@@ -80,6 +91,14 @@ export const setOnSubmitBackupEmailAddress = ({ onSubmitBackupEmailAddress }) =>
   }
 }
 
+export const setOnSubmitUploadForm = ({ onSubmitUploadForm }) => {
+  const uploadProfileFormElm = document.querySelector('#uploadProfileForm')
+  uploadProfileFormElm.onsubmit = (e) => {
+    e.preventDefault()
+    onSubmitUploadForm()
+  }
+}
+
 /* show data */
 export const showBackupEmailAddress = ({ backupEmailAddress }) => {
   const backupEmailAddressInputElm = document.querySelector('#backupEmailAddressInput')
@@ -108,6 +127,17 @@ export const showBackupEmailAddressForm = ({ splitPermissionListResult }) => {
     document.querySelector('#backupEmailAddressPermissionRequestContainer').classList.remove('hidden')
   }
 }
+
+export const showUploadForm = ({ splitPermissionListResult }) => {
+  const { splitPermissionList, clientId } = splitPermissionListResult.result
+  if (splitPermissionList.optional[`rw:${clientId}:file`]) {
+    document.querySelector('#uploadContainer').classList.remove('hidden')
+  } else {
+    document.querySelector('#uploadFilePermissionRequestContainer').classList.remove('hidden')
+  }
+}
+
+
 
 export const addTabMenuContainer = ({
   createTabMenuContainer, showTabButton, tabList, activeTabContainerId,

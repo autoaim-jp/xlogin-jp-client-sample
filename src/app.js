@@ -1,11 +1,15 @@
 import fs from 'fs'
+import { Readable } from 'stream'
 import axios from 'axios'
 import crypto from 'crypto'
 import https from 'https'
+import http from 'http'
 import express from 'express'
 import bodyParser from 'body-parser'
 import helmet from 'helmet'
 import dotenv from 'dotenv'
+import multer from 'multer'
+import FormData from 'form-data'
 
 import xdevkit from './xdevkit/server/index.js'
 import setting from './setting/index.js'
@@ -81,6 +85,13 @@ const _getActionRouter = () => {
     core: [a.core.handleInvalidSession, a.core.handleSplitPermissionList, a.core.createResponse],
   }))
   expressRouter.get(`${setting.browserServerSetting.getValue('apiEndpoint')}/session/splitPermissionList`, splitPermissionListHandler)
+
+  const uploadFileHandler = a.action.getHandlerUploadFile(argNamed({
+    core: [a.core.handleUploadFile, a.core.createResponse],
+    mod: [multer, FormData, Readable],
+  }))
+  expressRouter.post(`${setting.browserServerSetting.getValue('apiEndpoint')}/form/save`, uploadFileHandler)
+
   return expressRouter
 }
 
@@ -103,7 +114,7 @@ const _startServer = (expressApp) => {
 
 const main = () => {
   dotenv.config()
-  lib.init(axios, crypto)
+  lib.init(axios, http, crypto)
   setting.init(process.env)
   core.init(setting, output, input, lib)
 

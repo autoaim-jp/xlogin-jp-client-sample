@@ -61,6 +61,14 @@ const updateBackupEmailAddressRequest = ({
   return postRequest(CLIENT_ID, accessToken, API_SERVER_ORIGIN, path, param)
 }
 
+const fileAddRequest = ({
+  accessToken, CLIENT_ID, API_VERSION, API_SERVER_ORIGIN, postFormRequest, formData,
+}) => {
+  const path = `/api/${API_VERSION}/form/create`
+
+  return postFormRequest(CLIENT_ID, accessToken, API_SERVER_ORIGIN, path, formData)
+}
+
 /* to http client */
 const endResponse = ({
   res, json, redirect, ERROR_PAGE,
@@ -79,6 +87,7 @@ export default {
   fileSaveRequest,
   fileDeleteRequest,
   updateBackupEmailAddressRequest,
+  fileAddRequest,
 
   endResponse,
 }

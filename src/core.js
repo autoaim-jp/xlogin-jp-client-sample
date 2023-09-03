@@ -177,6 +177,43 @@ const handleUpdateBackupEmailAddress = async ({ accessToken, backupEmailAddress 
   return handleResult
 }
 
+const handleUploadFile = async ({
+  req, accessToken, multer, FormData, Readable,
+}) => {
+  const upload = multer({
+    storage: multer.memoryStorage(),
+    limits: { fileSize: 2 * 1024 * 1024 },
+  })
+
+  const uploadResult = await new Promise((resolve) => {
+    upload.single(mod.setting.getValue('key.FILE_UPLOAD'))(req, null, (error) => {
+      if (error instanceof multer.MulterError) {
+        return resolve({ error: true, message: error.message })
+      } if (error) {
+        return resolve({ error: true, message: 'unkown error' })
+      }
+
+      return resolve({ error: false, message: 'success' })
+    })
+  })
+
+  const filePath = mod.setting.getValue('user.PROFILE_FILE_PATH_WITHOUT_EXT')
+  const formData = new FormData()
+  formData.append('filePath', filePath)
+  formData.append('owner', mod.setting.getValue('env.CLIENT_ID'))
+  formData.append('file', Readable.from(req.file.buffer), { filename: filePath })
+
+  const fileAddResponse = await mod.output.fileAddRequest(argNamed({
+    param: { accessToken, formData },
+    xdevkitSetting: mod.setting.xdevkitSetting.getList('api.API_VERSION', 'env.API_SERVER_ORIGIN', 'env.CLIENT_ID'),
+    lib: [mod.lib.postFormRequest],
+  }))
+  console.log({ fileAddResponse })
+
+  const handleResult = { response: { status: mod.setting.browserServerSetting.getValue('statusList.OK') } }
+  return handleResult
+}
+
 const createResponse = ({ req, res, handleResult }) => {
   console.log('endResponse:', req.url, handleResult)
   // req.session.auth = handleResult.session
@@ -227,6 +264,8 @@ export default {
   handleFileList,
   handleSplitPermissionList,
   handleUpdateBackupEmailAddress,
+
+  handleUploadFile,
 
   createResponse,
   handleInvalidSession,

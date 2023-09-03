@@ -22,5 +22,11 @@ export const getOnSubmitBackupEmailAddress = ({ saveBackupEmailAddress }) => {
   }
 }
 
+export const getOnSubmitUploadForm = ({ uploadFile }) => {
+  return () => {
+    uploadFile()
+  }
+}
+
 export default {}
 

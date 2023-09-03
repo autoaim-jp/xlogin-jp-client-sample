@@ -1,6 +1,18 @@
 /* /_common/output.js */
 
 /* request */
+const _request = (url, opt) => {
+  return fetch(url, opt).then((res) => {
+    if (res.error || !res.body || !res.json) {
+      return null
+    }
+    return res.json()
+  }).catch((e) => {
+    console.error('[fatal] error @postRequest:', e)
+    return null
+  })
+}
+
 export const postRequest = (url, param = {}) => {
   const opt = {
     method: 'POST',
@@ -13,17 +25,17 @@ export const postRequest = (url, param = {}) => {
   if (param) {
     opt.body = JSON.stringify(param)
   }
-  return fetch(url, opt).then((res) => {
-    if (res.error || !res.body || !res.json) {
-      return null
-    }
-    return res.json()
-  }).catch((e) => {
-    console.error('[fatal] error @postRequest:', e)
-    return null
-  })
+  return _request(url, opt)
 }
 
+export const postFormRequest = (url, formData) => {
+  const opt = {
+    method: 'POST',
+    body: formData,
+  }
+
+  return _request(url, opt)
+}
 
 /* nav */
 export const setOnClickNavManu = () => {
