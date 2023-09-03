@@ -196,6 +196,7 @@ const handleUploadFile = async ({
       return resolve({ error: false, message: 'success' })
     })
   })
+  console.log({ uploadResult })
 
   const filePath = mod.setting.getValue('user.PROFILE_FILE_PATH_WITHOUT_EXT')
   const formData = new FormData()

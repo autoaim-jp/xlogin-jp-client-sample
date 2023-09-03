@@ -138,7 +138,6 @@ export const showUploadForm = ({ splitPermissionListResult }) => {
 }
 
 
-
 export const addTabMenuContainer = ({
   createTabMenuContainer, showTabButton, tabList, activeTabContainerId,
 }) => {

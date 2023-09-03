@@ -79,7 +79,7 @@ const getRequest = (clientId, accessToken, origin, path, param) => {
 }
 
 const postFormRequest = (clientId, accessToken, origin, path, formData) => {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     const header = {
       authorization: `Bearer ${accessToken}`,
       'x-xlogin-client-id': clientId,
