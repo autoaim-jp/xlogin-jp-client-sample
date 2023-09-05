@@ -112,7 +112,7 @@ export const showMessage = ({ messageResult }) => {
 
 export const showEditor = ({ splitPermissionListResult }) => {
   const { splitPermissionList, clientId } = splitPermissionListResult.result
-  if (splitPermissionList.optional[`rw:${clientId}:file`]) {
+  if (splitPermissionList.optional[`rw:${clientId}:json_v1`]) {
     document.querySelector('#editorContainer').classList.remove('hidden')
   } else {
     document.querySelector('#filePermissionRequestContainer').classList.remove('hidden')
@@ -130,7 +130,7 @@ export const showBackupEmailAddressForm = ({ splitPermissionListResult }) => {
 
 export const showUploadForm = ({ splitPermissionListResult }) => {
   const { splitPermissionList, clientId } = splitPermissionListResult.result
-  if (splitPermissionList.optional[`rw:${clientId}:file`]) {
+  if (splitPermissionList.optional[`rw:${clientId}:file_v1`]) {
     document.querySelector('#uploadContainer').classList.remove('hidden')
   } else {
     document.querySelector('#uploadFilePermissionRequestContainer').classList.remove('hidden')

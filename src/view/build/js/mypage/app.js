@@ -117,7 +117,9 @@ const loadPermission = async () => {
 }
 
 const loadTabBtn = async () => {
-  const tabList = { editorTabContainer: 'エディタ', timerTabContainer: 'タイマー', backupEmailAddressFormTabContainer: 'バックアップメールアドレス', uploadTabContainer: 'プロフィール画像' }
+  const tabList = {
+    editorTabContainer: 'エディタ', timerTabContainer: 'タイマー', backupEmailAddressFormTabContainer: 'バックアップメールアドレス', uploadTabContainer: 'プロフィール画像',
+  }
   const activeTabContainerId = Object.keys(tabList)[0]
 
   a.output.addTabMenuContainer(argNamed({
