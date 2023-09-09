@@ -69,9 +69,8 @@ const getHandlerMessageDelete = ({ handleMessageDelete, createResponse }) => {
 const getHandlerFileList = ({ handleFileList, createResponse }) => {
   return async (req, res) => {
     const { accessToken } = req.session.auth
-    const { filePath } = req.query
 
-    const handleResult = await handleFileList({ accessToken, filePath })
+    const handleResult = await handleFileList({ accessToken })
 
     createResponse({ req, res, handleResult })
   }

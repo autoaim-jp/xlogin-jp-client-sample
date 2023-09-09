@@ -22,13 +22,13 @@ const fileGetRequest = async ({
 }
 
 const fileListRequest = async ({
-  accessToken, filePath, CLIENT_ID, API_VERSION, API_SERVER_ORIGIN, getRequest,
+  accessToken, fileDir, CLIENT_ID, API_VERSION, API_SERVER_ORIGIN, getRequest,
 }) => {
   const origin = API_SERVER_ORIGIN
   const path = `/api/${API_VERSION}/file/list`
   const param = {
     owner: CLIENT_ID,
-    filePath,
+    fileDir,
   }
   return getRequest(CLIENT_ID, accessToken, origin, path, param)
 }

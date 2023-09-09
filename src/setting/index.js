@@ -13,7 +13,7 @@ setting.key.FILE_UPLOAD = 'file'
 
 setting.user = {}
 setting.user.MESSAGE_FILE_PATH = '/message.txt'
-setting.user.PROFILE_FILE_PATH_WITHOUT_EXT = '/profile'
+setting.user.PROFILE_FILE_PATH_WITHOUT_EXT = '/upload/mypage'
 
 setting.xdevkitSetting = xdevkitSetting
 setting.browserServerSetting = browserServerSetting

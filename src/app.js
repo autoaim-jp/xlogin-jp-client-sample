@@ -71,11 +71,6 @@ const _getActionRouter = () => {
   }))
   expressRouter.post(`${setting.browserServerSetting.getValue('apiEndpoint')}/message/delete`, messageDeleteHandler)
 
-  const fileListHandler = a.action.getHandlerFileList(argNamed({
-    core: [a.core.handleFileList, a.core.createResponse],
-  }))
-  expressRouter.get(`${setting.browserServerSetting.getValue('apiEndpoint')}/file/list`, fileListHandler)
-
   const updateBackupEmailAddressHandler = a.action.getHandlerUpdateBackupEmailAddress(argNamed({
     core: [a.core.handleUpdateBackupEmailAddress, a.core.createResponse],
   }))
@@ -91,6 +86,12 @@ const _getActionRouter = () => {
     mod: [multer, FormData, Readable],
   }))
   expressRouter.post(`${setting.browserServerSetting.getValue('apiEndpoint')}/form/save`, uploadFileHandler)
+
+  const fileListHandler = a.action.getHandlerFileList(argNamed({
+    core: [a.core.handleFileList, a.core.createResponse],
+  }))
+  expressRouter.get(`${setting.browserServerSetting.getValue('apiEndpoint')}/file/list`, fileListHandler)
+
 
   return expressRouter
 }

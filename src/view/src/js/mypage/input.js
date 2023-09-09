@@ -15,5 +15,13 @@ export const getBackupEmailAddress = ({ userInfoResult }) => {
   return backupEmailAddress || ''
 }
 
+export const getFetchUploadedFileList = ({ apiEndpoint, getRequest }) => {
+  return () => {
+    const url = `${apiEndpoint}/file/list`
+    return getRequest(url)
+  }
+}
+
+
 export default {}
 

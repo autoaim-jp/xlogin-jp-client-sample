@@ -117,11 +117,13 @@ const handleMessageDelete = async ({ accessToken }) => {
   return handleResult
 }
 
-const handleFileList = async ({ accessToken, filePath }) => {
+const handleFileList = async ({ accessToken }) => {
+  const filePathSplitList = mod.setting.getValue('user.PROFILE_FILE_PATH_WITHOUT_EXT').split('/')
+  const fileDir = filePathSplitList.slice(0, filePathSplitList.length - 1).join('/')
+
   const fileListResponse = await mod.input.fileListRequest(argNamed({
-    param: { accessToken, filePath },
+    param: { accessToken, fileDir },
     xdevkitSetting: mod.setting.xdevkitSetting.getList('api.API_VERSION', 'env.API_SERVER_ORIGIN', 'env.CLIENT_ID'),
-    setting: mod.setting.getList('user.MESSAGE_FILE_PATH'),
     lib: [mod.lib.getRequest],
   }))
 

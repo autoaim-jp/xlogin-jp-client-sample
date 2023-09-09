@@ -2,16 +2,18 @@
 import setting from '../_setting/index.js'
 import * as lib from '../_lib/index.js'
 
+import * as core from './core.js'
 import * as input from './input.js'
 import * as action from './action.js'
 import * as output from './output.js'
 
 const asocial = {}
 asocial.setting = setting
-asocial.lib = lib
+asocial.output = output
+asocial.core = core
 asocial.input = input
 asocial.action = action
-asocial.output = output
+asocial.lib = lib
 
 /* a is an alias of asocial */
 const a = asocial
@@ -96,6 +98,21 @@ const loadUploadForm = () => {
 
   a.output.setOnSubmitUploadForm(argNamed({
     onSubmit: { onSubmitUploadForm },
+  }))
+
+
+  const fetchUploadedFileList = a.input.getFetchUploadedFileList(argNamed({
+    browserServerSetting: a.setting.browserServerSetting.getList('apiEndpoint'),
+    lib: [a.lib.common.input.getRequest],
+  }))
+
+  const loadUploadedImg = a.output.getLoadUploadedImg(argNamed({
+    browserServerSetting: a.setting.browserServerSetting.getList('apiEndpoint'),
+  }))
+
+  a.core.showUploadedImg(argNamed({
+    input: { fetchUploadedFileList },
+    output: { loadUploadedImg },
   }))
 }
 

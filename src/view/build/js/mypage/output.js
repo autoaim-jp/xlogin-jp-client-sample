@@ -105,6 +105,22 @@ export const showBackupEmailAddress = ({ backupEmailAddress }) => {
   backupEmailAddressInputElm.value = backupEmailAddress
 }
 
+export const getLoadUploadedImg = ({ apiEndpoint }) => {
+  return ({ fileId }) => {
+    const imgElm = document.querySelector('#uploadedImg')
+    if(!imgElm) {
+      return
+    }
+
+    let filePath = '/img/profile.png'
+    if (fileId) {
+      filePath = `${apiEndpoint}/file/getFileByFileId?fileId=${fileId}`
+    }
+
+    imgElm.setAttribute('src', filePath)
+  }
+}
+
 /* show elm */
 export const showMessage = ({ messageResult }) => {
   document.querySelector('#messageContent').value = messageResult.result.fileContent
@@ -132,6 +148,7 @@ export const showUploadForm = ({ splitPermissionListResult }) => {
   const { splitPermissionList, clientId } = splitPermissionListResult.result
   if (splitPermissionList.optional[`rw:${clientId}:file_v1`]) {
     document.querySelector('#uploadContainer').classList.remove('hidden')
+    document.querySelector('#uploadedImgContainer').classList.remove('hidden')
   } else {
     document.querySelector('#uploadFilePermissionRequestContainer').classList.remove('hidden')
   }
