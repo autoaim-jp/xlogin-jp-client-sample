@@ -28,10 +28,10 @@ const notificationOpenRequest = ({
 const fileSaveRequest = ({
   accessToken, message, MESSAGE_FILE_PATH, CLIENT_ID, API_VERSION, API_SERVER_ORIGIN, postRequest,
 }) => {
-  const path = `/api/${API_VERSION}/file/update`
+  const path = `/api/${API_VERSION}/json/update`
   const param = {
     owner: CLIENT_ID,
-    filePath: MESSAGE_FILE_PATH,
+    jsonPath: MESSAGE_FILE_PATH,
     content: message,
   }
 
@@ -41,10 +41,10 @@ const fileSaveRequest = ({
 const fileDeleteRequest = ({
   accessToken, MESSAGE_FILE_PATH, CLIENT_ID, API_VERSION, API_SERVER_ORIGIN, postRequest,
 }) => {
-  const path = `/api/${API_VERSION}/file/delete`
+  const path = `/api/${API_VERSION}/json/delete`
   const param = {
     owner: CLIENT_ID,
-    filePath: MESSAGE_FILE_PATH,
+    jsonPath: MESSAGE_FILE_PATH,
   }
 
   return postRequest(CLIENT_ID, accessToken, API_SERVER_ORIGIN, path, param)

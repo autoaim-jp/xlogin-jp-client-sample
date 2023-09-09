@@ -123,7 +123,7 @@ export const getLoadUploadedImg = ({ apiEndpoint }) => {
 
 /* show elm */
 export const showMessage = ({ messageResult }) => {
-  document.querySelector('#messageContent').value = messageResult.result.fileContent
+  document.querySelector('#messageContent').value = messageResult.result.jsonContent
 }
 
 export const showEditor = ({ splitPermissionListResult }) => {

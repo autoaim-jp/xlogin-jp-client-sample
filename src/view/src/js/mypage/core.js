@@ -12,4 +12,3 @@ export const showUploadedImg = async ({ fetchUploadedFileList, loadUploadedImg }
   loadUploadedImg({ fileId })
 }
 
-
