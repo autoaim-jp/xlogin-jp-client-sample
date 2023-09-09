@@ -8,8 +8,8 @@ export const showUploadedImg = async ({ fetchUploadedFileList, loadUploadedImg }
     return
   }
 
-  const fileId = fileListResult.result.fileList[0]
-  loadUploadedImg({ fileId })
+  const fileLabel = fileListResult.result.fileList[0].fileLabel
+  loadUploadedImg({ fileLabel })
 }
 
 export const _ = {}

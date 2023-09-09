@@ -78,6 +78,48 @@ const getRequest = (clientId, accessToken, origin, path, param) => {
   return apiRequest(false, origin, path, param, header)
 }
 
+const getFileRequest = (clientId, accessToken, origin, path, param) => {
+  return new Promise((resolve) => {
+    const header = {
+      authorization: `Bearer ${accessToken}`,
+      'x-xlogin-client-id': clientId,
+    }
+    const isPost = false
+    const query = param && objToQuery(param)
+    const queryString = query ? `?${query}` : ''
+    const pathWithQueryString = `${path}${isPost ? '' : queryString}`
+    const contentHash = _calcSha256AsB64(JSON.stringify(isPost ? param : {}))
+    const timestamp = Date.now()
+    const dataToSign = `${timestamp}:${pathWithQueryString}:${contentHash}`
+    const signature = _calcSha256HmacAsB64(process.env.CLIENT_SECRET, dataToSign)
+    const url = origin + pathWithQueryString
+
+    const opt = {
+      method: isPost ? 'POST' : 'GET',
+      url,
+      responseType: 'arraybuffer',
+
+      headers: {
+        ...header,
+        'x-xlogin-timestamp': timestamp,
+        'x-xlogin-signature': signature,
+        'tmp-dataToSign': dataToSign,
+      },
+      timeout: 30 * 1000,
+    }
+    if (isPost && param) {
+      opt.data = json ? param : param.toString()
+    }
+    mod.axios(opt)
+      .then((res) => {
+        resolve({ res, data: res.data })
+      })
+      .catch((error) => {
+        resolve({ error })
+      })
+  })
+}
+
 const postFormRequest = (clientId, accessToken, origin, path, formData) => {
   return new Promise((resolve) => {
     const header = {
@@ -128,6 +170,7 @@ export default {
   getRequest,
   apiRequest,
 
+  getFileRequest,
   postFormRequest,
 }
 

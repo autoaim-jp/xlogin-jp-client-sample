@@ -106,15 +106,15 @@ export const showBackupEmailAddress = ({ backupEmailAddress }) => {
 }
 
 export const getLoadUploadedImg = ({ apiEndpoint }) => {
-  return ({ fileId }) => {
+  return ({ fileLabel }) => {
     const imgElm = document.querySelector('#uploadedImg')
     if (!imgElm) {
       return
     }
 
     let filePath = '/img/profile.png'
-    if (fileId) {
-      filePath = `${apiEndpoint}/file/getFileByFileId?fileId=${fileId}`
+    if (fileLabel) {
+      filePath = `${apiEndpoint}/file/content?fileLabel=${fileLabel}`
     }
 
     imgElm.setAttribute('src', filePath)

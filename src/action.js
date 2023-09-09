@@ -76,6 +76,18 @@ const getHandlerFileList = ({ handleFileList, createResponse }) => {
   }
 }
 
+const getHandlerFileContent = ({ handleFileContent, createResponse }) => {
+  return async (req, res) => {
+    const { accessToken } = req.session.auth
+    const { fileLabel } = req.query
+
+    const fileContentGetResult = await handleFileContent({ accessToken, fileLabel })
+
+    res.end(fileContentGetResult.res.data)
+  }
+}
+
+
 const getHandlerSplitPermissionList = ({ handleInvalidSession, handleSplitPermissionList, createResponse }) => {
   return async (req, res) => {
     if (handleInvalidSession({ req, res })) {
@@ -126,6 +138,7 @@ export default {
   getHandlerMessageDelete,
 
   getHandlerFileList,
+  getHandlerFileContent,
 
   getHandlerSplitPermissionList,
 

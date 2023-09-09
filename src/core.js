@@ -145,6 +145,21 @@ const handleFileList = async ({ accessToken }) => {
   return handleResult
 }
 
+const handleFileContent = async ({ accessToken, fileLabel }) => {
+  const filePathSplitContent = mod.setting.getValue('user.PROFILE_FILE_PATH_WITHOUT_EXT').split('/')
+  const fileDir = filePathSplitContent.slice(0, filePathSplitContent.length - 1).join('/')
+
+  const fileContentResponse = await mod.input.fileContentRequest(argNamed({
+    param: { accessToken, fileDir, fileLabel },
+    xdevkitSetting: mod.setting.xdevkitSetting.getList('api.API_VERSION', 'env.API_SERVER_ORIGIN', 'env.CLIENT_ID'),
+    lib: [mod.lib.getFileRequest],
+  }))
+
+  // console.log({ fileContentResponse })
+
+  return fileContentResponse
+}
+
 const handleSplitPermissionList = async ({ splitPermissionList }) => {
   const clientId = mod.setting.xdevkitSetting.getValue('env.CLIENT_ID')
   const result = { splitPermissionList, clientId }
@@ -264,10 +279,11 @@ export default {
   handleMessageSave,
   handleMessageContent,
   handleMessageDelete,
-  handleFileList,
   handleSplitPermissionList,
   handleUpdateBackupEmailAddress,
 
+  handleFileList,
+  handleFileContent,
   handleUploadFile,
 
   createResponse,

@@ -92,6 +92,11 @@ const _getActionRouter = () => {
   }))
   expressRouter.get(`${setting.browserServerSetting.getValue('apiEndpoint')}/file/list`, fileListHandler)
 
+  const fileContentHandler = a.action.getHandlerFileContent(argNamed({
+    core: [a.core.handleFileContent, a.core.createResponse],
+  }))
+  expressRouter.get(`${setting.browserServerSetting.getValue('apiEndpoint')}/file/content`, fileContentHandler)
+
 
   return expressRouter
 }
