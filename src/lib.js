@@ -84,18 +84,17 @@ const getFileRequest = (clientId, accessToken, origin, path, param) => {
       authorization: `Bearer ${accessToken}`,
       'x-xlogin-client-id': clientId,
     }
-    const isPost = false
     const query = param && objToQuery(param)
     const queryString = query ? `?${query}` : ''
-    const pathWithQueryString = `${path}${isPost ? '' : queryString}`
-    const contentHash = _calcSha256AsB64(JSON.stringify(isPost ? param : {}))
+    const pathWithQueryString = `${path}${queryString}`
+    const contentHash = _calcSha256AsB64(JSON.stringify({}))
     const timestamp = Date.now()
     const dataToSign = `${timestamp}:${pathWithQueryString}:${contentHash}`
     const signature = _calcSha256HmacAsB64(process.env.CLIENT_SECRET, dataToSign)
     const url = origin + pathWithQueryString
 
     const opt = {
-      method: isPost ? 'POST' : 'GET',
+      method: 'GET',
       url,
       responseType: 'arraybuffer',
 
@@ -106,9 +105,6 @@ const getFileRequest = (clientId, accessToken, origin, path, param) => {
         'tmp-dataToSign': dataToSign,
       },
       timeout: 30 * 1000,
-    }
-    if (isPost && param) {
-      opt.data = json ? param : param.toString()
     }
     mod.axios(opt)
       .then((res) => {

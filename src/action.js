@@ -76,7 +76,7 @@ const getHandlerFileList = ({ handleFileList, createResponse }) => {
   }
 }
 
-const getHandlerFileContent = ({ handleFileContent, createResponse }) => {
+const getHandlerFileContent = ({ handleFileContent }) => {
   return async (req, res) => {
     const { accessToken } = req.session.auth
     const { fileLabel } = req.query
