@@ -108,7 +108,7 @@ export const showBackupEmailAddress = ({ backupEmailAddress }) => {
 export const getLoadUploadedImg = ({ apiEndpoint }) => {
   return ({ fileId }) => {
     const imgElm = document.querySelector('#uploadedImg')
-    if(!imgElm) {
+    if (!imgElm) {
       return
     }
 
