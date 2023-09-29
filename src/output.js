@@ -64,7 +64,7 @@ const updateBackupEmailAddressRequest = ({
 const fileAddRequest = ({
   accessToken, CLIENT_ID, API_VERSION, API_SERVER_ORIGIN, postFormRequest, formData,
 }) => {
-  const path = `/api/${API_VERSION}/form/create`
+  const path = `/api/${API_VERSION}/file/create`
 
   return postFormRequest(CLIENT_ID, accessToken, API_SERVER_ORIGIN, path, formData)
 }
