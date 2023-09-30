@@ -1,9 +1,10 @@
 /* /lib.js */
 const mod = {}
 
-const init = (axios, http, crypto) => {
+const init = (axios, http, https, crypto) => {
   mod.crypto = crypto
   mod.http = http
+  mod.https = https
   mod.axios = axios
 }
 
@@ -129,19 +130,36 @@ const postFormRequest = (clientId, accessToken, origin, path, formData) => {
     const signature = _calcSha256HmacAsB64(process.env.CLIENT_SECRET, dataToSign)
 
     const parsedUrl = new URL(origin)
-    const request = mod.http.request({
-      method: 'post',
-      host: parsedUrl.hostname,
-      port: parsedUrl.port,
-      path,
-      headers: {
-        ...header,
-        'x-xlogin-timestamp': timestamp,
-        'x-xlogin-signature': signature,
-        'tmp-dataToSign': dataToSign,
-        ...formData.getHeaders(),
-      },
-    })
+    let request = null
+    if (origin.indexOf('https') === 0) {
+      request = mod.https.request({
+        method: 'post',
+        host: parsedUrl.host,
+        path,
+        headers: {
+          ...header,
+          'x-xlogin-timestamp': timestamp,
+          'x-xlogin-signature': signature,
+          'tmp-dataToSign': dataToSign,
+          ...formData.getHeaders(),
+        },
+      })
+    } else {
+      request = mod.http.request({
+        method: 'post',
+        host: parsedUrl.host,
+        port: parsedUrl.port,
+        path,
+        headers: {
+          ...header,
+          'x-xlogin-timestamp': timestamp,
+          'x-xlogin-signature': signature,
+          'tmp-dataToSign': dataToSign,
+          ...formData.getHeaders(),
+        },
+      })
+    }
+
     formData.pipe(request)
 
     request.on('response', (res) => {

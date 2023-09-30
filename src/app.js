@@ -120,7 +120,7 @@ const _startServer = (expressApp) => {
 
 const main = () => {
   dotenv.config()
-  lib.init(axios, http, crypto)
+  lib.init(axios, http, https, crypto)
   setting.init(process.env)
   core.init(setting, output, input, lib)
 
