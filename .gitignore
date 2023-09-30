@@ -1,5 +1,7 @@
 .idea
 
+*.local
+
 node_modules/
 .env
 
