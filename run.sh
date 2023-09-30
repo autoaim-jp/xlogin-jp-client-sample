@@ -5,7 +5,7 @@
 XDEVKIT_VERSION=v0.17
 
 if [ $# != 2 ]; then
-  echo "run.sh (app | test) (build | config | up | down | xdevkit)"
+  echo "run.sh (app | test) (build | config | up | up-d | down | xdevkit)"
   exit 1
 fi
 
@@ -25,7 +25,9 @@ export COMPOSE_FILE=./docker-compose.${fileId}.yml
 # docker compose up
 # docker compose down
 
-if [ ! $op = "xdevkit" ]; then
+if [ $op = "up-d" ]; then
+  docker compose up -d
+elif [ ! $op = "xdevkit" ]; then
   docker compose $op
 fi
 
