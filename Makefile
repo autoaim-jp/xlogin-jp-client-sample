@@ -63,14 +63,14 @@ help:
 # init
 init-xdevkit:
 	git submodule update -i && pushd ./common/xdevkit-setting/ && git checkout master && git pull && git checkout ${XDEVKIT_SETTING_VERSION} && git pull origin ${XDEVKIT_SETTING_VERSION} && yarn install && popd
-	cp ./common/xdevkit-setting/browserServerSetting.js ./service/webServer/view/src/js/_setting/browserServerSetting.js
-	cp ./common/xdevkit-setting/browserServerSetting.js ./service/webServer/setting/browserServerSetting.js
+	cp ./common/xdevkit-setting/browserServerSetting.js ./service/webServer/src/view/src/js/_setting/browserServerSetting.js
+	cp ./common/xdevkit-setting/browserServerSetting.js ./service/webServer/src/setting/browserServerSetting.js
 	git submodule update -i && pushd ./common/xdevkit/ && git checkout master && git pull && git checkout ${XDEVKIT_VERSION} && git pull origin ${XDEVKIT_VERSION} && yarn install && popd
-	cp -r ./common/xdevkit/view/src/js/_xdevkit ./service/webServer/view/src/js/_lib/
+	cp -r ./common/xdevkit/view/src/js/_xdevkit ./service/webServer/src/view/src/js/_lib/
  
 # build
 docker-compose-build-app:
-	docker compose -p xljp-sample-app -f ./docker/docker-compose.app.yml build
+	docker compose -p xljp-sample-app -f ./app/docker/docker-compose.app.yml build
 docker-compose-build-test:
 	docker compose -p xljp-sample-test -f ./docker/docker-compose.test.yml build
 docker-compose-build-view:
@@ -78,9 +78,9 @@ docker-compose-build-view:
 
 # up
 docker-compose-up-app:
-	docker compose -p xljp-sample-app -f ./docker/docker-compose.app.yml up
+	docker compose -p xljp-sample-app -f ./app/docker/docker-compose.app.yml up
 docker-compose-up-app-d:
-	docker compose -p xljp-sample-app -f ./docker/docker-compose.app.yml up -d
+	docker compose -p xljp-sample-app -f ./app/docker/docker-compose.app.yml up -d
 docker-compose-up-test:
 	docker compose -p xljp-sample-test -f ./docker/docker-compose.test.yml down 
 	docker volume rm xljp-sample_xl-client-sample-rc-redis
@@ -95,13 +95,13 @@ docker-compose-up-view-watch:
 
 # down
 docker-compose-down-app:
-	docker compose -p xljp-sample-app -f ./docker/docker-compose.app.yml down --volumes
+	docker compose -p xljp-sample-app -f ./app/docker/docker-compose.app.yml down --volumes
 docker-compose-down-test:
 	docker compose -p xljp-sample-test -f ./docker/docker-compose.test.yml down --volumes
 
 # devtool
 docker-compose-up-lint:
-	docker compose -p xljp-sample-lint -f ./docker/docker-compose.lint.yml up --abort-on-container-exit
+	docker compose -p xljp-sample-lint -f ./standalone/docker/docker-compose.eslint.yml up --abort-on-container-exit
 docker-compose-up-doc-generate:
 	BUILD_COMMAND="doc-generate" docker compose -p xljp-sample-doc -f ./docker/docker-compose.doc.yml up
 docker-compose-up-doc-publish:

@@ -1,0 +1,37 @@
+version: '3'
+
+services:
+  redis_container:
+    build:
+      context: ../../
+      dockerfile: ./service/redis/docker/Dockerfile
+    volumes:
+      - xlsampleapp-rc-redis:/data
+    healthcheck:
+      test: ["CMD", "redis-cli","ping"]
+
+
+  web_server_container:
+    build:
+      context: ../../
+      dockerfile: ./service/webServer/docker/Dockerfile
+    tty: true
+    ports:
+      - 127.0.0.1:3001:3001
+    volumes:
+      - ./service/webServer/src:/app
+      - xlsampleapp-wsc-nm:/app/node_modules
+    depends_on:
+      redis_container: 
+        condition: service_healthy
+    command: sh -c "rm /tmp/setup.done || true && yarn run start-watch"
+    healthcheck:
+      test: ls /tmp/setup.done
+      interval: 5s
+      timeout : 5s
+      retries: 10
+
+volumes:
+  xlsampleapp-rc-redis:
+  xlsampleapp-wsc-nm:
+
