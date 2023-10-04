@@ -67,6 +67,7 @@ init-xdevkit:
 	cp ./common/xdevkit-setting/browserServerSetting.js ./service/webServer/src/setting/browserServerSetting.js
 	git submodule update -i && pushd ./common/xdevkit/ && git checkout master && git pull && git checkout ${XDEVKIT_VERSION} && git pull origin ${XDEVKIT_VERSION} && yarn install && popd
 	cp -r ./common/xdevkit/view/src/js/_xdevkit ./service/webServer/src/view/src/js/_lib/
+	cp -r ./common/xdevkit ./service/webServer/src/
  
 # build
 docker-compose-build-app:

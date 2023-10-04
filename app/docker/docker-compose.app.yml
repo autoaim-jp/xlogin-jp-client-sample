@@ -19,7 +19,7 @@ services:
     ports:
       - 127.0.0.1:3001:3001
     volumes:
-      - ./service/webServer/src:/app
+      - ../../service/webServer/src:/app
       - xlsampleapp-wsc-nm:/app/node_modules
     depends_on:
       redis_container: 
