@@ -23,8 +23,8 @@ view-watch: docker-compose-up-view-watch
 
 init: init-xdevkit init-common
 
-lint: init-xdevkit docker-compose-up-lint
-lint-fix: init-xdevkit docker-compose-up-lint-fix
+lint: init-xdevkit init-lint docker-compose-up-lint
+lint-fix: init-xdevkit init-lint docker-compose-up-lint-fix
 doc-generate: docker-compose-up-doc-generate
 doc-publish: docker-compose-up-doc-publish
 
@@ -64,12 +64,15 @@ help:
 
 # init
 init-xdevkit:
-	git submodule update -i ./common/xdevkit-setting/ && pushd ./common/xdevkit-setting/ && git checkout master && git pull && git checkout ${XDEVKIT_SETTING_VERSION} && git pull origin ${XDEVKIT_SETTING_VERSION} && yarn install && popd
+	git submodule update -i ./common/xdevkit-setting/ && pushd ./common/xdevkit-setting/ && git checkout master && git pull && git checkout ${XDEVKIT_SETTING_VERSION} && git pull origin ${XDEVKIT_SETTING_VERSION} && popd
 	cp ./common/xdevkit-setting/browserServerSetting.js ./service/webServer/src/view/src/js/_setting/browserServerSetting.js
 	cp ./common/xdevkit-setting/browserServerSetting.js ./service/webServer/src/setting/browserServerSetting.js
 	git submodule update -i ./common/xdevkit/ && pushd ./common/xdevkit/ && git checkout master && git pull && git checkout ${XDEVKIT_VERSION} && git pull origin ${XDEVKIT_VERSION} && yarn install && popd
 	cp -r ./common/xdevkit/view/src/js/_xdevkit ./service/webServer/src/view/src/js/_lib/
 	cp -r ./common/xdevkit ./service/webServer/src/
+init-lint:
+	git submodule update -i ./standalone/xdevkit-eslint/ && pushd ./standalone/xdevkit-eslint/ && git checkout main && git pull && git checkout ${XDEVKIT_ESLINT_VERSION} && git pull origin ${XDEVKIT_ESLINT_VERSION} && popd
+
  
 # build
 docker-compose-build-app:
