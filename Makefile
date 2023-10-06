@@ -1,6 +1,6 @@
 include setting/version.conf
 SHELL=/bin/bash
-PHONY=default app-rebuild app-build app-up app-up-d app-down test-build test-up test-down view-build view-compile view-compile-minify view-watch init lint doc-generate doc-publish clean help
+PHONY=default app-rebuild app-build app-up app-up-d app-down test-build test-up test-down view-build view-compile view-compile-minify view-watch init lint lint-fix doc-generate doc-publish clean help
 
 .PHONY: $(PHONY)
 
@@ -24,6 +24,7 @@ view-watch: docker-compose-up-view-watch
 init: init-xdevkit init-common
 
 lint: init-xdevkit docker-compose-up-lint
+lint-fix: init-xdevkit docker-compose-up-lint-fix
 doc-generate: docker-compose-up-doc-generate
 doc-publish: docker-compose-up-doc-publish
 
@@ -33,7 +34,7 @@ help:
 	@echo "Usage: make (app|test)-(rebuild|build|up|down)"
 	@echo "Usage: make view-(build|compile|compile-minify|watch)"
 	@echo "Usage: make doc-(generate|publish)"
-	@echo "Usage: make (init|lint|clean)"
+	@echo "Usage: make (init|lint|lint-fix|clean)"
 	@echo "Example:"
 	@echo "  make app-rebuild           # Recreate image"
 	@echo "  make app-build             # Create image"
@@ -56,16 +57,17 @@ help:
 	@echo "  make init                  # Update xdevkit, common"
 	@echo "------------------------------"
 	@echo "  make lint     		          # lint"
+	@echo "  make lint-fix 		          # lint and fix"
 	@echo "------------------------------"
 	@echo "  make clean                 # Clean app, test container/volume"
 
 
 # init
 init-xdevkit:
-	git submodule update -i && pushd ./common/xdevkit-setting/ && git checkout master && git pull && git checkout ${XDEVKIT_SETTING_VERSION} && git pull origin ${XDEVKIT_SETTING_VERSION} && yarn install && popd
+	git submodule update -i ./common/xdevkit-setting/ && pushd ./common/xdevkit-setting/ && git checkout master && git pull && git checkout ${XDEVKIT_SETTING_VERSION} && git pull origin ${XDEVKIT_SETTING_VERSION} && yarn install && popd
 	cp ./common/xdevkit-setting/browserServerSetting.js ./service/webServer/src/view/src/js/_setting/browserServerSetting.js
 	cp ./common/xdevkit-setting/browserServerSetting.js ./service/webServer/src/setting/browserServerSetting.js
-	git submodule update -i && pushd ./common/xdevkit/ && git checkout master && git pull && git checkout ${XDEVKIT_VERSION} && git pull origin ${XDEVKIT_VERSION} && yarn install && popd
+	git submodule update -i ./common/xdevkit/ && pushd ./common/xdevkit/ && git checkout master && git pull && git checkout ${XDEVKIT_VERSION} && git pull origin ${XDEVKIT_VERSION} && yarn install && popd
 	cp -r ./common/xdevkit/view/src/js/_xdevkit ./service/webServer/src/view/src/js/_lib/
 	cp -r ./common/xdevkit ./service/webServer/src/
  
@@ -102,7 +104,9 @@ docker-compose-down-test:
 
 # devtool
 docker-compose-up-lint:
-	docker compose -p xljp-sample-lint -f ./standalone/docker/docker-compose.eslint.yml up --abort-on-container-exit
+	docker compose -p xljp-sample-lint -f ./standalone/xdevkit-eslint/docker/docker-compose.eslint.yml up --abort-on-container-exit
+docker-compose-up-lint-fix:
+	FIX_OPTION="--fix" docker compose -p xljp-sample-lint -f ./standalone/xdevkit-eslint/docker/docker-compose.eslint.yml up --abort-on-container-exit
 docker-compose-up-doc-generate:
 	BUILD_COMMAND="doc-generate" docker compose -p xljp-sample-doc -f ./docker/docker-compose.doc.yml up
 docker-compose-up-doc-publish:

@@ -8,15 +8,16 @@ const breadcrumbAllList = {
 }
 
 const getBreadcrumbList = (pathList) => {
+  /* eslint-disable-next-line no-shadow */
   return pathList.map((path) => { return { path, label: breadcrumbAllList[path] } })
 }
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
-export const ejsConfig = {
+const ejsConfig = {
   _common: {
-    componentPath: __dirname + '/../ejs/component/',
-    xdevkitComponentPath: __dirname + '/../../../xdevkit/view/src/ejs/component/',
+    componentPath: `${__dirname}/../ejs/component/`,
+    xdevkitComponentPath: `${__dirname}/../../../xdevkit/view/src/ejs/component/`,
   },
   index: {
     title: 'sample.xlogin.jp',
@@ -51,5 +52,9 @@ export const ejsConfig = {
     inlineScriptList: [],
     externalScriptList: ['/js/error/app.js'],
   },
+}
+
+export default {
+  ejsConfig,
 }
 

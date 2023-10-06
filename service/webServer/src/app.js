@@ -19,6 +19,7 @@ import input from './input.js'
 import action from './action.js'
 import lib from './lib.js'
 
+
 const asocial = {
   setting, output, core, input, action, lib,
 }
