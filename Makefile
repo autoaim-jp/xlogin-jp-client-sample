@@ -67,9 +67,10 @@ init-xdevkit:
 	git submodule update -i ./common/xdevkit-setting/ && pushd ./common/xdevkit-setting/ && git checkout master && git pull && git checkout ${XDEVKIT_SETTING_VERSION} && git pull origin ${XDEVKIT_SETTING_VERSION} && popd
 	cp ./common/xdevkit-setting/browserServerSetting.js ./service/webServer/src/view/src/js/_setting/browserServerSetting.js
 	cp ./common/xdevkit-setting/browserServerSetting.js ./service/webServer/src/setting/browserServerSetting.js
-	git submodule update -i ./common/xdevkit/ && pushd ./common/xdevkit/ && git checkout master && git pull && git checkout ${XDEVKIT_VERSION} && git pull origin ${XDEVKIT_VERSION} && yarn install && popd
-	cp -r ./common/xdevkit/view/src/js/_xdevkit ./service/webServer/src/view/src/js/_lib/
-	cp -r ./common/xdevkit ./service/webServer/src/
+	
+	git submodule update -i ./common/xdevkit-auth-router/ && pushd ./common/xdevkit-auth-router/ && git checkout master && git pull && git checkout ${XDEVKIT_AUTH_ROUTER_VERSION} && git pull origin ${XDEVKIT_AUTH_ROUTER_VERSION} && popd
+	#cp -r ./common/xdevkit/view/src/js/_xdevkit ./service/webServer/src/view/src/js/_lib/
+	cp -r ./common/xdevkit-auth-router ./service/webServer/src/
 init-lint:
 	git submodule update -i ./standalone/xdevkit-eslint/ && pushd ./standalone/xdevkit-eslint/ && git checkout main && git pull && git checkout ${XDEVKIT_ESLINT_VERSION} && git pull origin ${XDEVKIT_ESLINT_VERSION} && popd
 

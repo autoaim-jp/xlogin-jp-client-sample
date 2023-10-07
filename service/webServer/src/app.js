@@ -11,7 +11,7 @@ import dotenv from 'dotenv'
 import multer from 'multer'
 import FormData from 'form-data'
 
-import xdevkit from './xdevkit/server/index.js'
+import xdevkit from './xdevkit-auth-router/src/app.js'
 import setting from './setting/index.js'
 import output from './output.js'
 import core from './core.js'
@@ -128,7 +128,7 @@ const main = () => {
 
   const expressApp = express()
   expressApp.use(_getOtherRouter())
-  expressApp.use(xdevkit.getRouter({ xdevkitSetting: setting.xdevkitSetting }))
+  expressApp.use(xdevkit.getRouter({ browserServerSetting: setting.browserServerSetting, xdevkitSetting: setting.xdevkitSetting }))
   expressApp.use(_getActionRouter())
 
   _startServer(expressApp)

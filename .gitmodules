@@ -10,3 +10,6 @@
 [submodule "standalone/xdevkit-htpasswd"]
 	path = standalone/xdevkit-htpasswd
 	url = https://github.com/autoaim-jp/xdevkit-htpasswd
+[submodule "common/xdevkit-auth-router"]
+	path = common/xdevkit-auth-router
+	url = https://github.com/autoaim-jp/xdevkit-auth-router
