@@ -17,7 +17,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const ejsConfig = {
   _common: {
     componentPath: `${__dirname}/../ejs/component/`,
-    xdevkitComponentPath: `${__dirname}/../../../xdevkit/view/src/ejs/component/`,
+    xdevkitComponentPath: `${__dirname}/../ejs/_xdevkit/component/`,
   },
   index: {
     title: 'sample.xlogin.jp',

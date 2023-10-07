@@ -13,3 +13,6 @@
 [submodule "common/xdevkit-auth-router"]
 	path = common/xdevkit-auth-router
 	url = https://github.com/autoaim-jp/xdevkit-auth-router
+[submodule "common/xdevkit-view-component"]
+	path = common/xdevkit-view-component
+	url = https://github.com/autoaim-jp/xdevkit-view-component
