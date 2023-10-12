@@ -1,21 +1,18 @@
-[submodule "common/xdevkit"]
-	path = common/xdevkit
-	url = https://github.com/autoaim-jp/xdevkit.git
 [submodule "common/xdevkit-setting"]
 	path = common/xdevkit-setting
 	url = https://github.com/autoaim-jp/xdevkit-setting.git
-[submodule "standalone/xdevkit-eslint"]
-	path = standalone/xdevkit-eslint
-	url = https://github.com/autoaim-jp/xdevkit-eslint
-[submodule "standalone/xdevkit-htpasswd"]
-	path = standalone/xdevkit-htpasswd
-	url = https://github.com/autoaim-jp/xdevkit-htpasswd
 [submodule "common/xdevkit-view-component"]
 	path = common/xdevkit-view-component
 	url = https://github.com/autoaim-jp/xdevkit-view-component
-[submodule "standalone/xdevkit-view-compiler"]
-	path = standalone/xdevkit-view-compiler
-	url = https://github.com/autoaim-jp/xdevkit-view-compiler
 [submodule "common/xdevkit-auth-router"]
 	path = common/xdevkit-auth-router
 	url = https://github.com/autoaim-jp/xdevkit-auth-router
+[submodule "standalone/xdevkit-eslint"]
+	path = standalone/xdevkit-eslint
+	url = https://github.com/autoaim-jp/xdevkit-eslint.git
+[submodule "standalone/xdevkit-htpasswd"]
+	path = standalone/xdevkit-htpasswd
+	url = https://github.com/autoaim-jp/xdevkit-htpasswd.git
+[submodule "standalone/xdevkit-view-compiler"]
+	path = standalone/xdevkit-view-compiler
+	url = https://github.com/autoaim-jp/xdevkit-view-compiler.git
