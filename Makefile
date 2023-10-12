@@ -21,7 +21,7 @@ view-compile: docker-compose-up-view-compile
 view-compile-minify: docker-compose-up-view-compile-minify
 view-watch: docker-compose-up-view-watch
 
-init: init-xdevkit init-common
+init: init-submodule init-xdevkit init-lint
 
 lint: init-xdevkit init-lint docker-compose-up-lint
 lint-fix: init-xdevkit init-lint docker-compose-up-lint-fix
@@ -63,6 +63,9 @@ help:
 
 
 # init
+init-submodule:
+	git submodule update --init
+
 init-xdevkit:
 	git submodule update -i ./common/xdevkit-setting/ && pushd ./common/xdevkit-setting/ && git checkout master && git pull && git checkout ${XDEVKIT_SETTING_VERSION} && git pull origin ${XDEVKIT_SETTING_VERSION} && popd
 	cp ./common/xdevkit-setting/browserServerSetting.js ./service/webServer/src/view/src/js/_setting/browserServerSetting.js
