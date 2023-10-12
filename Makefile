@@ -71,6 +71,7 @@ init-xdevkit:
 	git submodule update -i ./common/xdevkit-auth-router/ && pushd ./common/xdevkit-auth-router/ && git checkout master && git pull && git checkout ${XDEVKIT_AUTH_ROUTER_VERSION} && git pull origin ${XDEVKIT_AUTH_ROUTER_VERSION} && popd
 	rm -rf ./service/webServer/src/xdevkit-auth-router
 	cp -r ./common/xdevkit-auth-router ./service/webServer/src/
+	rm -rf ./service/webServer/src/xdevkit-auth-router/.git
 	
 	git submodule update -i ./common/xdevkit-view-component/ && pushd ./common/xdevkit-view-component/ && git checkout master && git pull && git checkout ${XDEVKIT_VIEW_COMPONENT_VERSION} && git pull origin ${XDEVKIT_VIEW_COMPONENT_VERSION} && popd
 	cp -r ./common/xdevkit-view-component/src/js/_xdevkit ./service/webServer/src/view/src/js/_lib/
