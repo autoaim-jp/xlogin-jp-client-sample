@@ -1,5 +1,7 @@
 .idea
 
+*.local
+
 node_modules/
 .env
 
@@ -11,4 +13,5 @@ src/doc/jsdoc/html/
 
 data/redis/
 
+cert/
 

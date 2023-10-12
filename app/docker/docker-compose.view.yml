@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+  view_container:
+    build:
+      context: ../../
+      dockerfile: ./standalone/xdevkit-view-compiler/docker/viewContainer/Dockerfile
+    tty: true
+    volumes:
+      - ../../service/webServer/src/view:/app/view
+      - ../../standalone/xdevkit-view-compiler/src:/app/src
+    command: sh -c "yarn run ${BUILD_COMMAND}"
+
+
