@@ -73,8 +73,8 @@ init-xdevkit:
 	cp -r ./common/xdevkit-auth-router ./service/webServer/src/
 	
 	git submodule update -i ./common/xdevkit-view-component/ && pushd ./common/xdevkit-view-component/ && git checkout master && git pull && git checkout ${XDEVKIT_VIEW_COMPONENT_VERSION} && git pull origin ${XDEVKIT_VIEW_COMPONENT_VERSION} && popd
-	cp -r ./common/xdevkit-view-component/src/js/_xdevkit ./service/webServer/src/view/src/js/_lib/_xdevkit
-	cp -r ./common/xdevkit-view-component/src/ejs ./service/webServer/src/view/src/_xdevkit
+	cp -r ./common/xdevkit-view-component/src/js/_xdevkit ./service/webServer/src/view/src/js/_lib/
+	cp -r ./common/xdevkit-view-component/src/ejs ./service/webServer/src/view/src/ejs/_xdevkit
 
 init-lint:
 	git submodule update -i ./standalone/xdevkit-eslint/ && pushd ./standalone/xdevkit-eslint/ && git checkout main && git pull && git checkout ${XDEVKIT_ESLINT_VERSION} && git pull origin ${XDEVKIT_ESLINT_VERSION} && popd
@@ -99,11 +99,11 @@ docker-compose-up-test:
 	docker compose -p xljp-sample-test -f ./docker/docker-compose.test.yml up --abort-on-container-exit
 
 docker-compose-up-view-compile:
-	BUILD_COMMAND="compile" docker compose -p xljp-sample-view -f ./docker/docker-compose.view.yml up --abort-on-container-exit
+	BUILD_COMMAND="compile" docker compose -p xljp-sample-view -f ./app/docker/docker-compose.view.yml up --abort-on-container-exit
 docker-compose-up-view-compile-minify:
-	BUILD_COMMAND="compile-minify" docker compose -p xljp-sample-view -f ./docker/docker-compose.view.yml up --abort-on-container-exit
+	BUILD_COMMAND="compile-minify" docker compose -p xljp-sample-view -f ./app/docker/docker-compose.view.yml up --abort-on-container-exit
 docker-compose-up-view-watch:
-	BUILD_COMMAND="watch" docker compose -p xljp-sample-view -f ./docker/docker-compose.view.yml up --abort-on-container-exit
+	BUILD_COMMAND="watch" docker compose -p xljp-sample-view -f ./app/docker/docker-compose.view.yml up --abort-on-container-exit
 
 # down
 docker-compose-down-app:
