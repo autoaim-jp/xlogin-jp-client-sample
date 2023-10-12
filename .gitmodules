@@ -16,3 +16,6 @@
 [submodule "common/xdevkit-view-component"]
 	path = common/xdevkit-view-component
 	url = https://github.com/autoaim-jp/xdevkit-view-component
+[submodule "standalone/xdevkit-view-compiler"]
+	path = standalone/xdevkit-view-compiler
+	url = https://github.com/autoaim-jp/xdevkit-view-compiler

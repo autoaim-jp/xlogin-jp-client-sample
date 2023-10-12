@@ -86,7 +86,7 @@ docker-compose-build-app:
 docker-compose-build-test:
 	docker compose -p xljp-sample-test -f ./docker/docker-compose.test.yml build
 docker-compose-build-view:
-	docker compose -p xljp-sample-view -f ./docker/docker-compose.view.yml build
+	docker compose -p xljp-sample-view -f ./app/docker/docker-compose.view.yml build
 
 # up
 docker-compose-up-app:
@@ -99,11 +99,11 @@ docker-compose-up-test:
 	docker compose -p xljp-sample-test -f ./docker/docker-compose.test.yml up --abort-on-container-exit
 
 docker-compose-up-view-compile:
-	BUILD_COMMAND="compile" docker compose -p xljp-sample-view -f ./app/docker/docker-compose.view.yml up --abort-on-container-exit
+	BUILD_COMMAND="compile" docker compose -p xljp-sample-view -f ./standalone/xdevkit-view-compiler/docker/docker-compose.view.yml up --abort-on-container-exit
 docker-compose-up-view-compile-minify:
-	BUILD_COMMAND="compile-minify" docker compose -p xljp-sample-view -f ./app/docker/docker-compose.view.yml up --abort-on-container-exit
+	BUILD_COMMAND="compile-minify" docker compose -p xljp-sample-view -f ./standalone/xdevkit-view-compiler/docker/docker-compose.view.yml up --abort-on-container-exit
 docker-compose-up-view-watch:
-	BUILD_COMMAND="watch" docker compose -p xljp-sample-view -f ./app/docker/docker-compose.view.yml up --abort-on-container-exit
+	BUILD_COMMAND="watch" docker compose -p xljp-sample-view -f ./standalone/xdevkit-view-compiler/docker/docker-compose.view.yml up --abort-on-container-exit
 
 # down
 docker-compose-down-app:
