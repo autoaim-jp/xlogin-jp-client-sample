@@ -1,4 +1,3 @@
-include setting/version.conf
 SHELL=/bin/bash
 PHONY=default app-rebuild app-build app-up app-up-d app-down test-build test-up test-down view-build view-compile view-compile-minify view-watch init lint lint-fix doc-generate doc-publish clean help
 
@@ -21,10 +20,10 @@ view-compile: docker-compose-up-view-compile
 view-compile-minify: docker-compose-up-view-compile-minify
 view-watch: docker-compose-up-view-watch
 
-init: init-submodule init-xdevkit init-lint
+init: init-submodule init-xdevkit
 
-lint: init-xdevkit init-lint docker-compose-up-lint
-lint-fix: init-xdevkit init-lint docker-compose-up-lint-fix
+lint: init-xdevkit docker-compose-up-lint
+lint-fix: init-xdevkit docker-compose-up-lint-fix
 doc-generate: docker-compose-up-doc-generate
 doc-publish: docker-compose-up-doc-publish
 
@@ -65,25 +64,19 @@ help:
 # init
 init-submodule:
 	git submodule update --init
+	pushd ./xdevkit/ && git submodule update --init && popd
 
 init-xdevkit:
-	git submodule update -i ./common/xdevkit-setting/ && pushd ./common/xdevkit-setting/ && git checkout master && git pull && git checkout ${XDEVKIT_SETTING_VERSION} && git pull origin ${XDEVKIT_SETTING_VERSION} && popd
-	cp ./common/xdevkit-setting/browserServerSetting.js ./service/webServer/src/view/src/js/_setting/browserServerSetting.js
-	cp ./common/xdevkit-setting/browserServerSetting.js ./service/webServer/src/setting/browserServerSetting.js
+	cp ./xdevkit/common/xdevkit-setting/browserServerSetting.js ./service/webServer/src/view/src/js/_setting/browserServerSetting.js
+	cp ./xdevkit/common/xdevkit-setting/browserServerSetting.js ./service/webServer/src/setting/browserServerSetting.js
 	
-	git submodule update -i ./common/xdevkit-auth-router/ && pushd ./common/xdevkit-auth-router/ && git checkout master && git pull && git checkout ${XDEVKIT_AUTH_ROUTER_VERSION} && git pull origin ${XDEVKIT_AUTH_ROUTER_VERSION} && popd
 	rm -rf ./service/webServer/src/xdevkit-auth-router
-	cp -r ./common/xdevkit-auth-router ./service/webServer/src/
+	cp -r ./xdevkit/common/xdevkit-auth-router ./service/webServer/src/
 	rm -rf ./service/webServer/src/xdevkit-auth-router/.git
 	
-	git submodule update -i ./common/xdevkit-view-component/ && pushd ./common/xdevkit-view-component/ && git checkout master && git pull && git checkout ${XDEVKIT_VIEW_COMPONENT_VERSION} && git pull origin ${XDEVKIT_VIEW_COMPONENT_VERSION} && popd
-	cp -r ./common/xdevkit-view-component/src/js/_xdevkit ./service/webServer/src/view/src/js/_lib/
-	cp -r ./common/xdevkit-view-component/src/ejs ./service/webServer/src/view/src/ejs/_xdevkit
+	cp -r ./xdevkit/common/xdevkit-view-component/src/js/_xdevkit ./service/webServer/src/view/src/js/_lib/
+	cp -r ./xdevkit/common/xdevkit-view-component/src/ejs ./service/webServer/src/view/src/ejs/_xdevkit
 
-init-lint:
-	git submodule update -i ./standalone/xdevkit-eslint/ && pushd ./standalone/xdevkit-eslint/ && git checkout main && git pull && git checkout ${XDEVKIT_ESLINT_VERSION} && git pull origin ${XDEVKIT_ESLINT_VERSION} && popd
-
- 
 # build
 docker-compose-build-app:
 	docker compose -p xljp-sample-app -f ./app/docker/docker-compose.app.yml build
@@ -103,11 +96,11 @@ docker-compose-up-test:
 	docker compose -p xljp-sample-test -f ./docker/docker-compose.test.yml up --abort-on-container-exit
 
 docker-compose-up-view-compile:
-	BUILD_COMMAND="compile" docker compose -p xljp-sample-view -f ./standalone/xdevkit-view-compiler/docker/docker-compose.view.yml up --abort-on-container-exit
+	BUILD_COMMAND="compile" docker compose -p xljp-sample-view -f ./xdevkit/standalone/xdevkit-view-compiler/docker/docker-compose.view.yml up --abort-on-container-exit
 docker-compose-up-view-compile-minify:
-	BUILD_COMMAND="compile-minify" docker compose -p xljp-sample-view -f ./standalone/xdevkit-view-compiler/docker/docker-compose.view.yml up --abort-on-container-exit
+	BUILD_COMMAND="compile-minify" docker compose -p xljp-sample-view -f ./xdevkit/standalone/xdevkit-view-compiler/docker/docker-compose.view.yml up --abort-on-container-exit
 docker-compose-up-view-watch:
-	BUILD_COMMAND="watch" docker compose -p xljp-sample-view -f ./standalone/xdevkit-view-compiler/docker/docker-compose.view.yml up --abort-on-container-exit
+	BUILD_COMMAND="watch" docker compose -p xljp-sample-view -f ./xdevkit/standalone/xdevkit-view-compiler/docker/docker-compose.view.yml up --abort-on-container-exit
 
 # down
 docker-compose-down-app:
@@ -117,9 +110,9 @@ docker-compose-down-test:
 
 # devtool
 docker-compose-up-lint:
-	docker compose -p xljp-sample-lint -f ./standalone/xdevkit-eslint/docker/docker-compose.eslint.yml up --abort-on-container-exit
+	docker compose -p xljp-sample-lint -f ./xdevkit/standalone/xdevkit-eslint/docker/docker-compose.eslint.yml up --abort-on-container-exit
 docker-compose-up-lint-fix:
-	FIX_OPTION="--fix" docker compose -p xljp-sample-lint -f ./standalone/xdevkit-eslint/docker/docker-compose.eslint.yml up --abort-on-container-exit
+	FIX_OPTION="--fix" docker compose -p xljp-sample-lint -f ./xdevkit/standalone/xdevkit-eslint/docker/docker-compose.eslint.yml up --abort-on-container-exit
 docker-compose-up-doc-generate:
 	BUILD_COMMAND="doc-generate" docker compose -p xljp-sample-doc -f ./docker/docker-compose.doc.yml up
 docker-compose-up-doc-publish:
