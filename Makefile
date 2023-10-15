@@ -68,7 +68,9 @@ help:
 
 # init
 init-xdevkit:
-	pushd ./xdevkit/ && git checkout ${XDEVKIT_VERSION} && git submodule update --init && popd
+	#rm -rf xdevkit/*
+	git submodule update --remote
+	pushd ./xdevkit/ && git checkout ${XDEVKIT_VERSION} && git pull origin ${XDEVKIT_VERSION} && git submodule update --init && popd
 	cp ./xdevkit/common/xdevkit-setting/browserServerSetting.js ./service/webServer/src/view/src/js/_setting/browserServerSetting.js
 	cp ./xdevkit/common/xdevkit-setting/browserServerSetting.js ./service/webServer/src/setting/browserServerSetting.js
 	
@@ -85,7 +87,7 @@ docker-compose-build-app:
 docker-compose-build-test:
 	docker compose -p ${DOCKER_PROJECT_NAME}-test -f ./docker/docker-compose.test.yml build
 docker-compose-build-view:
-	docker compose -p ${DOCKER_PROJECT_NAME}-view -f ./app/docker/docker-compose.view.yml build
+	docker compose -p ${DOCKER_PROJECT_NAME}-view -f ./xdevkit/standalone/xdevkit-view-compiler/docker/docker-compose.view.yml build
 
 # up
 docker-compose-up-app:
@@ -121,23 +123,20 @@ init-doc-deploy-key:
 	ssh-keygen -t rsa -b 4096 -f ./secret/id_rsa_deploy_key -N ""
 	echo "info: register this as a deploy key at github"
 	cat ./secret/id_rsa_deploy_key.pub
-
 docker-compose-rebuild-doc:
 	docker compose -p ${DOCKER_PROJECT_NAME}-doc -f ./xdevkit/standalone/xdevkit-jsdoc/docker/docker-compose.jsdoc.yml down --volumes
 	docker compose -p ${DOCKER_PROJECT_NAME}-doc -f ./xdevkit/standalone/xdevkit-jsdoc/docker/docker-compose.jsdoc.yml build
-
 docker-compose-up-doc-publish:
 	JSDOC_COMMAND="generate-publish" \
-	GIT_USER_NAME=${GIT_USER_NAME} \
-	GIT_USER_EMAIL=${GIT_USER_EMAIL} \
-	GIT_REPOSITORY_URL=${GIT_REPOSITORY_URL} \
+	GIT_USER_NAME="${GIT_USER_NAME}" \
+	GIT_USER_EMAIL="${GIT_USER_EMAIL}" \
+	GIT_REPOSITORY_URL="${GIT_REPOSITORY_URL}" \
 	docker compose -p ${DOCKER_PROJECT_NAME}-doc -f ./xdevkit/standalone/xdevkit-jsdoc/docker/docker-compose.jsdoc.yml up --abort-on-container-exit
-
 docker-compose-up-doc-generate:
 	JSDOC_COMMAND="generate" \
-	GIT_USER_NAME=${GIT_USER_NAME} \
-	GIT_USER_EMAIL=${GIT_USER_EMAIL} \
-	GIT_REPOSITORY_URL=${GIT_REPOSITORY_URL} \
+	GIT_USER_NAME="${GIT_USER_NAME}" \
+	GIT_USER_EMAIL="${GIT_USER_EMAIL}" \
+	GIT_REPOSITORY_URL="${GIT_REPOSITORY_URL}" \
 	docker compose -p ${DOCKER_PROJECT_NAME}-doc -f ./xdevkit/standalone/xdevkit-jsdoc/docker/docker-compose.jsdoc.yml up --abort-on-container-exit
 
 %:
