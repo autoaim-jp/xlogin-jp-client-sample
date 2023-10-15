@@ -114,10 +114,9 @@ docker-compose-up-lint:
 docker-compose-up-lint-fix:
 	FIX_OPTION="--fix" docker compose -p xljp-sample-lint -f ./xdevkit/standalone/xdevkit-eslint/docker/docker-compose.eslint.yml up --abort-on-container-exit
 docker-compose-up-doc-generate:
-	BUILD_COMMAND="doc-generate" docker compose -p xljp-sample-doc -f ./docker/docker-compose.doc.yml up
+	GIT_USER_NAME="autoaim_jp" GIT_USER_EMAIL="git@autoaim.jp" JSDOC_COMMAND="generate" docker compose -p xljp-sample-doc -f ./xdevkit/standalone/xdevkit-jsdoc/docker/docker-compose.jsdoc.yml up --abort-on-container-exit
 docker-compose-up-doc-publish:
-	BUILD_COMMAND="doc-publish" docker compose -p xljp-sample-doc -f ./docker/docker-compose.doc.yml up
-
+	GIT_USER_NAME="autoaim_jp" GIT_USER_EMAIL="git@autoaim.jp" JSDOC_COMMAND="generate-publish" docker compose -p xljp-sample-doc -f ./xdevkit/standalone/xdevkit-jsdoc/docker/docker-compose.jsdoc.yml up --abort-on-container-exit
 
 
 %:
