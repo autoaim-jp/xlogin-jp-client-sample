@@ -21,7 +21,7 @@ view-compile: docker-compose-up-view-compile
 view-compile-minify: docker-compose-up-view-compile-minify
 view-watch: docker-compose-up-view-watch
 
-init: init-submodule init-xdevkit
+init: init-xdevkit
 
 lint: init-xdevkit docker-compose-up-lint
 lint-fix: init-xdevkit docker-compose-up-lint-fix
@@ -67,11 +67,8 @@ help:
 
 
 # init
-init-submodule:
-	git submodule update --init --recursive --remote
-	pushd ./xdevkit/ && git submodule update --init && popd
-
 init-xdevkit:
+	pushd ./xdevkit/ && git checkout ${XDEVKIT_VERSION} && git submodule update --init && popd
 	cp ./xdevkit/common/xdevkit-setting/browserServerSetting.js ./service/webServer/src/view/src/js/_setting/browserServerSetting.js
 	cp ./xdevkit/common/xdevkit-setting/browserServerSetting.js ./service/webServer/src/setting/browserServerSetting.js
 	
@@ -136,7 +133,7 @@ docker-compose-up-doc-publish:
 	GIT_REPOSITORY_URL=${GIT_REPOSITORY_URL} \
 	docker compose -p ${DOCKER_PROJECT_NAME}-doc -f ./xdevkit/standalone/xdevkit-jsdoc/docker/docker-compose.jsdoc.yml up --abort-on-container-exit
 
-docker-compose-up-doc:
+docker-compose-up-doc-generate:
 	JSDOC_COMMAND="generate" \
 	GIT_USER_NAME=${GIT_USER_NAME} \
 	GIT_USER_EMAIL=${GIT_USER_EMAIL} \
