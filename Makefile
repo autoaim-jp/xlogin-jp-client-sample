@@ -68,7 +68,7 @@ help:
 
 # init
 init-submodule:
-	git submodule update --init
+	git submodule update --init --recursive --remote
 	pushd ./xdevkit/ && git submodule update --init && popd
 
 init-xdevkit:
