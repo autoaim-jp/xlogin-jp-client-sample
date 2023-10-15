@@ -1,5 +1,6 @@
+include setting.conf
 SHELL=/bin/bash
-PHONY=default app-rebuild app-build app-up app-up-d app-down test-build test-up test-down view-build view-compile view-compile-minify view-watch init lint lint-fix doc-generate doc-publish clean help
+PHONY=default app-rebuild app-build app-up app-up-d app-down test-build test-up test-down view-build view-compile view-compile-minify view-watch init lint lint-fix init-doc doc-rebuild doc-generate doc-publish clean help
 
 .PHONY: $(PHONY)
 
@@ -24,6 +25,9 @@ init: init-submodule init-xdevkit
 
 lint: init-xdevkit docker-compose-up-lint
 lint-fix: init-xdevkit docker-compose-up-lint-fix
+
+init-doc: init-doc-deploy-key
+doc-rebuild: docker-compose-rebuild-doc
 doc-generate: docker-compose-up-doc-generate
 doc-publish: docker-compose-up-doc-publish
 
@@ -50,6 +54,7 @@ help:
 	@echo "  make view-compile-minify   # compile minify"
 	@echo "  make view-watch            # watch"
 	@echo "------------------------------"
+	@echo "  make doc-rebuild     		  # Recreate image"
 	@echo "  make doc-generate     		  # doc-generate"
 	@echo "  make doc-deploy     		    # doc-deploy"
 	@echo "------------------------------"
@@ -79,45 +84,64 @@ init-xdevkit:
 
 # build
 docker-compose-build-app:
-	docker compose -p xljp-sample-app -f ./app/docker/docker-compose.app.yml build
+	docker compose -p ${DOCKER_PROJECT_NAME}-app -f ./app/docker/docker-compose.app.yml build
 docker-compose-build-test:
-	docker compose -p xljp-sample-test -f ./docker/docker-compose.test.yml build
+	docker compose -p ${DOCKER_PROJECT_NAME}-test -f ./docker/docker-compose.test.yml build
 docker-compose-build-view:
-	docker compose -p xljp-sample-view -f ./app/docker/docker-compose.view.yml build
+	docker compose -p ${DOCKER_PROJECT_NAME}-view -f ./app/docker/docker-compose.view.yml build
 
 # up
 docker-compose-up-app:
-	docker compose -p xljp-sample-app -f ./app/docker/docker-compose.app.yml up
+	docker compose -p ${DOCKER_PROJECT_NAME}-app -f ./app/docker/docker-compose.app.yml up
 docker-compose-up-app-d:
-	docker compose -p xljp-sample-app -f ./app/docker/docker-compose.app.yml up -d
+	docker compose -p ${DOCKER_PROJECT_NAME}-app -f ./app/docker/docker-compose.app.yml up -d
 docker-compose-up-test:
-	docker compose -p xljp-sample-test -f ./docker/docker-compose.test.yml down 
-	docker volume rm xljp-sample_xl-client-sample-rc-redis
-	docker compose -p xljp-sample-test -f ./docker/docker-compose.test.yml up --abort-on-container-exit
+	docker compose -p ${DOCKER_PROJECT_NAME}-test -f ./docker/docker-compose.test.yml down 
+	docker volume rm ${DOCKER_PROJECT_NAME}_xl-client-sample-rc-redis
+	docker compose -p ${DOCKER_PROJECT_NAME}-test -f ./docker/docker-compose.test.yml up --abort-on-container-exit
 
 docker-compose-up-view-compile:
-	BUILD_COMMAND="compile" docker compose -p xljp-sample-view -f ./xdevkit/standalone/xdevkit-view-compiler/docker/docker-compose.view.yml up --abort-on-container-exit
+	BUILD_COMMAND="compile" docker compose -p ${DOCKER_PROJECT_NAME}-view -f ./xdevkit/standalone/xdevkit-view-compiler/docker/docker-compose.view.yml up --abort-on-container-exit
 docker-compose-up-view-compile-minify:
-	BUILD_COMMAND="compile-minify" docker compose -p xljp-sample-view -f ./xdevkit/standalone/xdevkit-view-compiler/docker/docker-compose.view.yml up --abort-on-container-exit
+	BUILD_COMMAND="compile-minify" docker compose -p ${DOCKER_PROJECT_NAME}-view -f ./xdevkit/standalone/xdevkit-view-compiler/docker/docker-compose.view.yml up --abort-on-container-exit
 docker-compose-up-view-watch:
-	BUILD_COMMAND="watch" docker compose -p xljp-sample-view -f ./xdevkit/standalone/xdevkit-view-compiler/docker/docker-compose.view.yml up --abort-on-container-exit
+	BUILD_COMMAND="watch" docker compose -p ${DOCKER_PROJECT_NAME}-view -f ./xdevkit/standalone/xdevkit-view-compiler/docker/docker-compose.view.yml up --abort-on-container-exit
 
 # down
 docker-compose-down-app:
-	docker compose -p xljp-sample-app -f ./app/docker/docker-compose.app.yml down --volumes
+	docker compose -p ${DOCKER_PROJECT_NAME}-app -f ./app/docker/docker-compose.app.yml down --volumes
 docker-compose-down-test:
-	docker compose -p xljp-sample-test -f ./docker/docker-compose.test.yml down --volumes
+	docker compose -p ${DOCKER_PROJECT_NAME}-test -f ./docker/docker-compose.test.yml down --volumes
 
 # devtool
 docker-compose-up-lint:
-	docker compose -p xljp-sample-lint -f ./xdevkit/standalone/xdevkit-eslint/docker/docker-compose.eslint.yml up --abort-on-container-exit
+	docker compose -p ${DOCKER_PROJECT_NAME}-lint -f ./xdevkit/standalone/xdevkit-eslint/docker/docker-compose.eslint.yml up --abort-on-container-exit
 docker-compose-up-lint-fix:
-	FIX_OPTION="--fix" docker compose -p xljp-sample-lint -f ./xdevkit/standalone/xdevkit-eslint/docker/docker-compose.eslint.yml up --abort-on-container-exit
-docker-compose-up-doc-generate:
-	GIT_USER_NAME="autoaim_jp" GIT_USER_EMAIL="git@autoaim.jp" JSDOC_COMMAND="generate" docker compose -p xljp-sample-doc -f ./xdevkit/standalone/xdevkit-jsdoc/docker/docker-compose.jsdoc.yml up --abort-on-container-exit
-docker-compose-up-doc-publish:
-	GIT_USER_NAME="autoaim_jp" GIT_USER_EMAIL="git@autoaim.jp" JSDOC_COMMAND="generate-publish" docker compose -p xljp-sample-doc -f ./xdevkit/standalone/xdevkit-jsdoc/docker/docker-compose.jsdoc.yml up --abort-on-container-exit
+	FIX_OPTION="--fix" docker compose -p ${DOCKER_PROJECT_NAME}-lint -f ./xdevkit/standalone/xdevkit-eslint/docker/docker-compose.eslint.yml up --abort-on-container-exit
 
+init-doc-deploy-key:
+	mkdir -p ./secret/
+	ssh-keygen -t rsa -b 4096 -f ./secret/id_rsa_deploy_key -N ""
+	echo "info: register this as a deploy key at github"
+	cat ./secret/id_rsa_deploy_key.pub
+
+docker-compose-rebuild-doc:
+	docker compose -p ${DOCKER_PROJECT_NAME}-doc -f ./xdevkit/standalone/xdevkit-jsdoc/docker/docker-compose.jsdoc.yml down --volumes
+	docker compose -p ${DOCKER_PROJECT_NAME}-doc -f ./xdevkit/standalone/xdevkit-jsdoc/docker/docker-compose.jsdoc.yml build
+
+docker-compose-up-doc-publish:
+	JSDOC_COMMAND="generate-publish" \
+	GIT_USER_NAME=${GIT_USER_NAME} \
+	GIT_USER_EMAIL=${GIT_USER_EMAIL} \
+	GIT_REPOSITORY_URL=${GIT_REPOSITORY_URL} \
+	docker compose -p ${DOCKER_PROJECT_NAME}-doc -f ./xdevkit/standalone/xdevkit-jsdoc/docker/docker-compose.jsdoc.yml up --abort-on-container-exit
+
+docker-compose-up-doc:
+	JSDOC_COMMAND="generate" \
+	GIT_USER_NAME=${GIT_USER_NAME} \
+	GIT_USER_EMAIL=${GIT_USER_EMAIL} \
+	GIT_REPOSITORY_URL=${GIT_REPOSITORY_URL} \
+	docker compose -p ${DOCKER_PROJECT_NAME}-doc -f ./xdevkit/standalone/xdevkit-jsdoc/docker/docker-compose.jsdoc.yml up --abort-on-container-exit
 
 %:
 	@echo "Target '$@' does not exist."

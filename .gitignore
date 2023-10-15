@@ -5,6 +5,9 @@
 node_modules/
 .env
 
+secret/
+id_rsa_deploy_key
+
 src/data/accessTokenList.json
 src/data/authSessionList.json
 src/data/notificationList.json
