@@ -23,8 +23,8 @@ view-watch: docker-compose-up-view-watch
 
 init: init-xdevkit
 
-lint: init-xdevkit docker-compose-up-lint
-lint-fix: init-xdevkit docker-compose-up-lint-fix
+lint: docker-compose-up-lint
+lint-fix: docker-compose-up-lint-fix
 
 init-doc: init-doc-deploy-key
 doc-rebuild: docker-compose-rebuild-doc
@@ -36,7 +36,7 @@ clean: app-down test-down
 help:
 	@echo "Usage: make (app|test)-(rebuild|build|up|down)"
 	@echo "Usage: make view-(build|compile|compile-minify|watch)"
-	@echo "Usage: make doc-(generate|publish)"
+	@echo "Usage: make doc-(rebuild|generate|publish)"
 	@echo "Usage: make (init|lint|lint-fix|clean)"
 	@echo "Example:"
 	@echo "  make app-rebuild           # Recreate image"
@@ -56,7 +56,7 @@ help:
 	@echo "------------------------------"
 	@echo "  make doc-rebuild     		  # Recreate image"
 	@echo "  make doc-generate     		  # doc-generate"
-	@echo "  make doc-deploy     		    # doc-deploy"
+	@echo "  make doc-publish   		    # doc-publish"
 	@echo "------------------------------"
 	@echo "  make init                  # Update xdevkit, common"
 	@echo "------------------------------"
