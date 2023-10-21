@@ -71,15 +71,15 @@ init-xdevkit:
 	#rm -rf xdevkit/*
 	git submodule update --remote
 	pushd ./xdevkit/ && git checkout ${XDEVKIT_VERSION} && git pull origin ${XDEVKIT_VERSION} && git submodule update --init && popd
-	cp ./xdevkit/common/xdevkit-setting/browserServerSetting.js ./service/webServer/src/view/src/js/_setting/browserServerSetting.js
-	cp ./xdevkit/common/xdevkit-setting/browserServerSetting.js ./service/webServer/src/setting/browserServerSetting.js
+	cp ./xdevkit/common/xdevkit-setting/browserServerSetting.js ./service/staticWeb/src/view/src/js/_setting/browserServerSetting.js
+	cp ./xdevkit/common/xdevkit-setting/browserServerSetting.js ./service/staticWeb/src/setting/browserServerSetting.js
 	
-	rm -rf ./service/webServer/src/xdevkit-auth-router
-	cp -r ./xdevkit/common/xdevkit-auth-router ./service/webServer/src/
-	rm -rf ./service/webServer/src/xdevkit-auth-router/.git
+	rm -rf ./service/staticWeb/src/xdevkit-auth-router
+	cp -r ./xdevkit/common/xdevkit-auth-router ./service/staticWeb/src/
+	rm -rf ./service/staticWeb/src/xdevkit-auth-router/.git
 	
-	cp -r ./xdevkit/common/xdevkit-view-component/src/js/_xdevkit ./service/webServer/src/view/src/js/_lib/
-	cp -r ./xdevkit/common/xdevkit-view-component/src/ejs ./service/webServer/src/view/src/ejs/_xdevkit
+	cp -r ./xdevkit/common/xdevkit-view-component/src/js/_xdevkit ./service/staticWeb/src/view/src/js/_lib/
+	cp -r ./xdevkit/common/xdevkit-view-component/src/ejs ./service/staticWeb/src/view/src/ejs/_xdevkit
 
 # build
 docker-compose-build-app:

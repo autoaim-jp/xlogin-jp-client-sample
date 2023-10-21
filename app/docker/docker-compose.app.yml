@@ -14,12 +14,12 @@ services:
   web_server_container:
     build:
       context: ../../
-      dockerfile: ./service/webServer/docker/Dockerfile
+      dockerfile: ./service/staticWeb/docker/Dockerfile
     tty: true
     ports:
       - 127.0.0.1:3001:3001
     volumes:
-      - ../../service/webServer/src:/app
+      - ../../service/staticWeb/src:/app
       - xlsampleapp-wsc-nm:/app/node_modules
     depends_on:
       redis_container: 
