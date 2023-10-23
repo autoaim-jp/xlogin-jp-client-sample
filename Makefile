@@ -1,6 +1,6 @@
-include setting/version.conf
+include setting.conf
 SHELL=/bin/bash
-PHONY=default app-rebuild app-build app-up app-up-d app-down test-build test-up test-down view-build view-compile view-compile-minify view-watch init lint lint-fix doc-generate doc-publish clean help
+PHONY=default app-rebuild app-build app-up app-up-d app-down test-build test-up test-down view-build view-compile view-compile-minify view-watch init lint lint-fix init-doc doc-rebuild doc-generate doc-publish clean help
 
 .PHONY: $(PHONY)
 
@@ -21,10 +21,13 @@ view-compile: docker-compose-up-view-compile
 view-compile-minify: docker-compose-up-view-compile-minify
 view-watch: docker-compose-up-view-watch
 
-init: init-xdevkit init-common
+init: init-xdevkit
 
-lint: init-xdevkit init-lint docker-compose-up-lint
-lint-fix: init-xdevkit init-lint docker-compose-up-lint-fix
+lint: docker-compose-up-lint
+lint-fix: docker-compose-up-lint-fix
+
+init-doc: init-doc-deploy-key
+doc-rebuild: docker-compose-rebuild-doc
 doc-generate: docker-compose-up-doc-generate
 doc-publish: docker-compose-up-doc-publish
 
@@ -33,7 +36,7 @@ clean: app-down test-down
 help:
 	@echo "Usage: make (app|test)-(rebuild|build|up|down)"
 	@echo "Usage: make view-(build|compile|compile-minify|watch)"
-	@echo "Usage: make doc-(generate|publish)"
+	@echo "Usage: make doc-(rebuild|generate|publish)"
 	@echo "Usage: make (init|lint|lint-fix|clean)"
 	@echo "Example:"
 	@echo "  make app-rebuild           # Recreate image"
@@ -51,8 +54,9 @@ help:
 	@echo "  make view-compile-minify   # compile minify"
 	@echo "  make view-watch            # watch"
 	@echo "------------------------------"
+	@echo "  make doc-rebuild     		  # Recreate image"
 	@echo "  make doc-generate     		  # doc-generate"
-	@echo "  make doc-deploy     		    # doc-deploy"
+	@echo "  make doc-publish   		    # doc-publish"
 	@echo "------------------------------"
 	@echo "  make init                  # Update xdevkit, common"
 	@echo "------------------------------"
@@ -64,64 +68,76 @@ help:
 
 # init
 init-xdevkit:
-	git submodule update -i ./common/xdevkit-setting/ && pushd ./common/xdevkit-setting/ && git checkout master && git pull && git checkout ${XDEVKIT_SETTING_VERSION} && git pull origin ${XDEVKIT_SETTING_VERSION} && popd
-	cp ./common/xdevkit-setting/browserServerSetting.js ./service/webServer/src/view/src/js/_setting/browserServerSetting.js
-	cp ./common/xdevkit-setting/browserServerSetting.js ./service/webServer/src/setting/browserServerSetting.js
+	#rm -rf xdevkit/*
+	git config -f .gitmodules submodule.xdevkit.branch ${XDEVKIT_VERSION}
+	git submodule update --remote --init --recursive
+	cp ./xdevkit/common/xdevkit-setting/browserServerSetting.js ./service/staticWeb/src/view/src/js/_setting/browserServerSetting.js
+	cp ./xdevkit/common/xdevkit-setting/browserServerSetting.js ./service/staticWeb/src/setting/browserServerSetting.js
 	
-	git submodule update -i ./common/xdevkit-auth-router/ && pushd ./common/xdevkit-auth-router/ && git checkout master && git pull && git checkout ${XDEVKIT_AUTH_ROUTER_VERSION} && git pull origin ${XDEVKIT_AUTH_ROUTER_VERSION} && popd
-	rm -rf ./service/webServer/src/xdevkit-auth-router
-	cp -r ./common/xdevkit-auth-router ./service/webServer/src/
+	rm -rf ./service/staticWeb/src/xdevkit-auth-router
+	cp -r ./xdevkit/common/xdevkit-auth-router ./service/staticWeb/src/
+	rm -rf ./service/staticWeb/src/xdevkit-auth-router/.git
 	
-	git submodule update -i ./common/xdevkit-view-component/ && pushd ./common/xdevkit-view-component/ && git checkout master && git pull && git checkout ${XDEVKIT_VIEW_COMPONENT_VERSION} && git pull origin ${XDEVKIT_VIEW_COMPONENT_VERSION} && popd
-	cp -r ./common/xdevkit-view-component/src/js/_xdevkit ./service/webServer/src/view/src/js/_lib/
-	cp -r ./common/xdevkit-view-component/src/ejs ./service/webServer/src/view/src/ejs/_xdevkit
+	cp -r ./xdevkit/common/xdevkit-view-component/src/js/_xdevkit ./service/staticWeb/src/view/src/js/_lib/
+	cp -r ./xdevkit/common/xdevkit-view-component/src/ejs ./service/staticWeb/src/view/src/ejs/_xdevkit
 
-init-lint:
-	git submodule update -i ./standalone/xdevkit-eslint/ && pushd ./standalone/xdevkit-eslint/ && git checkout main && git pull && git checkout ${XDEVKIT_ESLINT_VERSION} && git pull origin ${XDEVKIT_ESLINT_VERSION} && popd
-
- 
 # build
 docker-compose-build-app:
-	docker compose -p xljp-sample-app -f ./app/docker/docker-compose.app.yml build
+	docker compose -p ${DOCKER_PROJECT_NAME}-app -f ./app/docker/docker-compose.app.yml build
 docker-compose-build-test:
-	docker compose -p xljp-sample-test -f ./docker/docker-compose.test.yml build
+	docker compose -p ${DOCKER_PROJECT_NAME}-test -f ./docker/docker-compose.test.yml build
 docker-compose-build-view:
-	docker compose -p xljp-sample-view -f ./app/docker/docker-compose.view.yml build
+	docker compose -p ${DOCKER_PROJECT_NAME}-view -f ./xdevkit/standalone/xdevkit-view-compiler/docker/docker-compose.view.yml build
 
 # up
 docker-compose-up-app:
-	docker compose -p xljp-sample-app -f ./app/docker/docker-compose.app.yml up
+	docker compose -p ${DOCKER_PROJECT_NAME}-app -f ./app/docker/docker-compose.app.yml up
 docker-compose-up-app-d:
-	docker compose -p xljp-sample-app -f ./app/docker/docker-compose.app.yml up -d
+	docker compose -p ${DOCKER_PROJECT_NAME}-app -f ./app/docker/docker-compose.app.yml up -d
 docker-compose-up-test:
-	docker compose -p xljp-sample-test -f ./docker/docker-compose.test.yml down 
-	docker volume rm xljp-sample_xl-client-sample-rc-redis
-	docker compose -p xljp-sample-test -f ./docker/docker-compose.test.yml up --abort-on-container-exit
+	docker compose -p ${DOCKER_PROJECT_NAME}-test -f ./docker/docker-compose.test.yml down 
+	docker volume rm ${DOCKER_PROJECT_NAME}_xl-client-sample-rc-redis
+	docker compose -p ${DOCKER_PROJECT_NAME}-test -f ./docker/docker-compose.test.yml up --abort-on-container-exit
 
 docker-compose-up-view-compile:
-	BUILD_COMMAND="compile" docker compose -p xljp-sample-view -f ./standalone/xdevkit-view-compiler/docker/docker-compose.view.yml up --abort-on-container-exit
+	BUILD_COMMAND="compile" docker compose -p ${DOCKER_PROJECT_NAME}-view -f ./xdevkit/standalone/xdevkit-view-compiler/docker/docker-compose.view.yml up --abort-on-container-exit
 docker-compose-up-view-compile-minify:
-	BUILD_COMMAND="compile-minify" docker compose -p xljp-sample-view -f ./standalone/xdevkit-view-compiler/docker/docker-compose.view.yml up --abort-on-container-exit
+	BUILD_COMMAND="compile-minify" docker compose -p ${DOCKER_PROJECT_NAME}-view -f ./xdevkit/standalone/xdevkit-view-compiler/docker/docker-compose.view.yml up --abort-on-container-exit
 docker-compose-up-view-watch:
-	BUILD_COMMAND="watch" docker compose -p xljp-sample-view -f ./standalone/xdevkit-view-compiler/docker/docker-compose.view.yml up --abort-on-container-exit
+	BUILD_COMMAND="watch" docker compose -p ${DOCKER_PROJECT_NAME}-view -f ./xdevkit/standalone/xdevkit-view-compiler/docker/docker-compose.view.yml up --abort-on-container-exit
 
 # down
 docker-compose-down-app:
-	docker compose -p xljp-sample-app -f ./app/docker/docker-compose.app.yml down --volumes
+	docker compose -p ${DOCKER_PROJECT_NAME}-app -f ./app/docker/docker-compose.app.yml down --volumes
 docker-compose-down-test:
-	docker compose -p xljp-sample-test -f ./docker/docker-compose.test.yml down --volumes
+	docker compose -p ${DOCKER_PROJECT_NAME}-test -f ./docker/docker-compose.test.yml down --volumes
 
 # devtool
 docker-compose-up-lint:
-	docker compose -p xljp-sample-lint -f ./standalone/xdevkit-eslint/docker/docker-compose.eslint.yml up --abort-on-container-exit
+	docker compose -p ${DOCKER_PROJECT_NAME}-lint -f ./xdevkit/standalone/xdevkit-eslint/docker/docker-compose.eslint.yml up --abort-on-container-exit
 docker-compose-up-lint-fix:
-	FIX_OPTION="--fix" docker compose -p xljp-sample-lint -f ./standalone/xdevkit-eslint/docker/docker-compose.eslint.yml up --abort-on-container-exit
-docker-compose-up-doc-generate:
-	BUILD_COMMAND="doc-generate" docker compose -p xljp-sample-doc -f ./docker/docker-compose.doc.yml up
+	FIX_OPTION="--fix" docker compose -p ${DOCKER_PROJECT_NAME}-lint -f ./xdevkit/standalone/xdevkit-eslint/docker/docker-compose.eslint.yml up --abort-on-container-exit
+
+init-doc-deploy-key:
+	mkdir -p ./secret/
+	ssh-keygen -t rsa -b 4096 -f ./secret/id_rsa_deploy_key -N ""
+	echo "info: register this as a deploy key at github"
+	cat ./secret/id_rsa_deploy_key.pub
+docker-compose-rebuild-doc:
+	docker compose -p ${DOCKER_PROJECT_NAME}-doc -f ./xdevkit/standalone/xdevkit-jsdoc/docker/docker-compose.jsdoc.yml down --volumes
+	docker compose -p ${DOCKER_PROJECT_NAME}-doc -f ./xdevkit/standalone/xdevkit-jsdoc/docker/docker-compose.jsdoc.yml build
 docker-compose-up-doc-publish:
-	BUILD_COMMAND="doc-publish" docker compose -p xljp-sample-doc -f ./docker/docker-compose.doc.yml up
-
-
+	JSDOC_COMMAND="generate-publish" \
+	GIT_USER_NAME="${GIT_USER_NAME}" \
+	GIT_USER_EMAIL="${GIT_USER_EMAIL}" \
+	GIT_REPOSITORY_URL="${GIT_REPOSITORY_URL}" \
+	docker compose -p ${DOCKER_PROJECT_NAME}-doc -f ./xdevkit/standalone/xdevkit-jsdoc/docker/docker-compose.jsdoc.yml up --abort-on-container-exit
+docker-compose-up-doc-generate:
+	JSDOC_COMMAND="generate" \
+	GIT_USER_NAME="${GIT_USER_NAME}" \
+	GIT_USER_EMAIL="${GIT_USER_EMAIL}" \
+	GIT_REPOSITORY_URL="${GIT_REPOSITORY_URL}" \
+	docker compose -p ${DOCKER_PROJECT_NAME}-doc -f ./xdevkit/standalone/xdevkit-jsdoc/docker/docker-compose.jsdoc.yml up --abort-on-container-exit
 
 %:
 	@echo "Target '$@' does not exist."
