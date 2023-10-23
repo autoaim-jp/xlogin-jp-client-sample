@@ -70,7 +70,7 @@ help:
 init-xdevkit:
 	#rm -rf xdevkit/*
 	git submodule update --remote
-	pushd ./xdevkit/ && git checkout ${XDEVKIT_VERSION} && git pull origin ${XDEVKIT_VERSION} && git submodule update --init && popd
+	pushd ./xdevkit/ && git pull && git checkout ${XDEVKIT_VERSION} && git pull origin ${XDEVKIT_VERSION} && git submodule update --init && popd
 	cp ./xdevkit/common/xdevkit-setting/browserServerSetting.js ./service/staticWeb/src/view/src/js/_setting/browserServerSetting.js
 	cp ./xdevkit/common/xdevkit-setting/browserServerSetting.js ./service/staticWeb/src/setting/browserServerSetting.js
 	
