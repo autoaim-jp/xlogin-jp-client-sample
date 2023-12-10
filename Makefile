@@ -100,11 +100,11 @@ docker-compose-up-test:
 	docker compose -p ${DOCKER_PROJECT_NAME}-test -f ./docker/docker-compose.test.yml up --abort-on-container-exit
 
 docker-compose-up-view-compile:
-	BUILD_COMMAND="compile" docker compose -p ${DOCKER_PROJECT_NAME}-view -f ./xdevkit/standalone/xdevkit-view-compiler/docker/docker-compose.view.yml up --abort-on-container-exit
+	VIEW_PATH=../../../../service/staticWeb/src/view BUILD_COMMAND="compile" docker compose -p ${DOCKER_PROJECT_NAME}-view -f ./xdevkit/standalone/xdevkit-view-compiler/docker/docker-compose.view.yml up --abort-on-container-exit
 docker-compose-up-view-compile-minify:
-	BUILD_COMMAND="compile-minify" docker compose -p ${DOCKER_PROJECT_NAME}-view -f ./xdevkit/standalone/xdevkit-view-compiler/docker/docker-compose.view.yml up --abort-on-container-exit
+	VIEW_PATH=../../../../service/staticWeb/src/view BUILD_COMMAND="compile-minify" docker compose -p ${DOCKER_PROJECT_NAME}-view -f ./xdevkit/standalone/xdevkit-view-compiler/docker/docker-compose.view.yml up --abort-on-container-exit
 docker-compose-up-view-watch:
-	BUILD_COMMAND="watch" docker compose -p ${DOCKER_PROJECT_NAME}-view -f ./xdevkit/standalone/xdevkit-view-compiler/docker/docker-compose.view.yml up --abort-on-container-exit
+	VIEW_PATH=../../../../service/staticWeb/src/view BUILD_COMMAND="watch" docker compose -p ${DOCKER_PROJECT_NAME}-view -f ./xdevkit/standalone/xdevkit-view-compiler/docker/docker-compose.view.yml up --abort-on-container-exit
 
 # down
 docker-compose-down-app:
@@ -114,9 +114,9 @@ docker-compose-down-test:
 
 # devtool
 docker-compose-up-lint:
-	docker compose -p ${DOCKER_PROJECT_NAME}-lint -f ./xdevkit/standalone/xdevkit-eslint/docker/docker-compose.eslint.yml up --abort-on-container-exit
+	SERVICE_PATH=../../../../service docker compose -p ${DOCKER_PROJECT_NAME}-lint -f ./xdevkit/standalone/xdevkit-eslint/docker/docker-compose.eslint.yml up --abort-on-container-exit
 docker-compose-up-lint-fix:
-	FIX_OPTION="--fix" docker compose -p ${DOCKER_PROJECT_NAME}-lint -f ./xdevkit/standalone/xdevkit-eslint/docker/docker-compose.eslint.yml up --abort-on-container-exit
+	SERVICE_PATH=../../../../service FIX_OPTION="--fix" docker compose -p ${DOCKER_PROJECT_NAME}-lint -f ./xdevkit/standalone/xdevkit-eslint/docker/docker-compose.eslint.yml up --abort-on-container-exit
 
 init-doc-deploy-key:
 	mkdir -p ./secret/
@@ -127,12 +127,16 @@ docker-compose-rebuild-doc:
 	docker compose -p ${DOCKER_PROJECT_NAME}-doc -f ./xdevkit/standalone/xdevkit-jsdoc/docker/docker-compose.jsdoc.yml down --volumes
 	docker compose -p ${DOCKER_PROJECT_NAME}-doc -f ./xdevkit/standalone/xdevkit-jsdoc/docker/docker-compose.jsdoc.yml build
 docker-compose-up-doc-publish:
+	SECRET_PATH=../../../../secret \
+	SERVICE_PATH=../../../../service \
 	JSDOC_COMMAND="generate-publish" \
 	GIT_USER_NAME="${GIT_USER_NAME}" \
 	GIT_USER_EMAIL="${GIT_USER_EMAIL}" \
 	GIT_REPOSITORY_URL="${GIT_REPOSITORY_URL}" \
 	docker compose -p ${DOCKER_PROJECT_NAME}-doc -f ./xdevkit/standalone/xdevkit-jsdoc/docker/docker-compose.jsdoc.yml up --abort-on-container-exit
 docker-compose-up-doc-generate:
+	SECRET_PATH=../../../../secret \
+	SERVICE_PATH=../../../../service \
 	JSDOC_COMMAND="generate" \
 	GIT_USER_NAME="${GIT_USER_NAME}" \
 	GIT_USER_EMAIL="${GIT_USER_EMAIL}" \

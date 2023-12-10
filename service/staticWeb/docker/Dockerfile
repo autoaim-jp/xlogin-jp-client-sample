@@ -2,9 +2,9 @@ FROM node:20-slim
 
 WORKDIR /app
 
-COPY ./service/webServer/src/package.json /app/
+COPY ./service/staticWeb/src/package.json /app/
 
 RUN yarn install
 
-COPY ./service/webServer/src /app
+COPY ./service/staticWeb/src /app
 
