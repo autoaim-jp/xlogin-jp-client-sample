@@ -233,7 +233,7 @@ const handleUploadFile = async ({
 }
 
 const createResponse = ({ req, res, handleResult }) => {
-  logger.debug('createResponse', { 'req.url': req.url, 'handleResult': handleResult })
+  logger.debug('createResponse', { 'req.url': req.url, handleResult })
   // req.session.auth = handleResult.session
 
   const ERROR_PAGE = mod.setting.xdevkitSetting.getValue('url.ERROR_PAGE')

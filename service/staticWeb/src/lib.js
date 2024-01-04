@@ -237,7 +237,6 @@ const monkeyPatch = ({ SERVICE_NAME }) => {
 }
 
 
-
 export default {
   init,
   postRequest,
