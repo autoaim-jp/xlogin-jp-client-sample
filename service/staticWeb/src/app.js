@@ -10,6 +10,7 @@ import helmet from 'helmet'
 import dotenv from 'dotenv'
 import multer from 'multer'
 import FormData from 'form-data'
+import winston from 'winston'
 
 import xdevkit from './xdevkit-auth-router/src/app.js'
 import setting from './setting/index.js'
@@ -110,20 +111,21 @@ const _startServer = (expressApp) => {
     }
     const server = https.createServer(tlsConfig, expressApp)
     server.listen(setting.getValue('env.SERVER_PORT'), () => {
-      console.log(`${setting.getValue('env.CLIENT_ID')} listen to port: ${setting.getValue('env.SERVER_PORT')}, origin: ${setting.getValue('env.SERVER_ORIGIN')}`)
+      logger.info(`${setting.getValue('env.CLIENT_ID')} listen to port: ${setting.getValue('env.SERVER_PORT')}, origin: ${setting.getValue('env.SERVER_ORIGIN')}`)
     })
   } else {
     expressApp.listen(setting.getValue('env.SERVER_PORT'), () => {
-      console.log(`${setting.getValue('env.CLIENT_ID')} listen to port: ${setting.getValue('env.SERVER_PORT')}, origin: ${setting.getValue('env.SERVER_ORIGIN')}`)
+      logger.info(`${setting.getValue('env.CLIENT_ID')} listen to port: ${setting.getValue('env.SERVER_PORT')}, origin: ${setting.getValue('env.SERVER_ORIGIN')}`)
     })
   }
 }
 
 const main = () => {
   dotenv.config()
-  lib.init(axios, http, https, crypto)
+  lib.init(axios, http, https, crypto, winston)
   setting.init(process.env)
   core.init(setting, output, input, lib)
+  a.lib.monkeyPatch({ SERVICE_NAME: a.setting.getValue('env.SERVICE_NAME') })
 
 
   const expressApp = express()

@@ -22,7 +22,7 @@ const handleTimerAdd = async ({ accessToken }) => {
       lib: [mod.lib.postRequest],
     }))
 
-    console.log({ timerAddResponse })
+    logger.debug('handleTimerAdd', { timerAddResponse })
   }, 10 * 1000)
 
   const handleResult = { response: { status: mod.setting.browserServerSetting.getValue('statusList.OK') } }
@@ -35,7 +35,7 @@ const handleNotificationOpen = async ({ accessToken, notificationIdList }) => {
     xdevkitSetting: mod.setting.xdevkitSetting.getList('api.API_VERSION', 'env.API_SERVER_ORIGIN', 'env.CLIENT_ID'),
     lib: [mod.lib.postRequest],
   }))
-  console.log({ notificationOpenResponse })
+  logger.debug('handleNotificationOpen', { notificationOpenResponse })
 
   const handleResult = { response: { status: mod.setting.browserServerSetting.getValue('statusList.OK') } }
   return handleResult
@@ -70,7 +70,7 @@ const handleMessageSave = async ({ accessToken, message }) => {
     lib: [mod.lib.postRequest],
   }))
 
-  console.log({ fileSaveResponse })
+  logger.debug('handleMessageSave', { fileSaveResponse })
 
   const status = mod.setting.browserServerSetting.getValue('statusList.OK')
 
@@ -86,7 +86,7 @@ const handleMessageContent = async ({ accessToken }) => {
     lib: [mod.lib.getRequest],
   }))
 
-  console.log({ fileGetResponse })
+  logger.debug('handleMessageContent', { fileGetResponse })
 
   if (!fileGetResponse || !fileGetResponse.data) {
     const status = mod.setting.browserServerSetting.getValue('statusList.INVALID_SESSION')
@@ -109,7 +109,7 @@ const handleMessageDelete = async ({ accessToken }) => {
     lib: [mod.lib.postRequest],
   }))
 
-  console.log({ fileDeleteResponse })
+  logger.debug('handleMessageDelete', { fileDeleteResponse })
 
   const status = mod.setting.browserServerSetting.getValue('statusList.OK')
 
@@ -127,7 +127,7 @@ const handleFileList = async ({ accessToken }) => {
     lib: [mod.lib.getRequest],
   }))
 
-  console.log({ fileListResponse })
+  logger.debug('handleFileList', { fileListResponse })
 
   if (!fileListResponse || !fileListResponse.data) {
     const status = mod.setting.browserServerSetting.getValue('statusList.INVALID_SESSION')
@@ -155,7 +155,7 @@ const handleFileContent = async ({ accessToken, fileLabel }) => {
     lib: [mod.lib.getFileRequest],
   }))
 
-  // console.log({ fileContentResponse })
+  // logger.debug('handleFileContent', { fileContentResponse })
 
   return fileContentResponse
 }
@@ -177,7 +177,7 @@ const handleUpdateBackupEmailAddress = async ({ accessToken, backupEmailAddress 
     lib: [mod.lib.postRequest],
   }))
 
-  console.log({ updateBackupEmailAddressResponse })
+  logger.debug('handleSplitPermissionList', { updateBackupEmailAddressResponse })
   if (!updateBackupEmailAddressResponse || !updateBackupEmailAddressResponse.data) {
     const status = mod.setting.browserServerSetting.getValue('statusList.INVALID_SESSION')
     const result = {}
@@ -213,7 +213,7 @@ const handleUploadFile = async ({
       return resolve({ error: false, message: 'success' })
     })
   })
-  console.log({ uploadResult })
+  logger.debug('handleUploadFile', { uploadResult })
 
   const filePath = mod.setting.getValue('user.PROFILE_FILE_PATH_WITHOUT_EXT')
   const formData = new FormData()
@@ -226,14 +226,14 @@ const handleUploadFile = async ({
     xdevkitSetting: mod.setting.xdevkitSetting.getList('api.API_VERSION', 'env.API_SERVER_ORIGIN', 'env.CLIENT_ID'),
     lib: [mod.lib.postFormRequest],
   }))
-  console.log({ fileAddResponse })
+  logger.debug('handleUploadFile', { fileAddResponse })
 
   const handleResult = { response: { status: mod.setting.browserServerSetting.getValue('statusList.OK') } }
   return handleResult
 }
 
 const createResponse = ({ req, res, handleResult }) => {
-  console.log('endResponse:', req.url, handleResult)
+  logger.debug('createResponse', { 'req.url': req.url, handleResult })
   // req.session.auth = handleResult.session
 
   const ERROR_PAGE = mod.setting.xdevkitSetting.getValue('url.ERROR_PAGE')

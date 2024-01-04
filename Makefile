@@ -1,6 +1,6 @@
 include setting.conf
 SHELL=/bin/bash
-PHONY=default app-rebuild app-build app-up app-up-d app-down test-build test-up test-down view-build view-compile view-compile-minify view-watch init lint lint-fix init-doc doc-rebuild doc-generate doc-publish clean help
+PHONY=default app-rebuild app-build app-up app-up-d app-down test-build test-up test-down view-build view-compile view-compile-minify view-watch init lint lint-fix init-doc doc-rebuild doc-generate doc-publish clean yarn-add help
 
 .PHONY: $(PHONY)
 
@@ -30,6 +30,8 @@ init-doc: init-doc-deploy-key
 doc-rebuild: docker-compose-rebuild-doc
 doc-generate: docker-compose-up-doc-generate
 doc-publish: docker-compose-up-doc-publish
+
+yarn-add: docker-restart-install-stop
 
 clean: app-down test-down
 
@@ -64,7 +66,8 @@ help:
 	@echo "  make lint-fix 		          # lint and fix"
 	@echo "------------------------------"
 	@echo "  make clean                 # Clean app, test container/volume"
-
+	@echo "------------------------------"
+	@echo "  make yarn-add CONTAINER= PACKAGE=  # restart container and install package"
 
 # init
 init-xdevkit:
@@ -142,6 +145,12 @@ docker-compose-up-doc-generate:
 	GIT_USER_EMAIL="${GIT_USER_EMAIL}" \
 	GIT_REPOSITORY_URL="${GIT_REPOSITORY_URL}" \
 	docker compose -p ${DOCKER_PROJECT_NAME}-doc -f ./xdevkit/standalone/xdevkit-jsdoc/docker/docker-compose.jsdoc.yml up --abort-on-container-exit
+
+docker-restart-install-stop:
+	docker restart $(CONTAINER)
+	docker exec -it $(CONTAINER) /bin/bash -c "yarn add $(PACKAGE)"
+	docker stop $(CONTAINER)
+
 
 %:
 	@echo "Target '$@' does not exist."
