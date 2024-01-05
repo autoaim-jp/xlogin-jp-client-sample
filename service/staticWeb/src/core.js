@@ -86,7 +86,7 @@ const handleMessageContent = async ({ accessToken }) => {
     lib: [mod.lib.getRequest],
   }))
 
-  logger.debug('handleMessageContent', { fileGetResponse })
+  logger.debug('handleMessageContent', { data: fileGetResponse.data })
 
   if (!fileGetResponse || !fileGetResponse.data) {
     const status = mod.setting.browserServerSetting.getValue('statusList.INVALID_SESSION')
@@ -127,7 +127,7 @@ const handleFileList = async ({ accessToken }) => {
     lib: [mod.lib.getRequest],
   }))
 
-  logger.debug('handleFileList', { fileListResponse })
+  logger.debug('handleFileList', { data: fileListResponse.data })
 
   if (!fileListResponse || !fileListResponse.data) {
     const status = mod.setting.browserServerSetting.getValue('statusList.INVALID_SESSION')
