@@ -1,6 +1,6 @@
 include setting.conf
 SHELL=/bin/bash
-PHONY=default app-rebuild app-build app-up app-up-d app-down test-build test-up test-down view-build view-compile view-compile-minify view-watch init lint lint-fix init-doc doc-rebuild doc-generate doc-publish clean yarn-add help
+PHONY=default app-rebuild app-build app-up app-up-d app-down test-build test-up test-down view-build view-compile view-compile-minify view-watch init lint lint-fix init-doc doc-rebuild doc-generate doc-publish clean yarn-add container-ls help
 
 .PHONY: $(PHONY)
 
@@ -32,6 +32,7 @@ doc-generate: docker-compose-up-doc-generate
 doc-publish: docker-compose-up-doc-publish
 
 yarn-add: docker-restart-install-stop
+container-ls: docker-container-ls
 
 clean: app-down test-down
 
@@ -68,6 +69,7 @@ help:
 	@echo "  make clean                 # Clean app, test container/volume"
 	@echo "------------------------------"
 	@echo "  make yarn-add CONTAINER= PACKAGE=  # restart container and install package"
+	@echo "  make container-ls  				# show container name in docker-compose.app.yml"
 
 # init
 init-xdevkit:
@@ -150,6 +152,9 @@ docker-restart-install-stop:
 	docker restart $(CONTAINER)
 	docker exec -it $(CONTAINER) /bin/bash -c "yarn add $(PACKAGE)"
 	docker stop $(CONTAINER)
+
+docker-container-ls:
+	cat ./app/docker/docker-compose.app.yml | grep container_name
 
 
 %:

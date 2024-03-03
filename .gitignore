@@ -21,3 +21,5 @@ data/redis/
 
 cert/
 
+yarn.lock
+
