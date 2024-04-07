@@ -167,7 +167,6 @@ const loadBackupEmailAddressForm = async ({ userInfoResult }) => {
 
 const main = async () => {
   a.lib.xdevkit.output.switchLoading(true)
-  a.lib.common.output.setOnClickNavManu()
   a.lib.monkeyPatch()
 
   const userInfoResult = await a.app.loadProfile()
@@ -200,4 +199,4 @@ a.app = {
 }
 
 a.app.main()
-
+window.a = a

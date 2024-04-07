@@ -30,7 +30,13 @@ const a = asocial
 const _getOtherRouter = () => {
   const expressRouter = express.Router()
   if (setting.getValue('env.SERVER_ORIGIN').indexOf('https') >= 0) {
-    expressRouter.use(helmet())
+    expressRouter.use(helmet({
+      contentSecurityPolicy: {
+        directives: {
+          'script-src': ['\'self\'', '\'unsafe-eval\'', '\'unsafe-inline\''],
+        },
+      },
+    }))
   }
   expressRouter.use(bodyParser.urlencoded({ extended: true }))
   expressRouter.use(bodyParser.json())

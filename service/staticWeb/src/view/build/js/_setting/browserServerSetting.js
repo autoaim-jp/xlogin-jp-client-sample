@@ -38,7 +38,18 @@ const labelList = {
         label: 'ファイル',
         summary: '連携するサービスで、あなたがデータを保存できます。',
       },
-
+      chatgpt: {
+        label: 'ChatGPT',
+        summary: '連携するサービスで、ChatGPTを利用するための権限です。',
+      },
+      text_lib_v1: {
+        label: 'テキスト変換',
+        summary: '連携するサービスで、テキスト変換機能を利用するための権限です。',
+      },
+      tesseract: {
+        label: 'OCR',
+        summary: '連携するサービスで、OCRを利用するための権限です。',
+      },
     },
   },
   scopeOperation: {
