@@ -1,3 +1,32 @@
-<div id='timerTabContainer' class='hidden'>
+<div id='timerTabContainer' class='hidden' x-data="timerData">
   <button id='addTimerBtn' class='w-60 px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out'>start timer</button>
+  <a
+    class="group inline-block rounded bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 p-[2px] hover:text-white focus:outline-none focus:ring active:text-opacity-75"
+    href="#"
+    @click.prevent="addNotificationRequest"
+    >
+    <span class="block rounded-sm bg-white px-8 py-3 text-sm font-medium group-hover:bg-transparent">
+      通知追加テスト
+    </span>
+  </a>
 </div>
+
+<script>
+function timerData() {
+  return {
+    async addNotificationRequest() {
+      const addNotification = a.output.getAddNotification(argNamed({
+        browserServerSetting: a.setting.browserServerSetting.getList('apiEndpoint'),
+        lib: [a.lib.common.output.postRequest],
+      }))
+
+      const onClickAddNotificationButton = a.action.getOnClickAddNotificationButton(argNamed({
+        output: { addNotification },
+      }))
+
+      await onClickAddNotificationButton()
+    }
+  }
+}
+</script>
+
