@@ -29,6 +29,20 @@ const handleTimerAdd = async ({ accessToken }) => {
   return handleResult
 }
 
+const handleNotificationAdd = async ({ accessToken }) => {
+  const timerAddResponse = await mod.output.timerAddRequest(argNamed({
+    param: { accessToken },
+    xdevkitSetting: mod.setting.xdevkitSetting.getList('api.API_VERSION', 'env.API_SERVER_ORIGIN', 'env.CLIENT_ID'),
+    lib: [mod.lib.postRequest],
+  }))
+
+  logger.debug('handleNotificationAdd', { timerAddResponse })
+
+  const handleResult = { response: { status: mod.setting.browserServerSetting.getValue('statusList.OK') } }
+  return handleResult
+}
+
+
 const handleNotificationOpen = async ({ accessToken, notificationIdList }) => {
   const notificationOpenResponse = await mod.output.notificationOpenRequest(argNamed({
     param: { accessToken, notificationIdList },
@@ -274,6 +288,7 @@ export default {
   init,
 
   handleTimerAdd,
+  handleNotificationAdd,
   handleNotificationOpen,
   handleNotificationList,
   handleMessageSave,

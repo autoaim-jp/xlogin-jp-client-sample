@@ -10,6 +10,16 @@ const getHandlerTimerAdd = ({ handleTimerAdd, createResponse }) => {
   }
 }
 
+const getHandlerNotificationAdd = ({ handleNotificationAdd, createResponse }) => {
+  return async (req, res) => {
+    const { accessToken } = req.session.auth
+
+    const handleResult = await handleNotificationAdd({ accessToken })
+
+    createResponse({ req, res, handleResult })
+  }
+}
+
 const getHandlerNotificationOpen = ({ handleNotificationOpen, createResponse }) => {
   return async (req, res) => {
     const { accessToken } = req.session.auth
@@ -129,6 +139,7 @@ const getHandlerUploadFile = ({
 
 export default {
   getHandlerTimerAdd,
+  getHandlerNotificationAdd,
 
   getHandlerNotificationOpen,
   getHandlerNotificationList,

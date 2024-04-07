@@ -54,6 +54,11 @@ const _getActionRouter = () => {
   }))
   expressRouter.post(`${setting.browserServerSetting.getValue('apiEndpoint')}/timer/add`, timerAddHandler)
 
+  const notificationAddHandler = a.action.getHandlerNotificationAdd(argNamed({
+    core: [a.core.handleNotificationAdd, a.core.createResponse],
+  }))
+  expressRouter.post(`${setting.browserServerSetting.getValue('apiEndpoint')}/notification/add`, notificationAddHandler)
+
   const notificationOpenHandler = a.action.getHandlerNotificationOpen(argNamed({
     core: [a.core.handleNotificationOpen, a.core.createResponse],
   }))
