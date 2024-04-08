@@ -86,36 +86,6 @@ const loadMessageBtn = () => {
   }))
 }
 
-const loadUploadForm = () => {
-  const uploadFile = a.output.getUploadFile(argNamed({
-    browserServerSetting: a.setting.browserServerSetting.getList('apiEndpoint'),
-    lib: [a.lib.common.output.postFormRequest],
-  }))
-
-  const onSubmitUploadForm = a.action.getOnSubmitUploadForm(argNamed({
-    output: { uploadFile },
-  }))
-
-  a.output.setOnSubmitUploadForm(argNamed({
-    onSubmit: { onSubmitUploadForm },
-  }))
-
-
-  const fetchUploadedFileList = a.input.getFetchUploadedFileList(argNamed({
-    browserServerSetting: a.setting.browserServerSetting.getList('apiEndpoint'),
-    lib: [a.lib.common.input.getRequest],
-  }))
-
-  const loadUploadedImg = a.output.getLoadUploadedImg(argNamed({
-    browserServerSetting: a.setting.browserServerSetting.getList('apiEndpoint'),
-  }))
-
-  a.core.showUploadedImg(argNamed({
-    input: { fetchUploadedFileList },
-    output: { loadUploadedImg },
-  }))
-}
-
 const loadPermission = async () => {
   const splitPermissionListResult = await a.lib.common.input.fetchSplitPermissionList(a.setting.browserServerSetting.getValue('apiEndpoint'))
   a.output.showEditor(argNamed({
@@ -123,10 +93,6 @@ const loadPermission = async () => {
   }))
 
   a.output.showBackupEmailAddressForm(argNamed({
-    param: { splitPermissionListResult },
-  }))
-
-  a.output.showUploadForm(argNamed({
     param: { splitPermissionListResult },
   }))
 
@@ -174,7 +140,6 @@ const main = async () => {
   a.app.loadTimerBtn()
   a.app.loadMessageContent()
   a.app.loadMessageBtn()
-  a.app.loadUploadForm()
   a.app.loadTabBtn()
 
   a.app.showNotification()
@@ -192,7 +157,6 @@ a.app = {
   showNotification,
   loadMessageContent,
   loadMessageBtn,
-  loadUploadForm,
   loadPermission,
   loadTabBtn,
   loadBackupEmailAddressForm,
