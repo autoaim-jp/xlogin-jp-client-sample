@@ -45,11 +45,11 @@ const loadTimerBtn = async () => {
   }))
 }
 
-const showNotification = () => {
-  setInterval(() => {
-    a.lib.common.output.showNotification(a.setting.browserServerSetting.getValue('apiEndpoint'), a.lib.xdevkit.output.showModal, a.lib.common.input.getRequest)
-  }, 30 * 1000)
-}
+//const showNotification = () => {
+//  setInterval(() => {
+//    a.lib.common.output.showNotification(a.setting.browserServerSetting.getValue('apiEndpoint'), a.lib.xdevkit.output.showModal, a.lib.common.input.getRequest)
+//  }, 3 * 1000)
+//}
 
 const loadMessageContent = async () => {
   const messageResult = await a.input.fetchMessage(argNamed({
@@ -142,7 +142,6 @@ const main = async () => {
   a.app.loadMessageBtn()
   a.app.loadTabBtn()
 
-  a.app.showNotification()
   a.app.loadPermission()
 
   setTimeout(() => {
@@ -154,7 +153,6 @@ a.app = {
   main,
   loadProfile,
   loadTimerBtn,
-  showNotification,
   loadMessageContent,
   loadMessageBtn,
   loadPermission,

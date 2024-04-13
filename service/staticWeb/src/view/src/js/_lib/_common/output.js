@@ -62,6 +62,12 @@ export const showNotification = async (apiEndpoint, showModal, getRequest) => {
   const durationHide = 0.2
   const resultFetchGlobalNotification = await getRequest(`${apiEndpoint}/notification/list`)
 
+  const notificationList = Object.values(resultFetchGlobalNotification?.result?.notificationList || {}).reverse()
+  console.log({ notificationList })
+  notificationIsVisible = false
+  return
+
+  /*
   const notificationContainerElm = document.querySelector('#notificationContainer')
   notificationContainerElm.clearChildren()
   const notificationTemplateElm = document.querySelector('#notificationTemplate')
@@ -105,5 +111,7 @@ export const showNotification = async (apiEndpoint, showModal, getRequest) => {
   }
   const param = { notificationIdList }
   await postRequest(`${apiEndpoint}/notification/open`, param)
+
+*/
 }
 

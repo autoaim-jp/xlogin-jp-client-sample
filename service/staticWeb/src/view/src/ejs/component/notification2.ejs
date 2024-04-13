@@ -1,0 +1,31 @@
+<div x-data="notification2" x-init="startNotificationTimer">
+  <template x-for="(notification, index) in notificationList" :key="index">
+    <%- include(`${componentPath}notificationCard.ejs`)  %>
+  </template>
+</div>
+
+<script>
+function notification2 () {
+  return {
+    notificationList: [{ id: 'a', title: 'x' }],
+
+    startNotificationTimer() {
+      setInterval(() => {
+        this.fetchNotification()
+      }, 5 * 1000)
+    },
+
+    async fetchNotification() {
+      console.log('fetchNotification')
+      const apiEndpoint = a.setting.browserServerSetting.getValue('apiEndpoint')
+      const getRequest = a.lib.common.input.getRequest
+
+      const resultFetchGlobalNotification = await getRequest(`${apiEndpoint}/notification/list`)
+      this.notificationList = Object.values(resultFetchGlobalNotification?.result?.notificationList || {}).reverse()
+      console.log(JSON.stringify(this.notificationList))
+    },
+
+  }
+}
+</script>
+
