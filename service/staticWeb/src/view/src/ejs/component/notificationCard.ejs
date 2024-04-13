@@ -1,4 +1,4 @@
-<div role="alert" class="absolute top-10 left-4 rounded-xl border border-gray-100 bg-white p-4">
+<div role="alert" class="rounded-xl border border-gray-100 bg-white p-4">
   <div class="flex items-start gap-4">
     <span class="text-green-600">
       <svg
@@ -18,37 +18,36 @@
     </span>
 
     <div class="flex-1">
-      <strong class="block font-medium text-gray-900" x-text="notification.subject"></strong>
+      <strong class="block font-medium text-gray-900" x-text="notificationDetail.title"></strong>
 
-      <p class="mt-1 text-sm text-gray-700" x-text="notification.detail"></p>
+      <p class="mt-1 text-sm text-gray-700" x-text="notificationDetail.content"></p>
 
-      <div class="mt-4 flex gap-2">
-        <a
-          href="#"
-          class="inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-white hover:bg-indigo-700"
-        >
-          <span class="text-sm"> Preview </span>
+      <template x-if="notificationDetail.action">
+        <div class="mt-4 flex gap-2">
+          <a
+            :href="notificationDetail.action.href"
+            class="inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-white hover:bg-indigo-700"
+            >
+            <span class="text-sm" x-text="notificationDetail.action.title"></span>
 
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="1.5"
-            stroke="currentColor"
-            class="h-4 w-4"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"
-            />
-          </svg>
-        </a>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="h-4 w-4"
+              >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"
+                />
+            </svg>
+          </a>
+        </div>
+      </template>
 
-        <button class="block rounded-lg px-4 py-2 text-gray-700 transition hover:bg-gray-50">
-          <span class="text-sm">Revert</span>
-        </button>
-      </div>
     </div>
 
     <button class="text-gray-500 transition hover:text-gray-600">

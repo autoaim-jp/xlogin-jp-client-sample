@@ -8,3 +8,7 @@ html {
   font-family: Roboto, Arial, 'Noto Sans', sans-serif;
 }
 
+.-translate-x-110percent {
+  transform: translate(-110%);
+}
+
