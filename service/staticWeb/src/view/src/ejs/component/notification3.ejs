@@ -35,7 +35,7 @@
 function notificationData () {
     return {
         notificationListOpen: true,
-        notificationList: [],
+        notificationList: {},
         notificationDetailList: [],
 
         startNotificationTimer() {
@@ -47,16 +47,25 @@ function notificationData () {
         async fetchNotification() {
             console.log('fetchNotification')
             const apiEndpoint = a.setting.browserServerSetting.getValue('apiEndpoint')
-            const getRequest = a.lib.common.input.getRequest
 
-            const resultFetchGlobalNotification = await getRequest(`${apiEndpoint}/notification/list`)
-            this.notificationList = Object.values(resultFetchGlobalNotification?.result?.notificationList || {}).reverse()
-            console.log(JSON.stringify(this.notificationList))
-            this.notificationDetailList = this.notificationList.map((notification) => {
-                console.log(notification.detail)
-                // return JSON.parse(notification.detail)
-                return notification.detail
+            const resultFetchGlobalNotification = await a.lib.common.input.getRequest(`${apiEndpoint}/notification/list`)
+            this.notificationList = resultFetchGlobalNotification?.result?.notificationList || {}
+            this.notificationDetailList = Object.values(this.notificationList).reverse().map((notification) => {
+                return JSON.parse(notification.detail)
             })
+
+            this.openNotification()
+        },
+
+        async openNotification() {
+            const apiEndpoint = a.setting.browserServerSetting.getValue('apiEndpoint')
+
+            const notificationIdList = Object.keys(this.notificationList)
+            if (notificationIdList.length === 0) {
+                return
+            }
+            const param = { notificationIdList }
+            await a.lib.common.output.postRequest(`${apiEndpoint}/notification/open`, param)
         },
 
     }
