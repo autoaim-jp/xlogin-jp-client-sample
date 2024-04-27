@@ -1,15 +1,15 @@
-<template x-teleport="body"  x-data="notificationData" x-init="startNotificationTimer">
+<template x-teleport="body"  x-data="notificationData" x-init="startNotificationTimer" @ace-notification.window="notificationListOpen=true">
     <div  x-show="notificationListOpen" @keydown.window.escape="notificationListOpen=false" class="relative z-[99]">
 
         <div x-show="notificationListOpen" x-transition.opacity.duration.600ms @click="notificationListOpen = false" class="fixed inset-0 bg-black bg-opacity-10"></div>
         <div class="fixed inset-0 overflow-hidden">
             <div class="absolute inset-0 overflow-hidden">
-                <div class="fixed inset-y-0 left-0 flex max-w-full pl-10">
+                <div class="fixed inset-y-0 left-0 flex max-w-full">
                     <div 
                      x-show="notificationListOpen" 
                      @click.away="notificationListOpen = false"
                      x-transition:enter="transform transition ease-in-out duration-500 sm:duration-700" 
-                     x-transition:leave-end="-translate-x-110percent" 
+                     x-transition:enter-start="-translate-x-110percent" 
                      x-transition:enter-end="translate-x-0" 
                      x-transition:leave="transform transition ease-in-out duration-500 sm:duration-700" 
                      x-transition:leave-start="translate-x-0" 
@@ -34,7 +34,7 @@
 <script>
 function notificationData () {
     return {
-        notificationListOpen: true,
+        notificationListOpen: false,
         notificationList: {},
         notificationDetailList: [],
 
