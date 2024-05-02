@@ -130,7 +130,7 @@ export const getLoadUploadedImg = ({ apiEndpoint }) => {
 
 /* show elm */
 export const showMessage = ({ messageResult }) => {
-  if (!messageResult || !messageResult.result ) {
+  if (!messageResult || !messageResult.result) {
     return
   }
   document.querySelector('#messageContent').value = messageResult.result.jsonContent
