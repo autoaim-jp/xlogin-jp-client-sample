@@ -4,6 +4,12 @@ export const getOnClickAddTimerButton = ({ addTimer }) => {
   }
 }
 
+export const getOnClickAddNotificationButton = ({ addNotification }) => {
+  return () => {
+    addNotification()
+  }
+}
+
 export const getOnClickSaveMessageButton = ({ saveMessage }) => {
   return () => {
     saveMessage()

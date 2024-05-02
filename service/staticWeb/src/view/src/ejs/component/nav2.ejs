@@ -1,0 +1,93 @@
+<header class="bg-white">
+  <div class="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">
+    <div class="flex h-16 items-center justify-between">
+      <div class="flex-1 md:flex md:items-center md:gap-12">
+        <a class="block text-teal-600" href="#">
+          <span class="sr-only">Home</span>
+          <img class='inline-block align-bottom' src='/img/logo.webp' width='128px' height='72px'>
+        </a>
+      </div>
+
+      <div class="flex items-center gap-12">
+        <nav aria-label="Global">
+          <ul class="flex items-center gap-6 text-sm"
+              x-data="nav2"
+              x-init="initNav2()"
+              >
+
+              <li class="hidden md:block">
+                <a class="text-gray-500 transition hover:text-gray-500/75" x-bind:href="authActionHref" x-cloak x-text="authActionLabel"></a>
+              </li>
+
+              <li class="hidden md:block">
+                <a class="text-gray-500 transition hover:text-gray-500/75" href="#">GitHub</a>
+              </li>
+
+              <li class="block">
+                <a class="text-gray-500 transition hover:text-gray-500/75" href="#" @click.prevent="$dispatch('ace-notification')">通知</a>
+              </li>
+
+              <li class="hidden md:block">
+                <a class="text-gray-500 transition hover:text-gray-500/75" href="#">アカウント</a>
+              </li>
+          </ul>
+        </nav>
+
+        <div class="flex items-center gap-4">
+          <div class="block">
+            <button class="rounded bg-gray-100 p-2 text-gray-600 transition hover:text-gray-600/75" @click.prevent="$dispatch('ace-sidemenu')" x-data>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                stroke-width="2"
+                >
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<script>
+function nav2() {
+  const awaitSleep = (ms) => {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve()
+      }, ms)
+    })
+  }
+
+  return {
+    authActionHref: null,
+    authActionLabel: null,
+
+
+    async initNav2 () {
+      await this.checkLoginStatus()
+
+      window.dispatchEvent(new CustomEvent('ace-init', { detail: { from: 'nav2.ejs' } }))
+    },
+
+    async checkLoginStatus () {
+      // console.log('debug delay @nav2.ejs')
+      // await awaitSleep(2000)
+      const splitPermissionListResult = await a.lib.common.input.fetchSplitPermissionList(a.setting.browserServerSetting.getValue('apiEndpoint'))
+      if (splitPermissionListResult?.result?.clientId) {
+        this.authActionLabel = 'ログアウト'
+        this.authActionHref = '/f/logout'
+      } else {
+        this.isLogin = false
+        this.authActionLabel = 'ログイン'
+        this.authActionHref = '/f/xlogin/connect?redirectAfterAuth=/mypage'
+      }
+    }
+  }
+}
+</script>

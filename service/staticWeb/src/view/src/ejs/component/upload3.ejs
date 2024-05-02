@@ -1,0 +1,131 @@
+<div id='uploadTabContainer' class='' x-data="imageViewer()" x-init="initUploadDiv()">
+  <div x-show="!hasFilePermission" class='flex justify-center'>
+    <button @click="loginWithFilePermission" class='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'>XLogin</button>
+  </div>
+
+  <div x-show="hasFilePermission" class='max-w-md mx-auto bg-white p-6 rounded-lg shadow-md mb-4'>
+    <h2 class='text-xl font-semibold mb-4'>プロフィール画像</h2>
+    <form id='uploadProfileForm' action='#' @submit.prevent="uploadImage">
+      <div class='mb-4'>
+        <label for='file' class='block text-gray-700 font-medium'>ファイルを選択してください</label>
+        <input id='profileImageInput' type='file' name='file' id='file' accept="image/*" @change="fileChosen" />
+      </div>
+      <div x-show="imageUrl">
+        <img :src="imageUrl" class="object-cover rounded border border-gray-200">
+      </div>
+      <button type='submit' class='bg-blue-500 text-white font-semibold px-4 py-2 rounded hover:bg-blue-600 focus:outline-none focus:bg-blue-600'>
+        プロフィール画像を更新
+      </button>
+    </form>
+
+    <div id='uploadedImgContainer' class='max-w-md mx-auto flex justify-center items-center bg-gray-100'>
+      <div class='max-w-md bg-white p-8 rounded-lg shadow-md text-center'>
+        <img id='uploadedImg' :src='filePath' class='w-32 h-32 rounded-full mx-auto mb-4'>
+        <p class='text-gray-700'>Uploaded Image</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+function imageViewer() {
+  return {
+    imageUrl: '',
+    hasFilePermission: false,
+    authActionHref: '/f/xlogin/connect?redirectAfterAuth=/mypage',
+    filePath: '/img/profile.png',
+
+    async initUploadDiv() {
+      console.log('initUploadDiv')
+      await this.checkFilePermission()
+      console.log('checkFilePermission')
+      await this.showProfileImage()
+      console.log('showProfileImage')
+
+      window.dispatchEvent(new CustomEvent('ace-init', { detail: { from: 'upload3.ejs' } }))
+    },
+
+    async showProfileImage() {
+      const fetchUploadedFileList = a.input.getFetchUploadedFileList(argNamed({
+        browserServerSetting: a.setting.browserServerSetting.getList('apiEndpoint'),
+        lib: [a.lib.common.input.getRequest],
+      }))
+      const fileListResult = await fetchUploadedFileList()
+      console.log({ debug: true, fileListResult })
+      if (!fileListResult || !fileListResult.result || !fileListResult.result.fileList || !fileListResult.result.fileList[0]) {
+        loadUploadedImg({ fileId: null })
+        return
+      }
+
+      const { fileLabel } = fileListResult.result.fileList[0]
+      const apiEndpoint = a.setting.browserServerSetting.getValue('apiEndpoint')
+      if (fileLabel) {
+        this.filePath = `${apiEndpoint}/file/content?fileLabel=${fileLabel}`
+      }
+    },
+
+    async uploadImage() {
+      const uploadFile = a.output.getUploadFile(argNamed({
+        browserServerSetting: a.setting.browserServerSetting.getList('apiEndpoint'),
+        lib: [a.lib.common.output.postFormRequest],
+      }))
+
+      const onSubmitUploadForm = a.action.getOnSubmitUploadForm(argNamed({
+        output: { uploadFile },
+      }))
+
+      await onSubmitUploadForm()
+
+      this.filePath = this.imageUrl
+      this.imageUrl = null
+      window.dispatchEvent(new CustomEvent('ace-banner', { detail: { isVisible: true, title: '[成功]', message: 'ファイルをアップロードしました。' }, bubbles: true }))
+    },
+
+    loginWithFilePermission() {
+      window.location.href = this.authActionHref
+    },
+
+    fileChosen(event) {
+      this.fileToDataUrl(event, src => this.imageUrl = src)
+      window.dispatchEvent(new CustomEvent('ace-banner', { detail: { isVisible: true, title: '[成功]', message: 'ファイルを選択しました。' }, bubbles: true }))
+    },
+
+    fileToDataUrl(event, callback) {
+      if (!event.target.files.length) return
+
+      const file = event.target.files[0]
+      const reader = new FileReader()
+
+      reader.readAsDataURL(file)
+      reader.onload = e => callback(e.target.result)
+    },
+
+    async checkFilePermission () {
+      const splitPermissionListResult = await a.lib.common.input.fetchSplitPermissionList(a.setting.browserServerSetting.getValue('apiEndpoint'))
+      if (!splitPermissionListResult.result) {
+        this.hasFilePermission = false
+        return
+      }
+      const { splitPermissionList, clientId } = splitPermissionListResult.result
+      const permission = 'rw:$CLIENT_ID:file_v1' 
+      const queryPart = `&requestScope=${permission.replace(/\$CLIENT_ID/g, clientId)}`
+      this.authActionHref = `/f/xlogin/connect?redirectAfterAuth=/mypage${queryPart}`
+
+      if (splitPermissionList.optional[`rw:${clientId}:file_v1`]) {
+        this.hasFilePermission = true
+      } else {
+        this.hasFilePermission = false
+      }
+    },
+  }
+}
+</script>
+
+<style>
+.test {
+  width: 100px;
+  height:1 00px;
+}
+</style>
+

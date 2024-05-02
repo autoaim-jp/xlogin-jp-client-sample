@@ -1,0 +1,74 @@
+<template x-teleport="body"  x-data="notificationData" x-init="startNotificationTimer" @ace-notification.window="notificationListOpen=true">
+    <div  x-show="notificationListOpen" @keydown.window.escape="notificationListOpen=false" class="relative z-[99]">
+
+        <div x-show="notificationListOpen" x-transition.opacity.duration.600ms @click="notificationListOpen = false" class="fixed inset-0 bg-black bg-opacity-10"></div>
+        <div class="fixed inset-0 overflow-hidden">
+            <div class="absolute inset-0 overflow-hidden">
+                <div class="fixed inset-y-0 left-0 flex max-w-full">
+                    <div 
+                     x-show="notificationListOpen" 
+                     @click.away="notificationListOpen = false"
+                     x-transition:enter="transform transition ease-in-out duration-500 sm:duration-700" 
+                     x-transition:enter-start="-translate-x-110percent" 
+                     x-transition:enter-end="translate-x-0" 
+                     x-transition:leave="transform transition ease-in-out duration-500 sm:duration-700" 
+                     x-transition:leave-start="translate-x-0" 
+                     x-transition:leave-end="-translate-x-110percent" 
+                     class="w-screen max-w-md">
+                        <div class="flex flex-col h-full py-5 overflow-y-scroll bg-white border-l shadow-lg border-neutral-100/70">
+
+                            <template x-for="(notificationDetail, index) in notificationDetailList" :key="index">
+                                <%- include(`${componentPath}notificationCard.ejs`)  %>
+                            </template>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+
+<script>
+function notificationData () {
+    return {
+        notificationListOpen: false,
+        notificationList: {},
+        notificationDetailList: [],
+
+        startNotificationTimer() {
+            setInterval(() => {
+                this.fetchNotification()
+            }, 5 * 1000)
+        },
+
+        async fetchNotification() {
+            const apiEndpoint = a.setting.browserServerSetting.getValue('apiEndpoint')
+            const notificationId = ''
+
+            const resultFetchGlobalNotification = await a.lib.common.input.getRequest(`${apiEndpoint}/notification/list`, { notificationId })
+            this.notificationList = resultFetchGlobalNotification?.result?.notificationList || {}
+            this.notificationDetailList = Object.values(this.notificationList).reverse().map((notification) => {
+                return JSON.parse(notification.detail)
+            })
+
+            this.openNotification()
+        },
+
+        async openNotification() {
+            const apiEndpoint = a.setting.browserServerSetting.getValue('apiEndpoint')
+
+            const notificationIdList = Object.keys(this.notificationList)
+            if (notificationIdList.length === 0) {
+                return
+            }
+            const param = { notificationIdList }
+            await a.lib.common.output.postRequest(`${apiEndpoint}/notification/open`, param)
+        },
+
+    }
+}
+</script>
+

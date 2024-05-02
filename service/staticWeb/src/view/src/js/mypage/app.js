@@ -45,11 +45,11 @@ const loadTimerBtn = async () => {
   }))
 }
 
-const showNotification = () => {
-  setInterval(() => {
-    a.lib.common.output.showNotification(a.setting.browserServerSetting.getValue('apiEndpoint'), a.lib.xdevkit.output.showModal, a.lib.common.input.getRequest)
-  }, 30 * 1000)
-}
+// const showNotification = () => {
+//  setInterval(() => {
+//    a.lib.common.output.showNotification(a.setting.browserServerSetting.getValue('apiEndpoint'), a.lib.xdevkit.output.showModal, a.lib.common.input.getRequest)
+//  }, 3 * 1000)
+// }
 
 const loadMessageContent = async () => {
   const messageResult = await a.input.fetchMessage(argNamed({
@@ -86,36 +86,6 @@ const loadMessageBtn = () => {
   }))
 }
 
-const loadUploadForm = () => {
-  const uploadFile = a.output.getUploadFile(argNamed({
-    browserServerSetting: a.setting.browserServerSetting.getList('apiEndpoint'),
-    lib: [a.lib.common.output.postFormRequest],
-  }))
-
-  const onSubmitUploadForm = a.action.getOnSubmitUploadForm(argNamed({
-    output: { uploadFile },
-  }))
-
-  a.output.setOnSubmitUploadForm(argNamed({
-    onSubmit: { onSubmitUploadForm },
-  }))
-
-
-  const fetchUploadedFileList = a.input.getFetchUploadedFileList(argNamed({
-    browserServerSetting: a.setting.browserServerSetting.getList('apiEndpoint'),
-    lib: [a.lib.common.input.getRequest],
-  }))
-
-  const loadUploadedImg = a.output.getLoadUploadedImg(argNamed({
-    browserServerSetting: a.setting.browserServerSetting.getList('apiEndpoint'),
-  }))
-
-  a.core.showUploadedImg(argNamed({
-    input: { fetchUploadedFileList },
-    output: { loadUploadedImg },
-  }))
-}
-
 const loadPermission = async () => {
   const splitPermissionListResult = await a.lib.common.input.fetchSplitPermissionList(a.setting.browserServerSetting.getValue('apiEndpoint'))
   a.output.showEditor(argNamed({
@@ -123,10 +93,6 @@ const loadPermission = async () => {
   }))
 
   a.output.showBackupEmailAddressForm(argNamed({
-    param: { splitPermissionListResult },
-  }))
-
-  a.output.showUploadForm(argNamed({
     param: { splitPermissionListResult },
   }))
 
@@ -167,7 +133,6 @@ const loadBackupEmailAddressForm = async ({ userInfoResult }) => {
 
 const main = async () => {
   a.lib.xdevkit.output.switchLoading(true)
-  a.lib.common.output.setOnClickNavManu()
   a.lib.monkeyPatch()
 
   const userInfoResult = await a.app.loadProfile()
@@ -175,10 +140,8 @@ const main = async () => {
   a.app.loadTimerBtn()
   a.app.loadMessageContent()
   a.app.loadMessageBtn()
-  a.app.loadUploadForm()
   a.app.loadTabBtn()
 
-  a.app.showNotification()
   a.app.loadPermission()
 
   setTimeout(() => {
@@ -190,14 +153,12 @@ a.app = {
   main,
   loadProfile,
   loadTimerBtn,
-  showNotification,
   loadMessageContent,
   loadMessageBtn,
-  loadUploadForm,
   loadPermission,
   loadTabBtn,
   loadBackupEmailAddressForm,
 }
 
 a.app.main()
-
+window.a = a

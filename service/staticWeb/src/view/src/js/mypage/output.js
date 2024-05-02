@@ -19,6 +19,13 @@ export const getAddTimer = ({ apiEndpoint, postRequest }) => {
   }
 }
 
+export const getAddNotification = ({ apiEndpoint, postRequest }) => {
+  const url = `${apiEndpoint}/notification/add`
+  return () => {
+    return postRequest(url)
+  }
+}
+
 export const getSaveMessage = ({ apiEndpoint, postRequest }) => {
   const url = `${apiEndpoint}/message/save`
   return () => {
@@ -123,6 +130,9 @@ export const getLoadUploadedImg = ({ apiEndpoint }) => {
 
 /* show elm */
 export const showMessage = ({ messageResult }) => {
+  if (!messageResult || !messageResult.result) {
+    return
+  }
   document.querySelector('#messageContent').value = messageResult.result.jsonContent
 }
 

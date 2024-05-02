@@ -30,7 +30,13 @@ const a = asocial
 const _getOtherRouter = () => {
   const expressRouter = express.Router()
   if (setting.getValue('env.SERVER_ORIGIN').indexOf('https') >= 0) {
-    expressRouter.use(helmet())
+    expressRouter.use(helmet({
+      contentSecurityPolicy: {
+        directives: {
+          'script-src': ['\'self\'', '\'unsafe-eval\'', '\'unsafe-inline\''],
+        },
+      },
+    }))
   }
   expressRouter.use(bodyParser.urlencoded({ extended: true }))
   expressRouter.use(bodyParser.json())
@@ -47,6 +53,11 @@ const _getActionRouter = () => {
     core: [a.core.handleTimerAdd, a.core.createResponse],
   }))
   expressRouter.post(`${setting.browserServerSetting.getValue('apiEndpoint')}/timer/add`, timerAddHandler)
+
+  const notificationAddHandler = a.action.getHandlerNotificationAdd(argNamed({
+    core: [a.core.handleNotificationAdd, a.core.createResponse],
+  }))
+  expressRouter.post(`${setting.browserServerSetting.getValue('apiEndpoint')}/notification/add`, notificationAddHandler)
 
   const notificationOpenHandler = a.action.getHandlerNotificationOpen(argNamed({
     core: [a.core.handleNotificationOpen, a.core.createResponse],
