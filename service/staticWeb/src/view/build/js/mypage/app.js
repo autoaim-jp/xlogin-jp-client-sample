@@ -45,11 +45,11 @@ const loadTimerBtn = async () => {
   }))
 }
 
-//const showNotification = () => {
+// const showNotification = () => {
 //  setInterval(() => {
 //    a.lib.common.output.showNotification(a.setting.browserServerSetting.getValue('apiEndpoint'), a.lib.xdevkit.output.showModal, a.lib.common.input.getRequest)
 //  }, 3 * 1000)
-//}
+// }
 
 const loadMessageContent = async () => {
   const messageResult = await a.input.fetchMessage(argNamed({

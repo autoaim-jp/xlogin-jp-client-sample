@@ -7,11 +7,11 @@ const timerAddRequest = ({
   const param = {
     notificationRange: CLIENT_ID,
     subject: 'timer',
-    detail: { 
+    detail: {
       title: 'time notification',
       content: 'TIME\'S UP!',
       action: { title: 'Go to xlogin!', href: 'https://xlogin.jp' },
-    }
+    },
   }
 
   return postRequest(CLIENT_ID, accessToken, API_SERVER_ORIGIN, path, param)
