@@ -4,7 +4,7 @@ const notificationListRequest = async ({
   accessToken, notificationId, CLIENT_ID, API_VERSION, API_SERVER_ORIGIN, getRequest,
 }) => {
   const origin = API_SERVER_ORIGIN
-  const path = `/api/${API_VERSION}/notification/list`
+  const path = `/api/${API_VERSION}/notification/select`
   const param = { notificationRange: CLIENT_ID, notificationId }
   return getRequest(CLIENT_ID, accessToken, origin, path, param)
 }

@@ -411,9 +411,8 @@ function notificationData () {
         },
 
         async fetchNotification() {
-            console.log('fetchNotification')
             const apiEndpoint = a.setting.browserServerSetting.getValue('apiEndpoint')
-            const notificationId = null
+            const notificationId = ''
 
             const resultFetchGlobalNotification = await a.lib.common.input.getRequest(`${apiEndpoint}/notification/list`, { notificationId })
             this.notificationList = resultFetchGlobalNotification?.result?.notificationList || {}
