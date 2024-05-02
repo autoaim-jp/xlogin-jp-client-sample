@@ -55,9 +55,9 @@ const handleNotificationOpen = async ({ accessToken, notificationIdList }) => {
   return handleResult
 }
 
-const handleNotificationList = async ({ accessToken }) => {
+const handleNotificationList = async ({ accessToken, notificationId }) => {
   const notificationListResponse = await mod.input.notificationListRequest(argNamed({
-    param: { accessToken },
+    param: { accessToken, notificationId },
     xdevkitSetting: mod.setting.xdevkitSetting.getList('api.API_VERSION', 'env.API_SERVER_ORIGIN', 'env.CLIENT_ID'),
     lib: [mod.lib.getRequest],
   }))

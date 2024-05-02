@@ -38,8 +38,9 @@ const getHandlerNotificationList = ({ handleInvalidSession, handleNotificationLi
     }
 
     const { accessToken } = req.session.auth
+    const { notificationId } = req.query
 
-    const handleResult = await handleNotificationList({ accessToken })
+    const handleResult = await handleNotificationList({ accessToken, notificationId })
 
     createResponse({ req, res, handleResult })
   }
